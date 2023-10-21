@@ -1,2 +1,2 @@
 # cs-re-re-minibot
-CS re-minibot, redone for XRP
+CS re-minibot, redone for XRP!
