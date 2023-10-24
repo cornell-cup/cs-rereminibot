@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>MiniBot Client GUI</title>
+	<!-- IMPORTS -->
+	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/gui_update.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/codemirror.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/chatbot.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/contextHistory.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/toggle.css') }}" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+		integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+	<link rel="icon" href="{{ url_for('static', filename = 'img/logo.png' )}}" />
+
+	<!-- blockly imports -->
+	<script src="{{ url_for('static', filename='js/vendor/blockly/blockly_compressed.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/vendor/blockly/javascript_compressed.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/vendor/blockly/python_compressed.js') }}"></script>
+	<script src="{{ url_for('static',filename='js/vendor/blockly/blocks_compressed.js') }}"></script>
+	<script src="{{ url_for('static',filename='js/vendor/blockly/en.js') }}"></script>
+
+	<!--TODO: localize d3-->
+	<script src="https://d3js.org/d3.v5.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body style="background-color: #212529;">
+	<!-- HTML HERE -->
+	<div id="root"></div>
+	<xml id="toolbox">
+		<category name="Control" colour="220">
+			<block type="controls_repeat_ext"></block>
+			<block type="controls_repeat"></block>
+			<block type="controls_if"></block>
+			<block type="controls_ifelse"></block>
+			<block type="controls_for"></block>
+			<block type="controls_forEach"></block>
+			<block type="controls_flow_statements"></block>
+			<block type="controls_whileUntil"></block>
+			<block type="do_while"></block>
+		</category>
+		<category name="Logic" colour="90">
+			<block type="logic_compare"></block>
+			<block type="logic_negate"></block>
+			<block type="logic_boolean"></block>
+			<block type="logic_operation"></block>
+			<block type="logic_ternary"></block>
+			<block type="logic_null"></block>
+		</category>
+		<category name="Math" colour="300">
+			<block type="math_number"></block>
+			<block type="math_arithmetic"></block>
+			<block type="math_single"></block>
+			<block type="math_trig"></block>
+			<block type="math_constant"></block>
+			<block type="math_number_property"></block>
+			<block type="math_change"></block>
+			<block type="math_round"></block>
+			<block type="math_on_list"></block>
+			<block type="math_modulo"></block>
+			<block type="math_constrain"></block>
+		</category>
+		<category name="Text" colour="0">
+			<block type="text"></block>
+			<block type="text_join"></block>
+			<block type="text_create_join_container"></block>
+			<block type="text_create_join_item"></block>
+			<block type="text_print"></block>
+			<block type="text_append"></block>
+			<block type="text_isEmpty"></block>
+			<block type="text_indexOf"></block>
+			<block type="text_charAt"></block>
+			<block type="text_length"></block>
+		</category>
+		<category name="Lists" colour="250">
+			<block type="lists_create_empty"></block>
+			<block type="lists_repeat"></block>
+			<block type="lists_isEmpty"></block>
+			<block type="lists_length"></block>
+		</category>
+		<category name="Color" colour="75">
+			<block type="colour_picker"></block>
+			<block type="colour_random"></block>
+			<block type="colour_rgb"></block>
+			<block type="colour_blend"></block>
+		</category>
+		<category name="Minibot" colour="300">
+			<block type="move_power"></block>
+			<block type="move_power_time"></block>
+			<block type="move_distance"></block>
+			<block type="move_to_position"></block>
+			<block type="path_plan_to_position"></block>
+			<block type="stop_moving"></block>
+			<block type="set_power"></block>
+			<block type="turn_power"></block>
+			<block type="turn_power_time"></block>
+			<block type="turn_angle"></block>
+			<block type="turn_to_angle"></block>
+			<block type="wait_seconds"></block>
+			<block type="send_commands"></block>
+			<block type="wait_for_commands"></block>
+			<block type="while_wait_for_commands"></block>
+			<block type="sees_color"></block>
+			<block type="read_ultrasonic"></block>
+			<block type="move_servo"></block>
+		</category>
+		<category name="Variables" colour="200" custom="VARIABLE">
+			<block type="variables_set"></block>
+			<block type="variables_get"></block>
+		</category>
+		<category name="Functions" colour="100" custom="PROCEDURE">
+		</category>
+		<category name="Custom Blocks" colour="200">
+			<block type="custom_block"></block>
+		</category>
+		<!-- ADDING CUSTOM BLOCKS -->
+	</xml>
+	<!-- basic imports + bootstrap -->
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+		integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
+		integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
+		crossorigin="anonymous"></script>
+	<!-- IMPORT CUSTOM BLOCKS -->
+	<script type="text/javascript" src="{{ url_for('static', filename='js/blocks/custom_blocks.js')}}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/blocks/custom_json.js')}}"></script>
+
+	<script src="{{ url_for('static', filename='build/app.bundle.js')}}"></script>
+</body>
+
+</html>
