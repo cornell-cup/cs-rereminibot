@@ -10,7 +10,6 @@ import threading
 import math
 
 from basestation.bot import Bot
-from basestation.controller.minibot_sim_gui_adapter import run_program_string_for_gui_data
 from basestation import config
 
 # database imports
@@ -18,23 +17,12 @@ from basestation.databases.user_database import User, Chatbot as ChatbotTable, S
 from basestation.databases.user_database import db
 
 # imports from basestation util
-from basestation.util.path_planning import PathPlanner
 from basestation.util.stoppable_thread import StoppableThread, ThreadSafeVariable
-from basestation.util.helper_functions import distance
-from basestation.util.units import AngleUnits, LengthUnits, convert_angle, convert_length
-from basestation.util.world_builder import WorldBuilder
 
 from random import choice, randint
 from string import digits, ascii_lowercase, ascii_uppercase
 from typing import Any, Dict, List, Tuple, Optional
 from copy import deepcopy
-
-from .ChatbotWrapper import ChatbotWrapper
-
-
-
-
-
 import subprocess
 
 MAX_VISION_LOG_LENGTH = 1000

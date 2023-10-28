@@ -24,7 +24,6 @@ import BotControl from './BotControl/BotControl.js';
 import Dashboard from './Analytics/dashboard.js';
 import History from './Analytics/submissionHistory.js';
 import ContextHistory from './ContextHistory/ContextHistory.js';
-import Vision from './Vision/Vision.js';
 
 // Utils import
 import VirtualEnviroment from './utils/VirtualEnviroment.js';
@@ -145,14 +144,6 @@ const Platform = withCookies((props) => {
               contextHistoryLoaded={props.contextHistoryLoaded}
               setContextHistoryLoaded={props.setContextHistoryLoaded}
             />
-          </Route>
-
-          <Route path="/vision-page">
-            <PythonCodeContext.Provider value={{ pythonCode: pythonCode }}>
-              <VirtualEnviromentContext.Provider value={{ virtualEnviroment, setVirtualEnviroment }}>
-                <Vision />
-              </VirtualEnviromentContext.Provider>
-            </PythonCodeContext.Provider>
           </Route>
 
         </Switch>
