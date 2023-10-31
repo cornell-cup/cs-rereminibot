@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, LabeledTextBox } from '../utils/Util.js';
 import axios from 'axios';
 
-import CodeMirror from 'react-codemirror';
+import CodeMirror from '@uiw/react-codemirror';
 require('codemirror/mode/python/python');
 
 
