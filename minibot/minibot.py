@@ -12,6 +12,7 @@ import time
 from builtins import dict, set
 import _thread
 import sys
+import argparse
 
 # NOTE: Please add "flush=True" to all print statements so that our test
 # harness (test_minibot.py) can pipe the stdout output, and use it
@@ -43,7 +44,7 @@ class Minibot:
         # can immediately rebind if the program is killed and then restarted
         self.broadcast_sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         # can broadcast messages to all
-        self.broadcast_sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        # self.broadcast_sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
         # listens for a TCP connection from the basestation
         self.listener_sock = None
@@ -74,12 +75,12 @@ class Minibot:
         connects/reconnects to the basestation if there is no connection.
         """
 
-        def remove_closed_sockets(SOCKET_LIST):
-            sockets = SOCKET_LIST.copy()
-            for sock in sockets:
-            # Remove file descriptor if closed
-                if sock != None and sock.fileno() < 0:
-                    SOCKET_LIST.remove(sock)
+        # def remove_closed_sockets(SOCKET_LIST):
+        #     sockets = SOCKET_LIST.copy()
+        #     for sock in sockets:
+        #     # Remove file descriptor if closed
+        #         if sock != None and sock.fileno() < 0:
+        #             SOCKET_LIST.remove(sock)
 
         # basically acts as a handler for keyboard interrupt using try-catch
         try: 
@@ -98,12 +99,14 @@ class Minibot:
                 if len(self.readable_socks) == 1:
                     self.broadcast_to_base_station()
                     
+                # Remove removed_closed_sockets temporarily as it doesn't seem like it 
+                # will cause an error with select
                 #Remove all closed sockets to prevent select errors. Note: not sure
                 #whether to perform this before or after checking whether reconnection
                 #is necessary.
-                remove_closed_sockets(self.readable_socks)
-                remove_closed_sockets(self.writable_socks)
-                remove_closed_sockets(self.errorable_socks)
+                # remove_closed_sockets(self.readable_socks)
+                # remove_closed_sockets(self.writable_socks)
+                # remove_closed_sockets(self.errorable_socks)
                     
                 # select returns new lists of sockets that are read ready (have
                 # received data), write ready (have initialized their buffers, and
@@ -357,7 +360,7 @@ class Minibot:
             else:
                 # kill any running Python/Blockly scripts
                 if self.blockly_python_proc.is_running():
-                    self.blockly_python_proc.kill_proc()
+                    self.blockly_python_proc.kill_thread()
                 _thread.start_new_thread(ece.stop, ())
         elif key == "IR":
             return_val = []
