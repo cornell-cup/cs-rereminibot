@@ -90,12 +90,26 @@ class Avatar:
         
     def set_current_expression(self, expression_name : str):
         """
-        
+        Sets the avatar's current expression to the specified expression, 
+        if an expression with the specified name has been added to the avatar.
+        If no such expression exists, the current expression will not be changed.
+
+        Parameters
+        -----------------
+        expression_name : str
+            The name of the expression which will be set as the current expression.
+
+        Returns
+        -----------------
+        Whether or not the expression was able to be set. If `True`, the current 
+        expression was set to the expression with the specified name. If `False`, 
+        the current expression was not changed.
         """
         
         try:
             self._expressions[expression_name]
             self._current_expression = expression_name
+            self._current_frame = 0
             return True
         except KeyError as e:
             return False
@@ -128,5 +142,27 @@ class Avatar:
         self._prev_update_time = current_time
 
     def get_current_display(self):
-        return self._expressions[self._current_expression].get_frame(self._current_frame)    
+        """
+        Returns the active animation frame (should typically be called after 
+        calling `update()`).
+
+        Returns
+        ---------------
+        The active animation frame of the current expression's spritesheet. 
+        See Spritesheet.get_frame() for the return type.
+        """
+        return self._expressions[self._current_expression].get_frame(self._current_frame)   
+
+    def get_current_frame_count(self):
+        """
+        Returns the active animation's total frame count.
+        """
+        return self._expressions[self._current_expression]._frame_count 
+
+    def get_expression_names(self):
+        """
+        Returns a list of the names of all expressions current available
+        on this avatar.
+        """
+        return list(self._expressions.keys()) 
 

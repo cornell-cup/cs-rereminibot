@@ -43,7 +43,27 @@ class Spritesheet:
 
     def get_frame(self, frame_number : float) -> Image:
         """
+        Returns the frame with the specified frame number. 
         
+        If the specified frame number is a decimal, it is rounded down to the 
+        nearest integer.
+
+        If the specified frame number is greater than or equal to the total
+        frame count N, it is brought into the range [0,N) by subtracting a
+        multiple of N. For instance, if there are ten total frames, and 
+        `frame_number` is set to 11, the second frame at index 1 is returned.
+
+        If the specified frame number is less than zero, it is brought into the
+        range [0,N) by adding a multiple of N. 
+
+        Parameters
+        -------------
+        frame_number : float
+            The number of the frame being accessed.
+
+        Returns
+        -------------
+        A PIL Image representing the current frame.
         """
         
         while frame_number >= self._frame_count:
