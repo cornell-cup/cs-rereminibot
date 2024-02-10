@@ -102,7 +102,8 @@ class Avatar:
 
     def update(self):
         """
-        
+        Updates the current frame being displayed by the avatar based on the 
+        time change since the previous update.
         """ 
 
         # Get current time
