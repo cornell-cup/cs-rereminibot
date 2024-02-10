@@ -38,8 +38,13 @@ def run_demo():
     while True:
         user_input = input("Enter expression, a number for new playback speed, or q to quit:")
 
+        user_input = user_input.strip()
+
         if user_input == "q":
             break
+
+        if len(user_input) == 0:
+            continue
 
         if user_input.isnumeric() or (user_input[0] == '-' and user_input[1:].isnumeric()):
             demo_ava._current_playback_speed = float(user_input)
@@ -51,8 +56,11 @@ def run_demo():
             frame = demo_ava.get_current_display()
             img_fig = plt.imshow(frame)
 
-            two_cycles_duration = 2 * demo_ava.get_current_frame_count() / abs(demo_ava._current_playback_speed)
-            animation_duration = max(MIN_ANIAMTION_DURATION, two_cycles_duration)
+            if demo_ava._current_playback_speed == 0:
+                animation_duration = MIN_ANIAMTION_DURATION
+            else:
+                two_cycles_duration = 2 * demo_ava.get_current_frame_count() / abs(demo_ava._current_playback_speed)
+                animation_duration = max(MIN_ANIAMTION_DURATION, two_cycles_duration)
 
             start_time = time.time()
 

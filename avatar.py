@@ -113,6 +113,13 @@ class Avatar:
             return True
         except KeyError as e:
             return False
+        
+    def set_playback_speed(self, new_speed : float):
+        """
+        Sets the avatar's playback speed to the specified value. 
+        """
+        self._current_playback_speed = new_speed
+
 
     def update(self):
         """
