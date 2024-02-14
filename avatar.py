@@ -5,7 +5,7 @@ class Avatar:
 
     def __init__(self, expressions : dict = {}, current_expression : str = None, current_playback_speed : float = 10.0):
         """
-        An collection of expressions used together. These animations are 
+        A collection of expressions used together. These animations are 
         called "expressions" and consist of a name and associated spritesheet.
 
         For example, one might have an expression "idle" and a spritesheet
