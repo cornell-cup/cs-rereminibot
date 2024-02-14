@@ -430,3 +430,23 @@ Blockly.Python['sees_color'] = function (block) {
 
   return [BOT_HEADER + sensor_code + color_code, Blockly.Python.ORDER_NONE];
 };
+
+// ============= EMOTIONAL SUBSYSTEM BLOCK ============== //
+
+Blockly.Blocks['create_emotion'] = {
+  init: function (){
+    this.jsonInit(miniblocks.create_emotion)
+  }
+};
+
+Blockly.Python['create_emotion'] = function(block) { //, generator) {
+  // var value_emotion_name = generator.valueToCode(block, 'emotion_name', python.Order.ATOMIC);
+  // var statements_action_steps = generator.statementToCode(block, 'emotion_action_steps');
+
+  var emotion_name = block.getFieldValue('emotion_name');
+
+  // TODO: Assemble python into code variable.
+  var code = 'pass #TODO Implement backend for \'Create Emotion\' block\n';
+  return code;
+};
+
