@@ -573,5 +573,29 @@ var miniblocks = {
     colour: 180,
     tooltip: "",
     helpUrl: ""
+  },
+
+  create_emotion: {
+    type: "create_emotion",
+    message0: "Create Emotion named %1 %2 which does %3",
+    args0: [
+      {
+        type: "input_value",
+        name: "emotion_name",
+        check: "String",
+      },
+      {
+        type: "input_dummy"
+      },
+      {
+        type: "input_statement",
+        name: "emotion_action_steps"
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 40,
+    tooltip: "Creates an Emotion which then can be added to a robot.",
+    helpUrl: ""
   }
 };
