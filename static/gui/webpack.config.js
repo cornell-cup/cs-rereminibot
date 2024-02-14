@@ -9,13 +9,16 @@ module.exports = {
         filename: 'app.bundle.js'
     },
     module: {
-        loaders: [
+        rules: [ // Changed from "loaders" to "rules" which is the Webpack 2+ syntax
             {
                 test: /\.js$/,
-                loader: 'babel-loader',
-                query: {
-                    presets: ['es2015', 'react'],
-                    cacheDirectory: true
+                exclude: /node_modules/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: ['@babel/preset-env', '@babel/preset-react'], // Use the updated presets here
+                        cacheDirectory: true
+                    }
                 }
             },
         ]

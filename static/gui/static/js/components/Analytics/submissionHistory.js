@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Button, LabeledTextBox } from '../utils/Util.js';
 import axios from 'axios';
 
-import CodeMirror from 'react-codemirror';
+import CodeMirror from '@uiw/react-codemirror';
 require('codemirror/mode/python/python');
 
 
@@ -25,21 +25,23 @@ export default class History extends React.Component {
 		try {
 			var subs = this.state.submissions;
 			var submissionNums = [];
-			for (var i = 0; i < subs.length; i++) {
-				submissionNums.push(i);
+			if (subs !== null) {
+				for (var i = 0; i < subs.length; i++) {
+					submissionNums.push(i);
+				}
+			
+				const listItems = subs.map((subs, submissionNums) =>
+					subs["result"] == "Successful execution" ?
+						<li id={submissionNums} className="list-group-item list-group-item-success" onClick={() => this.onClick(subs["code"], submissionNums)}>{subs["time"]}</li>
+						: <li id={submissionNums} className="list-group-item list-group-item-danger" onClick={() => this.onClick(subs["code"], submissionNums)}>{subs["time"]}</li>,
+				);
+
+				this.setState({ history: listItems });
 			}
-
-			const listItems = subs.map((subs, submissionNums) =>
-				subs["result"] == "Successful execution" ?
-					<li id={submissionNums} className="list-group-item list-group-item-success" onClick={() => this.onClick(subs["code"], submissionNums)}>{subs["time"]}</li>
-					: <li id={submissionNums} className="list-group-item list-group-item-danger" onClick={() => this.onClick(subs["code"], submissionNums)}>{subs["time"]}</li>,
-			);
-
-			this.setState({ history: listItems });
-
 		} catch (error) {
 			alert(error);
 		}
+		
 	}
 
 	async getData() {
