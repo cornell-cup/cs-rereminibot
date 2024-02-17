@@ -299,7 +299,8 @@ class Minibot:
            basestation  
         """
         print("Basestation Disconnected")
-        _thread.start_new_thread(ece.stop, ())
+        # _thread.start_new_thread(ece.stop, ())
+        drivetrain.set_effort(0, 0)
         self.close_sock(basestation_sock)
         self.bs_repr = None
 
@@ -377,13 +378,13 @@ class Minibot:
                 # TODO use the appropriate power arg instead of 50 when
                 # that's implemented
                 arg = cmds_functions_map[value]
-                _thread.start_new_thread(drivetrain.set_effort, (arg[0], arg[1]))
+                drivetrain.set_effort(arg[0], arg[1])
             else:
                 # kill any running Python/Blockly scripts
                 print("killing thread")
                 if self.blockly_python_proc.is_running():
                     self.blockly_python_proc.kill_thread()
-                _thread.start_new_thread(drivetrain.set_effort, (0, 0))
+                drivetrain.set_effort(0, 0)
         elif key == "IR":
             return_val = []
             thread = _thread.start_new_thread(ece.read_ir, (return_val))
