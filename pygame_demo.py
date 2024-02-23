@@ -4,14 +4,15 @@ import time
 import pygame
 import random
 import numpy as np
+import json
 
 MIN_ANIMATION_DURATION = 4
 
-def add_expression(avatar: Avatar, expr_name: str, sheet_src: str, frame_count: int):
+def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_count : int, frame_width : int, frame_height : int):
     sheet = Spritesheet(src=sheet_src,
-                        frame_width=480,
-                        frame_height=320,
-                        frame_count=frame_count)
+                             frame_width=frame_width,
+                             frame_height=frame_height,
+                             frame_count=frame_count)
     
     if not sheet._loaded_correctly:
         print("Expression " + expr_name + " could not be added. Spritesheet did not load correctly!")
@@ -28,10 +29,11 @@ def run_demo():
 
     demo_ava = Avatar()
     # add_expression(demo_ava, "flash", "sprites/ColorFlash.png", 8)
-    add_expression(demo_ava, "idle", "sprites/Eyes_Idle.png", 20) 
-    add_expression(demo_ava, "roll", "sprites/Eyes_Roll.png", 30) 
-    add_expression(demo_ava, "brow_raise", "sprites/Eyes_Eyebrow_Raise.png", 30)
+
+    demo_ava.load_expressions_json("expressions.json")
     
+
+
     print("Loaded the following expressions:")
     for expression in demo_ava.get_expression_names():
         print(" - ", expression)
