@@ -1,5 +1,6 @@
 from spritesheet import Spritesheet
 import time
+import json
 
 class Avatar:
 
@@ -28,7 +29,7 @@ class Avatar:
             in frames per second. Negative values will play the animation backwards.
         """
         self._expressions = expressions
-        
+        self.json_expressions_dict = {}
         self._current_expression = None
         self._current_playback_speed = current_playback_speed
         self._current_frame = 0.0
@@ -71,6 +72,29 @@ class Avatar:
         """
 
         self._expressions[expression_name] = expression_spritesheet
+        self.json_expressions_dict[expression_name] = {
+            "frame_width" : expression_spritesheet._frame_width,
+            "frame_height" : expression_spritesheet._frame_height,
+            "frame_count" : expression_spritesheet._frame_count,
+            "sheet_src" : expression_spritesheet._image_src
+        }
+        with open("expressions.json", "w") as write_file:
+            json.dump(self.json_expressions_dict, write_file, indent=2)
+
+    def load_expressions_json(self, src : str):
+        """
+        """
+        temp_dict = {}
+        with open(src, "r") as read_file:
+            temp_dict = json.load(read_file)
+            for key in temp_dict.keys():
+                sheet = Spritesheet(src=temp_dict[key]["sheet_src"],
+                             frame_width=temp_dict[key]["frame_width"],
+                             frame_height=temp_dict[key]["frame_height"],
+                             frame_count=temp_dict[key]["frame_count"])
+                self.add_or_update_expression(key, sheet)
+        
+
 
     def get_expression(self, expression_name : str):
         """
