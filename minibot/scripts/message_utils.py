@@ -1,6 +1,5 @@
-# import binascii
-# import spidev
-from machine import SPI, Pin
+# from machine import SPI, Pin
+from machine import UART
 import time
 from scripts.crc import crc16
 
@@ -17,13 +16,12 @@ ACK = 6
 DATA_LEN = 16  # Number of data (i.e. non-validation) bytes in all messages
 
 
-def send_message(spi, msg, max_tries=100):
+def send_message(uart, msg, max_tries=100):
     """
     Send a message until the recipient sends back an ACK over SPI.
 
     Args:
-        spi: The SPI object from spidev, with preset properties
-                i.e. open bus/device, mode, max speed, etc.
+        uart: The UART object from machine.UART, with preset properties
         msg: The message to send as a list of ASCII numbers, including
                 any non-payload bytes. Pads to 16 bytes.
         max_tries:  The maximum number of tries to send the message
@@ -36,11 +34,17 @@ def send_message(spi, msg, max_tries=100):
     buf = msg.copy()
     while not done and numTries < max_tries:
         # Send the message
-        spi.write_readinto(buf, buf)
+        # spi.write_readinto(buf, buf)
+        uart.write(buf)
+        uart.readinto(buf)
         numTries += 1
+    
         # Request status
         buf = [5]
-        spi.write_readinto(buf, buf)
+        # spi.write_readinto(buf, buf)
+        uart.write(buf)
+        uart.readinto(buf)
+
         # Check for ACKnowledgement
         for i in buf:
             if i == ACK:
@@ -50,14 +54,12 @@ def send_message(spi, msg, max_tries=100):
     # print("Sent {} in {} tries".format(msg, numTries))
 
 
-
-
-def read_data(spi, msg, nbytes, validator, max_tries=100):
+def read_data(uart, msg, nbytes, validator, max_tries=100):
     """
-    Reads data from the secondary device over SPI.
+    Reads data from the secondary device over UART.
 
     Args:
-        spi: The SPI object from spidev, with preset properties
+        uart: The UART object, with preset properties
                 i.e. open bus/device, mode, max speed, etc.
         msg: The message to send as a list of ASCII numbers, including
                 any non-payload bytes. Use this to request some data
@@ -73,7 +75,7 @@ def read_data(spi, msg, nbytes, validator, max_tries=100):
         msg = list(msg)
     lod_msg = msg.copy()
     # print("Send load req msg")
-    send_message(spi, lod_msg)  # request data load
+    send_message(uart, lod_msg)  # request data load
     buf = [0] * nbytes
     done = False
     data = []
@@ -81,8 +83,11 @@ def read_data(spi, msg, nbytes, validator, max_tries=100):
     while not done and numTries < max_tries:
         # Send empty buffer (to read)
         # print("Sent {}: {} | {}".format(len(buf), "".join([chr(c) for c in bu>
-        spi.write_readinto(buf, buf)
+        # spi.write_readinto(buf, buf)
+        uart.write(buf)
+        uart.readinto(buf)
         numTries += 1
+
         # Validate data
         # print("Received {}: {} | {}".format(len(buf), "".join([chr(c) for c in >
         if validate_crc_message(buf):
@@ -92,7 +97,7 @@ def read_data(spi, msg, nbytes, validator, max_tries=100):
         else:
             # Ask to resend
             # print("Send load req msg")
-            send_message(spi, lod_msg)
+            send_message(uart, lod_msg)
     # print("Read {} in {} tries".format(buf, numTries))
     return [data, numTries]
 

@@ -1,12 +1,14 @@
 # import spidev
-from machine import SPI, Pin
+# from machine import SPI, Pin
+from machine import UART
 import time
 import _thread
 # import threading
 import scripts.message_utils as msglib
 
 # spi = spidev.SpiDev()
-spi = SPI(pi_bus, baudrate=400000)
+# spi = SPI(pi_bus, baudrate=400000)
+uart = None
 
 class TransmitLock():
     # TODO: implement this class with condition variables
@@ -78,33 +80,22 @@ class TransmitLock():
 tlock = TransmitLock()
 
 
-def setSlave(device):
-    """
-    set which arduino to talk to. slave(0) for arduino 1 and slave(1) for arduino 2
-    """
-    pi_bus = 0
-    spi = SPI(pi_bus, baudrate=400000)
-
-    # Switching to device
-    cs = Pin(4, mode=Pin.OUT, value=0)
-    cs(device)
-
-
 def acquire_lock():
-    """ Acquires the lock to start sending data over SPI to
-    the Arduino.
+    """ Acquires the lock to start sending data over UART to
+    the Raspberry Pi 0.
     """
+    uart = UART(baudrate=115200)
+    uart.init(baudrate=115200)
     priority = time.time()
     while not tlock.start_transmit(priority):
         time.sleep(0.01)
-    setSlave(0)
 
 
 def release_lock():
-    """ Releases the lock that was used to send data over SPI to
-    the Arduino.
+    """ Releases the lock that was used to send data over UART to
+    the Raspberry Pi.
     """
-    spi.deinit()
+    uart.deinit()
     tlock.end_transmit()
 
 
@@ -116,7 +107,7 @@ def motor(id, dir, power, time):
     acquire_lock()
     data = [ord('M'), id, ord('D'), dir, ord('P'), power, ord('T'), time]
     msg = msglib.make_crc_message(data)
-    msglib.send_message(spi, msg)
+    msglib.send_message(uart, msg)
     release_lock()
 
 
@@ -129,7 +120,7 @@ def servo(id, angle):
     # Angle is 0 to 180 so no need for 2 bytes
     data = [ord('S'), ord('R'), ord('V'), ord('O'), id, ord('A'), angle]
     msg = msglib.make_crc_message(data)
-    msglib.send_message(spi, msg)
+    msglib.send_message(uart, msg)
     release_lock()
 
 
@@ -141,7 +132,7 @@ def rfid(id, returned_tags):
     load_req = [ord('R'), ord('F'), ord('I'), ord('D')]
     load_msg = msglib.make_crc_message(load_req)
     data, numTries = msglib.read_data(
-        spi, load_msg, 22, msglib.validate_crc_message)
+        uart, load_msg, 22, msglib.validate_crc_message)
     data = msglib.unpack_crc_message(data)
     if len(data) != 0:
         returned_tags[0] = data[0]
@@ -160,7 +151,7 @@ def stop():
     acquire_lock()
     data = [ord('S'), ord('T'), ord('O'), ord('P')]
     msg = msglib.make_crc_message(data)
-    msglib.send_message(spi, msg)
+    msglib.send_message(uart, msg)
     release_lock()
 
 
@@ -172,7 +163,7 @@ def sensor(id):
     load_req = [ord('L'), ord('O'), ord('A'), ord('D'), id]
     load_msg = msglib.make_crc_message(load_req)
     data, numTries = msglib.read_data(
-        spi, load_msg, 22, msglib.validate_crc_message)
+        uart, load_msg, 22, msglib.validate_crc_message)
     data = msglib.unpack_crc_message(data)
     release_lock()
     return data
@@ -183,7 +174,7 @@ def line_follow():
     acquire_lock()
     data = "LINE"
     msg = msglib.make_crc_message(data)
-    msglib.send_message(spi, msg)
+    msglib.send_message(uart, msg)
     release_lock()
 
 
@@ -200,7 +191,7 @@ def test(returned):
     load_req = [ord('T'), ord('E'), ord('S'), ord('T')]
     load_msg = msglib.make_crc_message(load_req)
     data, numTries = msglib.read_data(
-        spi, load_msg, 22, msglib.validate_crc_message)
+        uart, load_msg, 22, msglib.validate_crc_message)
     data = msglib.unpack_crc_message(data)
 
     returned[0] = data[0]
@@ -220,7 +211,7 @@ def transmit_once(cmd):
     """
     for char in cmd:
         print(char)
-        spi.write([ord(char)])
+        uart.write([ord(char)])
         
 def set_ports(ports):
     """ Tell minibot which motors and sensor correspond to
