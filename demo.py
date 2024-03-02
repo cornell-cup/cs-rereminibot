@@ -4,15 +4,16 @@ from spritesheet import Spritesheet
 from matplotlib import pyplot as plt
 
 import time
+import json 
 
 import json
 
 MIN_ANIAMTION_DURATION = 4
 
-def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_count : int):
+def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_count : int, frame_width : int, frame_height : int):
     sheet = Spritesheet(src=sheet_src,
-                             frame_width=480,
-                             frame_height=320,
+                             frame_width=frame_width,
+                             frame_height=frame_height,
                              frame_count=frame_count)
     
     if not sheet._loaded_correctly:
@@ -24,11 +25,12 @@ def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_coun
 def run_demo():
     demo_ava = Avatar()
 
-    add_expression(demo_ava, "flash", "sprites/ColorFlash.png", 8)
+    add_expression(demo_ava, "flash", "sprites/ColorFlash.png", 8, 480, 320)
 
-    add_expression(demo_ava, "idle", "sprites/Eyes_Idle.png", 20) 
-    add_expression(demo_ava, "roll", "sprites/Eyes_Roll.png", 30) 
-    add_expression(demo_ava, "brow_raise", "sprites/Eyes_Eyebrow_Raise.png", 30)
+    add_expression(demo_ava, "idle", "sprites/Eyes_Idle.png", 20, 480, 320) 
+    add_expression(demo_ava, "roll", "sprites/Eyes_Roll.png", 30, 480, 320) 
+    add_expression(demo_ava, "brow_raise", "sprites/Eyes_Eyebrow_Raise.png", 30, 480, 320)
+
     
     file = open("expressions.json")
     json.dump(demo_ava._expressions, file)
