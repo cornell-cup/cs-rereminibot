@@ -431,7 +431,7 @@ Blockly.Python['sees_color'] = function (block) {
   return [BOT_HEADER + sensor_code + color_code, Blockly.Python.ORDER_NONE];
 };
 
-// ============= EMOTIONAL SUBSYSTEM BLOCK ============== //
+// ============= EMOTIONAL SUBSYSTEM BLOCKS ============== //
 
 Blockly.Blocks['create_emotion'] = {
   init: function (){
@@ -439,14 +439,115 @@ Blockly.Blocks['create_emotion'] = {
   }
 };
 
-Blockly.Python['create_emotion'] = function(block) { //, generator) {
-  // var value_emotion_name = generator.valueToCode(block, 'emotion_name', python.Order.ATOMIC);
-  // var statements_action_steps = generator.statementToCode(block, 'emotion_action_steps');
-
-  var emotion_name = block.getFieldValue('emotion_name');
+Blockly.Python['create_emotion'] = function(block) { 
+  var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
+  var emotion_action_steps = Blockly.Python.statementToCode(block, 'emotion_action_steps');
 
   // TODO: Assemble python into code variable.
-  var code = 'pass #TODO Implement backend for \'Create Emotion\' block\n';
+  var code = 'emotion_repo[\"' + emotion_name + '\"] = Emotion(' + emotion_name + ',' + ')' 
+  'name=' + emotion_name + '\n' + 
+  'steps=\n' + emotion_action_steps;
   return code;
 };
 
+Blockly.Blocks['add_emotion'] = {
+  init: function (){
+    this.jsonInit(miniblocks.add_emotion)
+  }
+};
+
+Blockly.Python['add_emotion'] = function(block) { 
+  var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
+  var emotion_priority = Blockly.Python.valueToCode(block, 'emotion_priority', Blockly.Python.ORDER_NONE);
+
+  // TODO: Assemble python into code variable.
+  var code = 'pass #TODO Implement backend for \'Add Emotion\' block\n';
+  return code;
+};
+
+Blockly.Blocks['add_required_device'] = {
+  init: function (){
+    this.jsonInit(miniblocks.add_required_device)
+  }
+};
+
+Blockly.Python['add_required_device'] = function(block) {
+  var dropdown_device_name = block.getFieldValue('device_name');
+  var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
+
+  // TODO: Assemble python into code variable.
+  var code = 'pass #TODO Implement backend for \'Add Required Device\' block\n';
+  return code;
+};
+
+Blockly.Blocks['set_device_emotion_status'] = {
+  init: function (){
+    this.jsonInit(miniblocks.set_device_emotion_status)
+  }
+};
+
+Blockly.Python['set_device_emotion_status'] = function(block) {
+  var dropdown_device_name = block.getFieldValue('device_name');
+  var emotion_name = Blockly.Python.valueToCode(block, 'device_status', Blockly.Python.ORDER_NONE);
+
+  // TODO: Assemble python into code variable.
+  var code = 'pass #TODO Implement backend for \'Set Device Emotion Status\' block\n';
+  return code;
+};
+
+Blockly.Blocks['set_emotion_if_possible'] = {
+  init: function (){
+    this.jsonInit(miniblocks.set_emotion_if_possible)
+  }
+};
+
+Blockly.Python['set_emotion_if_possible'] = function(block) {
+  var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
+
+  // TODO: Assemble python into code variable.
+  var code = 'pass #TODO Implement backend for \'Set Emotion If Possible\' block\n';
+  return code;
+};
+
+Blockly.Blocks['process_current_emotion'] = {
+  init: function (){
+    this.jsonInit(miniblocks.process_current_emotion)
+  }
+};
+
+Blockly.Python['process_current_emotion'] = function(block) {
+    // TODO: Assemble python into code variable.
+  var code = 'if current_emotion is not None and current_emotion.check_devices():\n' + 
+              '  current_emotion.process_emotion()';
+  return code;
+};
+
+// ============= FACIAL ANIMATION BLOCKS ============== //
+
+Blockly.Blocks['set_current_expression'] = {
+  init: function (){
+    this.jsonInit(miniblocks.set_current_expression)
+  }
+};
+
+Blockly.Python['set_current_expression'] = function(block) {
+  var expression_name = Blockly.Python.valueToCode(block, 'expression_name', Blockly.Python.ORDER_NONE);
+
+  // TODO: Assemble python into code variable.
+  var code = 'pass #TODO Implement backend for \'Set Current Expression\' block\n';
+  return code;
+};
+
+Blockly.Blocks['set_current_playback_speed'] = {
+  init: function (){
+    this.jsonInit(miniblocks.set_current_expression)
+  }
+};
+
+Blockly.Python['set_current_playback_speed'] = function(block) {
+  var emotion_name = Blockly.Python.valueToCode(block, 'new_speed', Blockly.Python.ORDER_NONE);
+
+  // TODO: Assemble python into code variable.
+  var code = 'pass #TODO Implement backend for \'Set Current Playback Speed\' block\n';
+  return code;
+};

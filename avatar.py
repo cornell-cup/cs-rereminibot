@@ -106,6 +106,8 @@ class Avatar:
         the current expression was not changed.
         """
         
+        if expression_name == self._current_expression:
+            return True
         try:
             self._expressions[expression_name]
             self._current_expression = expression_name

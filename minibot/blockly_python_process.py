@@ -5,6 +5,7 @@
 # import sys
 
 import _thread
+from emotion import *
 
 class BlocklyPythonProcess:
     """ Stores the process which is executing the Blockly / Python script
@@ -18,6 +19,9 @@ class BlocklyPythonProcess:
         self.result = None 
         self.result_lock = _thread.allocate_lock()
         self.BOT_LIB_FUNCS = BOT_LIB_FUNCS
+
+        # MAY NEED TO MOVE SOMEWHERE ELSE LATER
+        self.current_emotion = None
     
     def get_exec_result(self) -> str:
         """ Gets the execution result of the last blockly / python script """
@@ -104,6 +108,10 @@ class BlocklyPythonProcess:
         program = []
         program.append("from scripts." + self.BOT_LIB_FUNCS + " import *\n")
         program.append("import time\n")
+
+        # Inject emotional code
+        init_emotional_system(program)        
+
         # TODO: convert threading after replacing BOT_LIB_FUNCS files
         # program += "from threading import *\n"
         for i in range(len(cmds)):

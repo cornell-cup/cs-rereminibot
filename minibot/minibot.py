@@ -129,6 +129,7 @@ class Minibot:
                 self.handle_errorable_socks(errored_out_socks)
                 self.handle_writable_socks(write_ready_socks)
                 self.handle_readable_socks(read_ready_socks)
+
                 # if basestation exists but is disconnected, stop minibot
                 if self.bs_repr and not self.bs_repr.is_connected():
                     self.basestation_disconnected(self.bs_repr.conn_sock)
