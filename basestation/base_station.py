@@ -291,7 +291,7 @@ class BaseStation:
         # 2nd group is for func name, 3rd group is for args,
         # 4th group is for anything else (additional whitespace,
         # ":" for end of if condition, etc)
-        pattern = r"(.*)bot.(\w*)\((.*)\)(.*)"
+        pattern = r"(.*)bot\.(\w+)\(([^)]*)\)(.*)"
         regex = re.compile(pattern)
         program_lines = script.split('\n')
         parsed_program = []
@@ -299,7 +299,7 @@ class BaseStation:
             match = regex.match(line)
             # match group 2: command, such as move_forward
             # match group 3: argument, such as power like 100
-            if match:
+            while match:
                 command = match.group(2)
                 argument = str(match.group(3))
                 if command in self.blockly_function_map:
@@ -313,10 +313,13 @@ class BaseStation:
                     whitespace = ""
                 parsed_line = whitespace
                 # adding ; for multiline execution in exec
-                parsed_line += func + ";"
-                parsed_program.append(parsed_line + "\n")
-            else:
-                parsed_program.append(line + '\n')  # "normal" Python
+                parsed_line += func
+                parsed_line += match.group(4)
+
+                line = parsed_line
+                match = regex.match(line)
+            
+            parsed_program.append(line + '\n') 
         parsed_program_string = "".join(parsed_program)
         return parsed_program_string
 
