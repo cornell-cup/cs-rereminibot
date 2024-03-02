@@ -98,9 +98,6 @@ class BaseStation:
         # Cards, and therefore will have multiple ip_addresses
         server_address = ("0.0.0.0", 5001)
         
-
-    
-
         
         # checks if vision can see april tag by checking lenth of vision_log
         # self.connections = BaseConnection()
