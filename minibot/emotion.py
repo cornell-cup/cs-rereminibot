@@ -2,6 +2,7 @@ def init_emotional_system(program):
     program.append("import emotion\n")
 
     program.append("emotion_repo = {}\n")
+    program.append("added_emotions = {}\n")
     program.append("current_emotion = None\n")
 
     program.append("devices_emotional_status = {}\n")
