@@ -5,6 +5,8 @@ from matplotlib import pyplot as plt
 
 import time
 
+import json
+
 MIN_ANIAMTION_DURATION = 4
 
 def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_count : int):
@@ -28,52 +30,56 @@ def run_demo():
     add_expression(demo_ava, "roll", "sprites/Eyes_Roll.png", 30) 
     add_expression(demo_ava, "brow_raise", "sprites/Eyes_Eyebrow_Raise.png", 30)
     
-    print("Loaded the following expressions:")
-    for expression in demo_ava.get_expression_names():
-        print(" - ", expression)
+    file = open("expressions.json")
+    json.dump(demo_ava._expressions, file)
+    file.close()
 
-    print("Playback speed is currently at " + str(demo_ava._current_playback_speed))
-    print("")
+#     print("Loaded the following expressions:")
+#     for expression in demo_ava.get_expression_names():
+#         print(" - ", expression)
 
-    while True:
-        user_input = input("Enter expression, a number for new playback speed, or q to quit:")
+#     print("Playback speed is currently at " + str(demo_ava._current_playback_speed))
+#     print("")
 
-        user_input = user_input.strip()
+#     while True:
+#         user_input = input("Enter expression, a number for new playback speed, or q to quit:")
 
-        if user_input == "q":
-            break
+#         user_input = user_input.strip()
 
-        if len(user_input) == 0:
-            continue
+#         if user_input == "q":
+#             break
 
-        if user_input.isnumeric() or (user_input[0] == '-' and user_input[1:].isnumeric()):
-            demo_ava._current_playback_speed = float(user_input)
-            print("Current Playback Speed Set to " + user_input)
-            continue
+#         if len(user_input) == 0:
+#             continue
 
-        if demo_ava.set_current_expression(user_input):
-            demo_ava.update()
-            frame = demo_ava.get_current_display()
-            img_fig = plt.imshow(frame)
+#         if user_input.isnumeric() or (user_input[0] == '-' and user_input[1:].isnumeric()):
+#             demo_ava._current_playback_speed = float(user_input)
+#             print("Current Playback Speed Set to " + user_input)
+#             continue
 
-            if demo_ava._current_playback_speed == 0:
-                animation_duration = MIN_ANIAMTION_DURATION
-            else:
-                two_cycles_duration = 2 * demo_ava.get_current_frame_count() / abs(demo_ava._current_playback_speed)
-                animation_duration = max(MIN_ANIAMTION_DURATION, two_cycles_duration)
+#         if demo_ava.set_current_expression(user_input):
+#             demo_ava.update()
+#             frame = demo_ava.get_current_display()
+#             img_fig = plt.imshow(frame)
 
-            start_time = time.time()
+#             if demo_ava._current_playback_speed == 0:
+#                 animation_duration = MIN_ANIAMTION_DURATION
+#             else:
+#                 two_cycles_duration = 2 * demo_ava.get_current_frame_count() / abs(demo_ava._current_playback_speed)
+#                 animation_duration = max(MIN_ANIAMTION_DURATION, two_cycles_duration)
 
-            while time.time() - start_time < animation_duration:
-                demo_ava.update()
-                frame = demo_ava.get_current_display()
-                img_fig.set_data(frame)
-                plt.pause(0.01)
-            plt.close()
-        else:
-            print("Expression could not be found! Try another expression!")
+#             start_time = time.time()
 
-    print("Demo Complete!")
+#             while time.time() - start_time < animation_duration:
+#                 demo_ava.update()
+#                 frame = demo_ava.get_current_display()
+#                 img_fig.set_data(frame)
+#                 plt.pause(0.01)
+#             plt.close()
+#         else:
+#             print("Expression could not be found! Try another expression!")
+
+#     print("Demo Complete!")
 
 if __name__ == "__main__":
     run_demo()

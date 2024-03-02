@@ -577,7 +577,7 @@ var miniblocks = {
 
   create_emotion: {
     type: "create_emotion",
-    message0: "Create Emotion named %1 %2 which does %3",
+    message0: "Create Emotion named %1 %2\n which does %3",
     args0: [
       {
         type: "input_value",
@@ -594,8 +594,114 @@ var miniblocks = {
     ],
     previousStatement: null,
     nextStatement: null,
-    colour: 40,
+    colour: 30,
     tooltip: "Creates an Emotion which then can be added to a robot.",
     helpUrl: ""
-  }
+  },
+
+  add_emotion: {
+    type: "add_emotion",
+    message0: "Add Emotion named %1\nwith priority %2",
+    args0: [
+      {
+        type: "input_value",
+        name: "emotion_name",
+        check: "String",
+      },
+      {
+        type: "input_value",
+        name: "emotion_priority",
+        check: "Number",
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 30,
+    tooltip: "Adds an Emotion to the robot with the specified priority.",
+    helpUrl: ""
+  },
+
+  add_required_device: {
+    type: "add_required_device",
+    message0: "Add required device %1 to emotion %2",
+    args0: [
+      {
+        type: "field_dropdown",
+        name: "device_name",
+        options: [
+          ["wheels", "wheels"],
+          ["screen", "display"],
+          ["speaker", "speaker"]
+        ]
+      },
+      {
+        type: "input_value",
+        name: "emotion_name",
+        check: "String",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 20,
+    tooltip: "Adds a required device to an emotion (used to determine whether an emotion is available to be run).",
+    helpUrl: ""
+  },
+
+  set_device_emotion_status: {
+    type: "set_device_emotion_status",
+    message0: "Set whether device %1 %2\nis available for emotions to %3",
+    args0: [
+      {
+        type: "field_dropdown",
+        name: "device_name",
+        options: [
+          ["wheels", "wheels"],
+          ["screen", "display"],
+          ["speaker", "speaker"]
+        ]
+      },
+      {
+        type: "input_dummy"
+      },
+      {
+        type: "input_value",
+        name: "device_status",
+        check: "Boolean",
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 20,
+    tooltip: "Specifies whether a device should or should not be used by emotions.",
+    helpUrl: ""
+  },
+
+  set_emotion_if_possible: {
+    type: "set_emotion_if_possible",
+    message0: "Try to set emotion to %1",
+    args0: [
+      {
+        type: "input_value",
+        name: "emotion_name",
+        check: "String",
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 30,
+    tooltip: "Sets the robot's emotion to the emotion with the specified name if:\n" + 
+              "1) the emotion has been added to the robot, and\n" + 
+              "2) the emotion is higher priority than the currently running emotion.",
+    helpUrl: ""
+  },
+
+  process_current_emotion: {
+    type: "process_current_emotion",
+    message0: "Emote",
+    previousStatement: null,
+    nextStatement: null,
+    colour: 30,
+    tooltip: "Runs the code associated with the current emotion.",
+    helpUrl: ""
+  },
 };
