@@ -444,9 +444,13 @@ Blockly.Python['create_emotion'] = function(block) {
   var emotion_action_steps = Blockly.Python.statementToCode(block, 'emotion_action_steps');
 
   // TODO: Assemble python into code variable.
-  var code = 'emotion_repo[\"' + emotion_name + '\"] = Emotion(' + emotion_name + ',' + ')' 
-  'name=' + emotion_name + '\n' + 
-  'steps=\n' + emotion_action_steps;
+  var processed_eas = emotion_action_steps.substring(0,emotion_action_steps.length-1);
+  processed_eas = processed_eas.replaceAll("\n", ",");
+  processed_eas = processed_eas.replaceAll("\t", "");
+
+  var code = 'emotion_repo[' + emotion_name + '] = Emotion(' + emotion_name + ',';
+  code += 'lambda:(' + processed_eas + ')';
+  code += ')';
   return code;
 };
 
@@ -476,7 +480,7 @@ Blockly.Python['add_required_device'] = function(block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'pass #TODO Implement backend for \'Add Required Device\' block\n';
+  var code = 'emotion_repo[\"' + emotion_name + '\"].add_required_device(\"' + dropdown_device_name + '\")';
   return code;
 };
 

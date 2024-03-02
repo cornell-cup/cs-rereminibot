@@ -448,12 +448,13 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    if args.is_simulation and args.comm_mode == 1:
+    if args.is_simulation: # and args.comm_mode == 1:
         import scripts.ece_dummy_ops as ece
         BOT_LIB_FUNCS = "ece_dummy_ops"
-    elif args.is_simulation and args.comm_mode == 2:
-        import scripts.ece_dummy_ops2 as ece
-        BOT_LIB_FUNCS = "ece_dummy_ops2"
+        print("Using Port", args.port_number)
+    #elif args.is_simulation and args.comm_mode == 2:
+        # import scripts.ece_dummy_ops2 as ece
+        # BOT_LIB_FUNCS = "ece_dummy_ops2"
     elif args.comm_mode == 1:
         import scripts.pi_arduino as ece
         BOT_LIB_FUNCS = "pi_arduino"

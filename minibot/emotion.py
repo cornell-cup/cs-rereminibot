@@ -15,7 +15,7 @@ class Emotion:
     Represents an emotion that can be added to and run by an XRP bot.
     """
 
-    def __init__(self, name : str, action_steps : function):
+    def __init__(self, name : str, action_steps):
         self._name = name
         self.required_devices = []
         self.action_steps = action_steps
