@@ -17,6 +17,7 @@ class Spritesheet:
         self._frame_width = frame_width
         self._frame_height = frame_height
         self._frame_count = frame_count
+        self._image_src = src
 
         num_frames_h = int(self._full_spriteheet.width / frame_width)
         num_frames_v = int(self._full_spriteheet.height / frame_height)
