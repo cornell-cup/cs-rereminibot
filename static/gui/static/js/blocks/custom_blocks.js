@@ -465,7 +465,7 @@ Blockly.Python['add_emotion'] = function (block) {
   var emotion_priority = Blockly.Python.valueToCode(block, 'emotion_priority', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'added_emotion[\"' + emotion_name + '\"] = (emotion_repo[\"' + emotion_name + '\"],' + emotion_priority + ')';
+  var code = 'added_emotions[' + emotion_name + '] = ' + emotion_priority + '\n';
   return code;
 };
 
@@ -509,8 +509,12 @@ Blockly.Python['set_emotion_if_possible'] = function (block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'pass #TODO Implement backend for \'Set Emotion If Possible\' block\n';
-  //var code = 'if \"' + emotion_name + '\" in added_emotion\n\tif current_emotion != None: \n\t\tif current_emotion[1] > added_emotion[\"' + emotion_name + '\"][1]:\n\t\t\tcurrent_emotion = added_emotion[\"' + emotion_name + '\"]\n\telse: \n\t\tcurrent_emotion = added_emotion[\"' + emotion_name + '\"]';
+  var code = 'if ' + emotion_name + ' in added_emotions:\n';
+     code += '    if current_emotion != None: \n';
+     code += '        if added_emotions[' + emotion_name + '] > added_emotions[current_emotion]:\n';
+     code += '            current_emotion = ' + emotion_name + '\n';
+     code += '    else:\n';
+     code += '        current_emotion = ' + emotion_name + '\n';
   return code;
 };
 
@@ -522,8 +526,9 @@ Blockly.Blocks['process_current_emotion'] = {
 
 Blockly.Python['process_current_emotion'] = function (block) {
   // TODO: Assemble python into code variable.
-  var code = 'if current_emotion is not None and current_emotion.check_devices():\n' +
-    '  current_emotion.process_emotion()';
+  var code = 'if current_emotion is not None:\n';
+     code += '    if check_devices(current_emotion, ...):\n';
+     code += '        emotion_repo[current_emotion].process_emotion()'; 
   return code;
 };
 

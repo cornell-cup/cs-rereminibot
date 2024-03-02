@@ -10,6 +10,11 @@ def init_emotional_system(program):
     program.append("devices_emotional_status[\"display\"] = True\n")
     program.append("devices_emotional_status[\"speaker\"] = True\n")
 
+
+def check_devices(emotion_name, emotion_repo, device_statuses):
+    pass
+    
+
 class Emotion:
     """
     Represents an emotion that can be added to and run by an XRP bot.
