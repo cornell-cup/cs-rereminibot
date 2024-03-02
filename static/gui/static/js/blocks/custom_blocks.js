@@ -434,17 +434,17 @@ Blockly.Python['sees_color'] = function (block) {
 // ============= EMOTIONAL SUBSYSTEM BLOCKS ============== //
 
 Blockly.Blocks['create_emotion'] = {
-  init: function (){
+  init: function () {
     this.jsonInit(miniblocks.create_emotion)
   }
 };
 
-Blockly.Python['create_emotion'] = function(block) { 
+Blockly.Python['create_emotion'] = function (block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
   var emotion_action_steps = Blockly.Python.statementToCode(block, 'emotion_action_steps');
 
   // TODO: Assemble python into code variable.
-  var processed_eas = emotion_action_steps.substring(0,emotion_action_steps.length-1);
+  var processed_eas = emotion_action_steps.substring(0, emotion_action_steps.length - 1);
   processed_eas = processed_eas.replaceAll("\n", ",");
   processed_eas = processed_eas.replaceAll("\t", "");
 
@@ -455,27 +455,27 @@ Blockly.Python['create_emotion'] = function(block) {
 };
 
 Blockly.Blocks['add_emotion'] = {
-  init: function (){
+  init: function () {
     this.jsonInit(miniblocks.add_emotion)
   }
 };
 
-Blockly.Python['add_emotion'] = function(block) { 
+Blockly.Python['add_emotion'] = function (block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
   var emotion_priority = Blockly.Python.valueToCode(block, 'emotion_priority', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'pass #TODO Implement backend for \'Add Emotion\' block\n';
+  var code = 'added_emotion[\"' + emotion_name + '\"] = (emotion_repo[\"' + emotion_name + '\"],' + emotion_priority + ')';
   return code;
 };
 
 Blockly.Blocks['add_required_device'] = {
-  init: function (){
+  init: function () {
     this.jsonInit(miniblocks.add_required_device)
   }
 };
 
-Blockly.Python['add_required_device'] = function(block) {
+Blockly.Python['add_required_device'] = function (block) {
   var dropdown_device_name = block.getFieldValue('device_name');
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
 
@@ -485,12 +485,12 @@ Blockly.Python['add_required_device'] = function(block) {
 };
 
 Blockly.Blocks['set_device_emotion_status'] = {
-  init: function (){
+  init: function () {
     this.jsonInit(miniblocks.set_device_emotion_status)
   }
 };
 
-Blockly.Python['set_device_emotion_status'] = function(block) {
+Blockly.Python['set_device_emotion_status'] = function (block) {
   var dropdown_device_name = block.getFieldValue('device_name');
   var device_status = Blockly.Python.valueToCode(block, 'device_status', Blockly.Python.ORDER_NONE);
 
@@ -500,41 +500,42 @@ Blockly.Python['set_device_emotion_status'] = function(block) {
 };
 
 Blockly.Blocks['set_emotion_if_possible'] = {
-  init: function (){
+  init: function () {
     this.jsonInit(miniblocks.set_emotion_if_possible)
   }
 };
 
-Blockly.Python['set_emotion_if_possible'] = function(block) {
+Blockly.Python['set_emotion_if_possible'] = function (block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
   var code = 'pass #TODO Implement backend for \'Set Emotion If Possible\' block\n';
+  //var code = 'if \"' + emotion_name + '\" in added_emotion\n\tif current_emotion != None: \n\t\tif current_emotion[1] > added_emotion[\"' + emotion_name + '\"][1]:\n\t\t\tcurrent_emotion = added_emotion[\"' + emotion_name + '\"]\n\telse: \n\t\tcurrent_emotion = added_emotion[\"' + emotion_name + '\"]';
   return code;
 };
 
 Blockly.Blocks['process_current_emotion'] = {
-  init: function (){
+  init: function () {
     this.jsonInit(miniblocks.process_current_emotion)
   }
 };
 
-Blockly.Python['process_current_emotion'] = function(block) {
-    // TODO: Assemble python into code variable.
-  var code = 'if current_emotion is not None and current_emotion.check_devices():\n' + 
-              '  current_emotion.process_emotion()';
+Blockly.Python['process_current_emotion'] = function (block) {
+  // TODO: Assemble python into code variable.
+  var code = 'if current_emotion is not None and current_emotion.check_devices():\n' +
+    '  current_emotion.process_emotion()';
   return code;
 };
 
 // ============= FACIAL ANIMATION BLOCKS ============== //
 
 Blockly.Blocks['set_current_expression'] = {
-  init: function (){
+  init: function () {
     this.jsonInit(miniblocks.set_current_expression)
   }
 };
 
-Blockly.Python['set_current_expression'] = function(block) {
+Blockly.Python['set_current_expression'] = function (block) {
   var expression_name = Blockly.Python.valueToCode(block, 'expression_name', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
@@ -543,12 +544,12 @@ Blockly.Python['set_current_expression'] = function(block) {
 };
 
 Blockly.Blocks['set_current_playback_speed'] = {
-  init: function (){
+  init: function () {
     this.jsonInit(miniblocks.set_current_expression)
   }
 };
 
-Blockly.Python['set_current_playback_speed'] = function(block) {
+Blockly.Python['set_current_playback_speed'] = function (block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'new_speed', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
