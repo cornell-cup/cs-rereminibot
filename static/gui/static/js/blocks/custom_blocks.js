@@ -526,8 +526,8 @@ Blockly.Blocks['process_current_emotion'] = {
 
 Blockly.Python['process_current_emotion'] = function (block) {
   // TODO: Assemble python into code variable.
-  var code = 'if current_emotion is not None:\n';
-     code += '    if check_devices(current_emotion, ...):\n';
+  var code = 'if current_emotion is not None and current_emotion in emotion_repo:\n';
+     code += '    if emotion_repo[current_emotion].check_devices(devices_emotional_status):\n';
      code += '        emotion_repo[current_emotion].process_emotion()'; 
   return code;
 };
