@@ -450,7 +450,7 @@ Blockly.Python['create_emotion'] = function(block) {
 
   var code = 'emotion_repo[' + emotion_name + '] = Emotion(' + emotion_name + ',';
   code += 'lambda:(' + processed_eas + ')';
-  code += ')';
+  code += ')\n';
   return code;
 };
 
@@ -480,7 +480,7 @@ Blockly.Python['add_required_device'] = function(block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'emotion_repo[\"' + emotion_name + '\"].add_required_device(\"' + dropdown_device_name + '\")';
+  var code = 'emotion_repo[' + emotion_name + '].add_required_device(\"' + dropdown_device_name + '\")\n';
   return code;
 };
 
@@ -492,10 +492,10 @@ Blockly.Blocks['set_device_emotion_status'] = {
 
 Blockly.Python['set_device_emotion_status'] = function(block) {
   var dropdown_device_name = block.getFieldValue('device_name');
-  var emotion_name = Blockly.Python.valueToCode(block, 'device_status', Blockly.Python.ORDER_NONE);
+  var device_status = Blockly.Python.valueToCode(block, 'device_status', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'pass #TODO Implement backend for \'Set Device Emotion Status\' block\n';
+  var code = 'devices_emotional_status[\"' + dropdown_device_name + '\"] = ' + device_status + '\n';
   return code;
 };
 
