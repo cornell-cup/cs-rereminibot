@@ -59,24 +59,31 @@ class BaseStation:
         self.reuseport = reuseport
 
         self.blockly_function_map = {
-            "move_forward": "fwd",         "move_backward": "back",
-            "move_forward_distance": "fwd_dst",         "move_backward_distance": "back_dst",
-            "move_to": "move_to",
-            "wait": "time.sleep",          "stop": "stop",
-            "set_wheel_power":             "ECE_wheel_pwr",
-            "turn_clockwise": "right",     "turn_counter_clockwise": "left",
-            "turn_clockwise_angle": "right_angle",     "turn_counter_clockwise_angle": "left_angle",
-            "turn_to": "turn_to",
-            "move_servo": "move_servo",    "read_ultrasonic": "read_ultrasonic",
-
+            "move_forward": "drivetrain.set_effort(1, 1)",
+            "move_backward": "drivetrain.set_effort(-1, -1)",
+            "turn_clockwise": "drivetrain.set_effort(1, 0)",
+            "turn_counter_clockwise": "drivetrain.set_effort(0, 1)",
+            # "move_forward_distance": "fwd_dst",
+            # "move_backward_distance": "back_dst",
+            # "move_to": "move_to",
+            "wait": "time.sleep",        
+            "stop": "drivetrain.set_effort(0, 0)"
+            # "set_wheel_power": "ECE_wheel_pwr",
+            # "turn_clockwise": "right",     
+            # "turn_counter_clockwise": "left",
+            # "turn_clockwise_angle": "right_angle",     
+            # "turn_counter_clockwise_angle": "left_angle",
+            # "turn_to": "turn_to",
+            # "move_servo": "move_servo",    
+            # "read_ultrasonic": "read_ultrasonic",
         }
         # functions that run continuously, and hence need to be started
         # in a new thread on the Minibot otherwise the Minibot will get
         # stuck in an infinite loop and will be unable to receive
         # other commands
-        self.blockly_threaded_functions = [
-            "fwd", "back", "right", "left", "stop", "ECE_wheel_pwr"
-        ]
+        # self.blockly_threaded_functions = [
+        #     "fwd", "back", "right", "left", "stop", "ECE_wheel_pwr"
+        # ]
 
         # This socket is used to listen for new incoming Minibot broadcasts
         # The Minibot broadcast will allow us to learn the Minibot's ipaddress
@@ -98,6 +105,9 @@ class BaseStation:
         # Cards, and therefore will have multiple ip_addresses
         server_address = ("0.0.0.0", 5001)
         
+
+    
+
         
         # checks if vision can see april tag by checking lenth of vision_log
         # self.connections = BaseConnection()
@@ -256,6 +266,8 @@ class BaseStation:
         # reset the previous script_exec_result
         bot.script_exec_result = None
         parsed_program_string = self.parse_program(script)
+        print("parsed program string")
+        print(parsed_program_string)
         # Now actually send to the bot
         bot.sendKV("SCRIPTS", parsed_program_string)
 
@@ -285,21 +297,24 @@ class BaseStation:
         parsed_program = []
         for line in program_lines:
             match = regex.match(line)
+            # match group 2: command, such as move_forward
+            # match group 3: argument, such as power like 100
             if match:
-                if match.group(2) in self.blockly_function_map:
-                    func = self.blockly_function_map[match.group(2)]
+                command = match.group(2)
+                argument = str(match.group(3))
+                if command in self.blockly_function_map:
+                    func = self.blockly_function_map[command]
                 else:
-                    func = match.group(2)
-                args = match.group(3)
+                    func = command
+                if command == "wait":
+                    func = func + "(" + argument + ")"
                 whitespace = match.group(1)
                 if not whitespace:
                     whitespace = ""
                 parsed_line = whitespace
-                if func in self.blockly_threaded_functions:
-                    parsed_line += f"Thread(target={func}, args=[{args}]).start()\n"
-                else:
-                    parsed_line += f"{func}({args}){match.group(4)}\n"
-                parsed_program.append(parsed_line)
+                # adding ; for multiline execution in exec
+                parsed_line += func + ";"
+                parsed_program.append(parsed_line + "\n")
             else:
                 parsed_program.append(line + '\n')  # "normal" Python
         parsed_program_string = "".join(parsed_program)
