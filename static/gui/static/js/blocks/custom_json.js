@@ -691,17 +691,63 @@ var miniblocks = {
     colour: 30,
     tooltip: "Sets the robot's emotion to the emotion with the specified name if:\n" + 
               "1) the emotion has been added to the robot, and\n" + 
-              "2) the emotion is higher priority than the currently running emotion.",
+              "2) the emotion is higher priority than the currently running emotion.\n" + 
+              "Note: Use clear emotion first in order to change to a lower priority emotion.",
+    helpUrl: ""
+  },
+
+  clear_current_emotion: {
+    type: "clear_current_emotion",
+    message0: "Clear current emotion",
+    previousStatement: null,
+    nextStatement: null,
+    colour: 30,
+    tooltip: "Clears the robots current emotion.",
     helpUrl: ""
   },
 
   process_current_emotion: {
     type: "process_current_emotion",
-    message0: "Emote",
+    message0: "Try to Emote",
     previousStatement: null,
     nextStatement: null,
     colour: 30,
-    tooltip: "Runs the code associated with the current emotion.",
+    tooltip: "Runs the code associated with the current emotion, if all required devices are available.",
+    helpUrl: ""
+  },
+
+  set_current_expression: {
+    type: "set_current_expression",
+    message0: "Set current expression to %1",
+    args0: [
+      {
+        type: "input_value",
+        name: "expression_name",
+        check: "String",
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 60,
+    tooltip: "Sets the current expression to one with the specified name, if one exists.",
+    helpUrl: ""
+  },
+
+  set_current_playback_speed: {
+    type: "set_current_playback_speed",
+    message0: "Set current playback speed to %1",
+    args0: [
+      {
+        type: "input_value",
+        name: "new_speed",
+        check: "Number",
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 60,
+    tooltip: "Sets the current playback speed in frames per second to the specified value.\n" + 
+             "Note: Negative values will play the animation backwards.",
     helpUrl: ""
   },
 };

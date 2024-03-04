@@ -517,6 +517,18 @@ Blockly.Python['set_emotion_if_possible'] = function (block) {
   return code;
 };
 
+Blockly.Blocks['clear_current_emotion'] = {
+  init: function () {
+    this.jsonInit(miniblocks.clear_current_emotion)
+  }
+};
+
+Blockly.Python['clear_current_emotion'] = function (block) {
+  // TODO: Assemble python into code variable.
+  var code = 'current_emotion = None';
+  return code;
+};
+
 Blockly.Blocks['process_current_emotion'] = {
   init: function () {
     this.jsonInit(miniblocks.process_current_emotion)
@@ -554,7 +566,7 @@ Blockly.Python['set_current_expression'] = function (block) {
 
 Blockly.Blocks['set_current_playback_speed'] = {
   init: function () {
-    this.jsonInit(miniblocks.set_current_expression)
+    this.jsonInit(miniblocks.set_current_playback_speed)
   }
 };
 
