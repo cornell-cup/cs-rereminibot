@@ -1,12 +1,12 @@
 def init_emotional_system(program):
-    program.append("emotion_repo = {}\n")
-    program.append("added_emotions = {}\n")
-    program.append("current_emotion = None\n")
+    program.append("er = {}\n")
+    program.append("ae = {}\n")
+    program.append("ce = None\n")
 
-    program.append("devices_emotional_status = {}\n")
-    program.append("devices_emotional_status[\"wheels\"] = True\n")
-    program.append("devices_emotional_status[\"display\"] = True\n")
-    program.append("devices_emotional_status[\"speaker\"] = True\n")
+    program.append("des = {}\n")
+    program.append("des[\"wheels\"] = True\n")
+    program.append("des[\"display\"] = True\n")
+    program.append("des[\"speaker\"] = True\n")
 
 def create_action_steps_function(statements):
     def action_function():
@@ -24,10 +24,10 @@ class Emotion:
         self.required_devices = []
         self.action_steps = create_action_steps_function(action_steps)
 
-    def add_required_device(self, device : str):
+    def add_rd(self, device : str):
         self.required_devices.append(device)
 
-    def process_emotion(self):
+    def pe(self):
         self.action_steps()
 
     def check_devices(self, device_statuses):

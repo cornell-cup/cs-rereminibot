@@ -447,7 +447,7 @@ Blockly.Python['create_emotion'] = function (block) {
   var processed_eas = emotion_action_steps.substring(2, emotion_action_steps.length - 1).replaceAll("\n  ", "\\n"); 
 
   // TODO: Assemble python into code variable.
-  var code =  'emotion_repo[' + emotion_name + '] = Emotion(' + emotion_name + ',';
+  var code =  'er[' + emotion_name + '] = Emotion(' + emotion_name + ',';
   code += '\"' + processed_eas + '\"';
   code += ')\n';
   return code;
@@ -464,7 +464,7 @@ Blockly.Python['add_emotion'] = function (block) {
   var emotion_priority = Blockly.Python.valueToCode(block, 'emotion_priority', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'added_emotions[' + emotion_name + '] = ' + emotion_priority + '\n';
+  var code = 'ae[' + emotion_name + '] = ' + emotion_priority + '\n';
   return code;
 };
 
@@ -479,7 +479,7 @@ Blockly.Python['add_required_device'] = function (block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'emotion_repo[' + emotion_name + '].add_required_device(\"' + dropdown_device_name + '\")\n';
+  var code = 'er[' + emotion_name + '].add_rd(\"' + dropdown_device_name + '\")\n';
   return code;
 };
 
@@ -494,7 +494,7 @@ Blockly.Python['set_device_emotion_status'] = function (block) {
   var device_status = Blockly.Python.valueToCode(block, 'device_status', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'devices_emotional_status[\"' + dropdown_device_name + '\"] = ' + device_status + '\n';
+  var code = 'des[\"' + dropdown_device_name + '\"] = ' + device_status + '\n';
   return code;
 };
 
@@ -508,12 +508,12 @@ Blockly.Python['set_emotion_if_possible'] = function (block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'if ' + emotion_name + ' in added_emotions:\n';
-     code += '    if current_emotion != None: \n';
-     code += '        if added_emotions[' + emotion_name + '] > added_emotions[current_emotion]:\n';
-     code += '            current_emotion = ' + emotion_name + '\n';
+  var code = 'if ' + emotion_name + ' in ae:\n';
+     code += '    if ce != None: \n';
+     code += '        if ae[' + emotion_name + '] > ae[ce]:\n';
+     code += '            ce = ' + emotion_name + '\n';
      code += '    else:\n';
-     code += '        current_emotion = ' + emotion_name + '\n';
+     code += '        ce = ' + emotion_name + '\n';
   return code;
 };
 
@@ -525,7 +525,7 @@ Blockly.Blocks['clear_current_emotion'] = {
 
 Blockly.Python['clear_current_emotion'] = function (block) {
   // TODO: Assemble python into code variable.
-  var code = 'current_emotion = None';
+  var code = 'ce = None';
   return code;
 };
 
@@ -537,13 +537,13 @@ Blockly.Blocks['process_current_emotion'] = {
 
 Blockly.Python['process_current_emotion'] = function (block) {
   // TODO: Assemble python into code variable.
-  var code = 'if current_emotion is not None and current_emotion in emotion_repo:\n';
-     code += '    if emotion_repo[current_emotion].check_devices(devices_emotional_status):\n';
+  var code = 'if ce is not None and ce in er:\n';
+     code += '    if er[ce].check_devices(des):\n';
     //  code += '        bot.move_forward(100)\n'
     //  code += '        bot.wait(0.25)\n'
     //  code += '        bot.stop()\n'
     //  code += '        bot.wait(1)\n'
-     code += '        emotion_repo[current_emotion].process_emotion()\n'; 
+     code += '        er[ce].pe()\n'; 
   // var code = "emotion_repo[current_emotion].process_emotion()\n"
   return code;
 };
