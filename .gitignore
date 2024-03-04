@@ -1,1 +1,2 @@
-static\gui\node_modules
+venv/
+/.vscode
