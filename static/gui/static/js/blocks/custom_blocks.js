@@ -560,7 +560,7 @@ Blockly.Python['set_current_expression'] = function (block) {
   var expression_name = Blockly.Python.valueToCode(block, 'expression_name', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'pass #TODO Implement backend for \'Set Current Expression\' block\n';
+  var code = 'pass\n';
   return code;
 };
 
@@ -573,7 +573,7 @@ Blockly.Blocks['clear_current_expression'] = {
 Blockly.Python['clear_current_expression'] = function (block) {
 
   // TODO: Assemble python into code variable.
-  var code = 'pass #TODO Implement backend for \'Clear Current Expression\' block\n';
+  var code = 'pass\n';
   return code;
 };
 
@@ -587,6 +587,6 @@ Blockly.Python['set_current_playback_speed'] = function (block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'new_speed', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'pass #TODO Implement backend for \'Set Current Playback Speed\' block\n';
+  var code = 'pass\n';
   return code;
 };
