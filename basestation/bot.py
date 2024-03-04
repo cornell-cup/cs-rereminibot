@@ -68,6 +68,9 @@ class Bot:
             return
 
         data = f"<<<<{key},{value}>>>>".encode()
+
+        print(data)
+
         # check whether the socket connection is still open
         line = self.try_receive_data(peek=True)
         # If the socket connection is not disconnected

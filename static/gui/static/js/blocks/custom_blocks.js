@@ -444,7 +444,7 @@ Blockly.Python['create_emotion'] = function (block) {
   var emotion_action_steps = Blockly.Python.statementToCode(block, 'emotion_action_steps');
 
   // TODO: Assemble python into code variable.
-  var processed_eas = emotion_action_steps.substring(0, emotion_action_steps.length - 1).replaceAll("\n", ";"); 
+  var processed_eas = emotion_action_steps.substring(2, emotion_action_steps.length - 1).replaceAll("\n  ", "\\n"); 
 
   // TODO: Assemble python into code variable.
   var code =  'emotion_repo[' + emotion_name + '] = Emotion(' + emotion_name + ',';
@@ -539,11 +539,11 @@ Blockly.Python['process_current_emotion'] = function (block) {
   // TODO: Assemble python into code variable.
   var code = 'if current_emotion is not None and current_emotion in emotion_repo:\n';
      code += '    if emotion_repo[current_emotion].check_devices(devices_emotional_status):\n';
-     code += '        bot.move_forward(100)\n'
-     code += '        bot.wait(0.25)\n'
-     code += '        bot.stop()\n'
-     code += '        bot.wait(1)\n'
-  //    code += '        emotion_repo[current_emotion].process_emotion()\n'; 
+    //  code += '        bot.move_forward(100)\n'
+    //  code += '        bot.wait(0.25)\n'
+    //  code += '        bot.stop()\n'
+    //  code += '        bot.wait(1)\n'
+     code += '        emotion_repo[current_emotion].process_emotion()\n'; 
   // var code = "emotion_repo[current_emotion].process_emotion()\n"
   return code;
 };
