@@ -733,6 +733,16 @@ var miniblocks = {
     helpUrl: ""
   },
 
+  clear_current_expression: {
+    type: "clear_current_expression",
+    message0: "Clear current expression",
+    previousStatement: null,
+    nextStatement: null,
+    colour: 60,
+    tooltip: "Clears the current expression, if one is active.",
+    helpUrl: ""
+  },
+
   set_current_playback_speed: {
     type: "set_current_playback_speed",
     message0: "Set current playback speed to %1",

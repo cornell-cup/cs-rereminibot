@@ -564,6 +564,19 @@ Blockly.Python['set_current_expression'] = function (block) {
   return code;
 };
 
+Blockly.Blocks['clear_current_expression'] = {
+  init: function () {
+    this.jsonInit(miniblocks.clear_current_expression)
+  }
+};
+
+Blockly.Python['clear_current_expression'] = function (block) {
+
+  // TODO: Assemble python into code variable.
+  var code = 'pass #TODO Implement backend for \'Clear Current Expression\' block\n';
+  return code;
+};
+
 Blockly.Blocks['set_current_playback_speed'] = {
   init: function () {
     this.jsonInit(miniblocks.set_current_playback_speed)
