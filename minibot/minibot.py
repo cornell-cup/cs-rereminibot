@@ -44,7 +44,8 @@ class Minibot:
         # can immediately rebind if the program is killed and then restarted
         self.broadcast_sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         # can broadcast messages to all
-        # self.broadcast_sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        self.broadcast_sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        self.broadcast_sock.setblocking(False)
 
         # listens for a TCP connection from the basestation
         self.listener_sock = None
@@ -55,15 +56,16 @@ class Minibot:
         # to be (and will almost never be) the empty set
 
         # contains sockets which we are expecting to receive some data on
-        self.readable_socks = set()
+        self.readable_socks = []
         # contains sockets which we want to send some data on
-        self.writable_socks = set()
+        self.writable_socks = []
         # contains sockets that throw errors that we care about and want to
         # react to
-        self.errorable_socks = set()
+        self.errorable_socks = []
         # TODO: All message queues should have a max limit of messages that they
         # store, implement custom class at some point
-        self.writable_sock_message_queue_map = dict()
+        self.writable_sock_message_queue_key = []
+        self.writable_sock_message_queue_value = []
         self.bs_repr = None
         self.sock_lists = [self.readable_socks, self.writable_socks, self.errorable_socks]
 
@@ -90,8 +92,8 @@ class Minibot:
             # errorable_socks so that we are alerted if an error gets thrown by this
             # listener sock.  No need to add the listener sock to writable socks
             # because we won't be writing to this socket, only listening.
-            self.readable_socks.add(self.listener_sock)
-            self.errorable_socks.add(self.listener_sock)
+            self.readable_socks.append(self.listener_sock)
+            self.errorable_socks.append(self.listener_sock)
             while True:
                 # if the listener socket is the only socket alive, we need to
                 # broadcast a message to the basestation to set up a new connection
@@ -147,7 +149,7 @@ class Minibot:
         self.listener_sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         # "" means bind to all addresses on this device.  Port 10000 was
         # randomly chosen as the port to bind to
-        self.listener_sock.bind(("", self.port_number))
+        self.listener_sock.bind(("0.0.0.0", self.port_number))
         # Make socket start listening
         print("Waiting for TCP connection from basestation", flush=True)
         self.listener_sock.listen()
@@ -170,7 +172,8 @@ class Minibot:
         # TODO: timeout error removed from basestation
         # except timeout:
         #     print("Timed out", flush=True)
-        except OSError:
+        except OSError as e:
+            print(e)
             print("Try again", flush=True)
 
         # TODO this security policy is stupid.  We should be doing
@@ -204,18 +207,17 @@ class Minibot:
             if sock is self.listener_sock:
                 connection, base_station_addr = sock.accept()
                 print(
-                    f"Connected to base station with address {base_station_addr}",
-                    flush=True
+                    f"Connected to base station with address {base_station_addr}"
                 )
                 # set to non-blocking reads (when we call connection.recv,
                 # should read whatever is in its buffer and return immediately)
-                connection.setblocking(0)
+                connection.setblocking(False)
                 # initialize basestation repr to the connection sock
                 self.bs_repr = BS_Repr(connection)
                 # we don't need to write anything right now, so don't add to
                 # writable socks
-                self.readable_socks.add(connection)
-                self.errorable_socks.add(connection)
+                self.readable_socks.append(connection)
+                self.errorable_socks.append(connection)
             # If its a connection socket, receive the data and execute the
             # necessary command
             else:
@@ -242,10 +244,11 @@ class Minibot:
         """
 
         for sock in write_ready_socks:
-            message_queue = self.writable_sock_message_queue_map[sock]
+            socket_index = self.socket_key_index(self.writable_sock_message_queue_key, sock)
+            message_queue = self.writable_sock_message_queue_value[socket_index]
             all_messages = "".join(message_queue)
             sock.sendall(all_messages.encode())
-            self.writable_sock_message_queue_map[sock] = deque((), 20, 1)
+            self.writable_sock_message_queue_value[socket_index] = []
             self.writable_socks.remove(sock)
 
     def handle_errorable_socks(self, errored_out_socks):
@@ -329,7 +332,8 @@ class Minibot:
         # threads, our code execution pointer would get stuck in the infinite loop.
         if key == "BOTSTATUS":
             # update status time of the basestation
-            self.bs_repr.update_status_time()
+            if self.bs_repr is not None:
+                self.bs_repr.update_status_time()
             self.sendKV(sock, key, "ACTIVE")
         elif key == "SCRIPT_EXEC_RESULT":
             # getting result of execution and sending it to basestation
@@ -416,13 +420,20 @@ class Minibot:
         pair is encoded as <<<<key, value>>>> when sent to the basestation """
         # we want to write to the socket we received data on, so add
         # it to the writable socks
-        self.writable_socks.add(sock)
+        self.writable_socks.append(sock)
         message = f"<<<<{key},{value}>>>>"
-        if sock in self.writable_sock_message_queue_map:
-            self.writable_sock_message_queue_map[sock].append(message)
+        # if sock in self.writable_sock_message_queue_map:
+        #     self.writable_sock_message_queue_map[sock].append(message)
+        # else:
+        #     self.writable_sock_message_queue_map[sock] = deque((), 20, 1)
+        #     self.writable_sock_message_queue_map[sock].append(message)
+        socket_index = self.socket_key_index(self.writable_sock_message_queue_key, sock)
+        if socket_index != -1:
+            self.writable_sock_message_queue_value[socket_index].append(message)
         else:
-            self.writable_sock_message_queue_map[sock] = deque((), 20, 1)
-            self.writable_sock_message_queue_map[sock].append(message)
+            self.writable_sock_message_queue_key.append(sock)
+            self.writable_sock_message_queue_value.append([])
+            self.writable_sock_message_queue_value[socket_index].append(message)
 
 
     def sigint_handler(self, sig: int, frame: object):
@@ -434,6 +445,12 @@ class Minibot:
         self.broadcast_sock.close()
         sys.exit(0)
 
+    def socket_key_index(self, key_list, socket):
+        """ Finds the index of the socket key in the key_list passed """
+        for i in range(0, len(key_list)):
+            if key_list[i] == socket:
+                return i
+        return -1
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Arguments for Minibot')
