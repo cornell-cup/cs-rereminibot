@@ -104,8 +104,6 @@ class BaseStation:
         # machine, because some machines can have multiple Network Interface
         # Cards, and therefore will have multiple ip_addresses
         server_address = ("0.0.0.0", 5001)
-        
-
     
 
         
@@ -184,7 +182,6 @@ class BaseStation:
         for address in address_data_map:
             # data should consist of "password port_number"
             data_lst = address_data_map[address].split(" ")
-
             if data_lst[0] == request_password:
                 # Tell the minibot that you are the base station
                 self.sock.sendto(response.encode(), address)

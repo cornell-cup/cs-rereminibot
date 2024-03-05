@@ -67,6 +67,7 @@ class BlocklyPythonProcess:
         """
         # script_name = "bot_script.py"
         program = self.process_string(code)
+        program = ''.join(program)
 
         # write the script to a file which we'll execute
         # file_dir is the path to folder this file is in
@@ -81,12 +82,12 @@ class BlocklyPythonProcess:
         # TODO: check if thread is alive
         if self.thread and self.thread_alive:
             self.kill_thread()
-            self.result_lock.acquire(waitflag=1)
+            self.result_lock.acquire()
             self.result = "Another process is running....Killing the process now....." + "Press Run again"
             self.result_lock.release()
             return
         
-        self.result_lock.acquire(waitflag=1)
+        self.result_lock.acquire()
         self.result = ""
         self.result_lock.release()
         
@@ -94,7 +95,7 @@ class BlocklyPythonProcess:
         # don't need to wait for it to terminate and we can kill it
         # whenever we want.
         # self.thread = _thread.start_new_thread(run_script, (script_name,))
-        self.thread = _thread.start_new_thread(exec_script_str, (program,))
+        self.exec_script_str(program)
 
     def process_string(self, value: str) -> [str]:
         """
@@ -121,12 +122,12 @@ class BlocklyPythonProcess:
     
     def exec_script_str(self, program: [str]):
         self.thread_alive = True
-        self.result_lock.acquire(waitflag=0)
+        self.result_lock.acquire()
         try:
-            line = 0
-            while self.thread_stop_flag == False and line < len(program):
-                exec(program[line])
-                line = line + 1
+            if self.thread_stop_flag == False:
+                # try to execute the whole program
+                print(program)
+                exec(program)
             if self.thread_stop_flag:
                 self.result = "Killed by user"
                 self.result_lock.release()
@@ -136,6 +137,7 @@ class BlocklyPythonProcess:
                 self.result = "Successful execution"
         except Exception as exception:
             str_exception = str(type(exception)) + ": " + str(exception)
+            print(str_exception)
             if self.thread_stop_flag:
                 self.result = "Killed by user"
                 self.result_lock.release()
