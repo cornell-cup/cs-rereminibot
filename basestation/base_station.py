@@ -54,6 +54,12 @@ def make_thread_safe(func):
 
 
 class BaseStation:
+    # THESE SHOULD BE CONSISTENT ACROSS THE BASESTATION AND ROBOT
+    START_CMD_TOKEN = "<<<<"
+    END_CMD_TOKEN = ">>>>"
+    SOCKET_BUFFER_SIZE = 1024
+    SOCKET_BUFFER_PADDING = 32
+
     def __init__(self, app_debug=False, reuseport = config.reuseport):
         self.active_bots = {}
         self.reuseport = reuseport
@@ -265,8 +271,38 @@ class BaseStation:
         parsed_program_string = self.parse_program(script)
         print("parsed program string")
         print(parsed_program_string)
+        
         # Now actually send to the bot
-        bot.sendKV("SCRIPTS", parsed_program_string)
+        script_size = len(parsed_program_string.encode("utf-8"))
+        if script_size + \
+           len(BaseStation.START_CMD_TOKEN) + \
+           len(BaseStation.END_CMD_TOKEN) + \
+           len("SCRIPTS,") + BaseStation.SOCKET_BUFFER_PADDING < BaseStation.SOCKET_BUFFER_SIZE:
+            bot.sendKV("SCRIPTS", parsed_program_string)
+        else:
+            # NOTE: "SCRIPT_BEG", "SCRIPT_MID", and "SCRIPT_END" must all have the same
+            # length for this to work correctly
+            chunk_size = BaseStation.SOCKET_BUFFER_SIZE - \
+                                len(BaseStation.START_CMD_TOKEN) - \
+                                len(BaseStation.END_CMD_TOKEN) - \
+                                len("SCRIPT_BEG,") - BaseStation.SOCKET_BUFFER_PADDING
+
+            num_chunks = math.ceil(script_size / chunk_size)
+            print(num_chunks)
+            bot.sendKV("SCRIPT_BEG", parsed_program_string[:chunk_size])
+            print("SCRIPT_BEG:")
+            print(parsed_program_string[:chunk_size])
+            if num_chunks > 2:
+                for i in range(num_chunks - 2):
+                    bot.sendKV("SCRIPT_MID", parsed_program_string[chunk_size*(i+1):chunk_size*(i+2)])
+                    print("SCRIPT_MID:")
+                    print(parsed_program_string[chunk_size*(i+1):chunk_size*(i+2)])
+
+            bot.sendKV("SCRIPT_END", parsed_program_string[chunk_size*(num_chunks-1):])
+            print("SCRIPT_END:")
+            print(parsed_program_string[chunk_size*(num_chunks-1):]) 
+
+            
 
     # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
     #     script = query_params['script_code']

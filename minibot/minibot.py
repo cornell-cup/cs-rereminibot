@@ -69,6 +69,8 @@ class Minibot:
         self.bs_repr = None
         self.sock_lists = [self.readable_socks, self.writable_socks, self.errorable_socks]
 
+        self.long_script_str = ""
+
         self.blockly_python_proc = BlocklyPythonProcess(BOT_LIB_FUNCS)
         
     def main(self):
@@ -137,6 +139,8 @@ class Minibot:
                     self.basestation_disconnected(self.bs_repr.conn_sock)
         except KeyboardInterrupt:
             print("Ctrl-C interrupt!")
+        except ConnectionAbortedError as e:
+            print(e)
         finally:
             self.sigint_handler()
 
@@ -310,6 +314,15 @@ class Minibot:
 
             token_len = len(Minibot.START_CMD_TOKEN)
             key = data_str[start + token_len:comma]
+            if(key == "SCRIPT_BEG"):
+                print("BEG Data:")
+                print(data_str)
+            if(key == "SCRIPT_MID"):
+                print("MID Data:")
+                print(data_str)
+            if(key == "SCRIPT_END"):
+                print("END Data:")
+                print(data_str)
             value = data_str[comma + 1:end]
             # executes command with key,value
             self.execute_command(sock, key, value)
@@ -350,6 +363,21 @@ class Minibot:
             # The script is always named bot_script.py.
             if len(value) > 0:
                 self.blockly_python_proc.spawn_script(value)
+        elif key == "SCRIPT_BEG":
+            print("BEG Value:")
+            print(value)
+            self.script_str = value
+        elif key == "SCRIPT_MID":
+            print("MID Value:")
+            print(value)
+            self.script_str += value
+        elif key == "SCRIPT_END":
+            print("END Value:")
+            print(value)
+            self.script_str += value
+            if(len(self.script_str) > 0):
+                self.blockly_python_proc.spawn_script(self.script_str)
+            self.script_str = ""
         elif key == "WHEELS":
             # print("key WHEELS", flush=True)
             cmds_functions_map = {
