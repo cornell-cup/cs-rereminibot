@@ -70,7 +70,7 @@ class PythonEditor extends React.Component {
         const file = event.target.files[0];
         const reader = new FileReader();
         reader.onload = function (event) {
-            this.props.setPythonCode(nextProps.pythonCode, event.target.result);
+            _this.props.setPythonCode(event.target.result, _this.props.pythonCodeState);
         };
         reader.readAsText(file);
     }
@@ -157,7 +157,7 @@ class PythonEditor extends React.Component {
                     // the server)
                     clearInterval(interval);
                 }
-            }).catch((err) => {
+            }).catch((error) => {
                 clearInterval(interval);
                 if (error.response.data.error_msg.length > 0)
                     window.alert(error.response.data.error_msg);
