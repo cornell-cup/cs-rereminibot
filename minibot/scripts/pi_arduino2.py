@@ -6,7 +6,7 @@ import _thread
 import scripts.message_utils as msglib
 
 # spi = spidev.SpiDev()
-spi = None
+spi = SPI(pi_bus, baudrate=400000)
 
 class TransmitLock():
     # TODO: implement this class with condition variables

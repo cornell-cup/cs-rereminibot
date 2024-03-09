@@ -1,3 +1,4 @@
+from XRPLib.defaults import *
 from blockly_python_process import BlocklyPythonProcess
 from bs_repr import BS_Repr
 
@@ -5,7 +6,8 @@ from collections import deque
 from select import select
 
 from socket import socket, AF_INET, SOCK_STREAM, SOCK_DGRAM
-from socket import SOL_SOCKET, SO_REUSEADDR, SO_BROADCAST
+from socket import SOL_SOCKET, SO_REUSEADDR
+import network
 
 # Micropython imports
 import time
@@ -14,9 +16,9 @@ import _thread
 import sys
 import argparse
 
-# NOTE: Please add "flush=True" to all print statements so that our test
-# harness (test_minibot.py) can pipe the stdout output, and use it
-# determine the correctness of the tests
+# NOTE: "flush=True" was removed from all print statements as a temporary
+# solution to how flush is not present in MicroPython. Additional configs
+# will possibly be added to ensure that print can be used for testing.
 
 class Minibot:
     """ Represents a minibot.  Handles all communication with the basestation
@@ -38,13 +40,24 @@ class Minibot:
     END_CMD_TOKEN = ">>>>"
 
     def __init__(self, port_number: int):
+        # Set up WiFi connection
+        sta_if = network.WLAN(network.STA_IF)
+        sta_if.active(True)
+        sta_if.connect("CornellCup-Web", "disneyworld!")
+
+        # Wait for connection to be established
+        while not sta_if.isconnected():
+            pass
+
+        print("Connected to WiFi")
+
         # Create a UDP socket.  We want to establish a TCP (reliable) connection
         # between the basestation and the
         self.broadcast_sock = socket(AF_INET, SOCK_DGRAM)
         # can immediately rebind if the program is killed and then restarted
         self.broadcast_sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         # can broadcast messages to all
-        self.broadcast_sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        # self.broadcast_sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
         self.broadcast_sock.setblocking(False)
 
         # listens for a TCP connection from the basestation
@@ -64,6 +77,9 @@ class Minibot:
         self.errorable_socks = []
         # TODO: All message queues should have a max limit of messages that they
         # store, implement custom class at some point
+        # self.writable_sock_message_queue_map = dict()
+        # replace map with key and value lists, as sockets are not hashable
+        # map key to value using the same index in both lists
         self.writable_sock_message_queue_key = []
         self.writable_sock_message_queue_value = []
         self.bs_repr = None
@@ -79,6 +95,9 @@ class Minibot:
         connects/reconnects to the basestation if there is no connection.
         """
 
+        # Couldn't find an equivalent for sock.fileno()
+        # select would not cause an error if there is an inactive socket
+        # so there is no need to remove closed socket through this operation
         # def remove_closed_sockets(SOCKET_LIST):
         #     sockets = SOCKET_LIST.copy()
         #     for sock in sockets:
@@ -103,11 +122,9 @@ class Minibot:
                 if len(self.readable_socks) == 1:
                     self.broadcast_to_base_station()
                     
-                # Remove removed_closed_sockets temporarily as it doesn't seem like it 
-                # will cause an error with select
-                #Remove all closed sockets to prevent select errors. Note: not sure
-                #whether to perform this before or after checking whether reconnection
-                #is necessary.
+                # Remove all closed sockets to prevent select errors. Note: not sure
+                # whether to perform this before or after checking whether reconnection
+                # is necessary.
                 # remove_closed_sockets(self.readable_socks)
                 # remove_closed_sockets(self.writable_socks)
                 # remove_closed_sockets(self.errorable_socks)
@@ -139,10 +156,10 @@ class Minibot:
                     self.basestation_disconnected(self.bs_repr.conn_sock)
         except KeyboardInterrupt:
             print("Ctrl-C interrupt!")
-        except ConnectionAbortedError as e:
-            print(e)
-        finally:
             self.sigint_handler()
+        except Exception as e: #TODO: Possibly remove for final version
+             print(e)
+    
 
     def create_listener_sock(self):
         """ Creates a socket that listens for TCP connections from the 
@@ -155,15 +172,16 @@ class Minibot:
         # randomly chosen as the port to bind to
         self.listener_sock.bind(("0.0.0.0", self.port_number))
         # Make socket start listening
-        print("Waiting for TCP connection from basestation", flush=True)
+        print("Waiting for TCP connection from basestation")
         self.listener_sock.listen()
+        self.listener_sock.setblocking(False)
 
     def broadcast_to_base_station(self):
         """ Establishes a TCP connection to the basestation.  This connection is 
         used to receive commands from the basestation, and send replies if 
         necessary.
         """
-        print("Broadcasting message to basestation.", flush=True)
+        print("Broadcasting message to basestation.")
         # try connecting to the basestation every 2 sec until connection is made
         self.broadcast_sock.settimeout(0.2)
         data = ""
@@ -178,7 +196,7 @@ class Minibot:
         #     print("Timed out", flush=True)
         except OSError as e:
             print(e)
-            print("Try again", flush=True)
+            print("Try again")
 
         # TODO this security policy is stupid.  We should be doing
         # authentication after we create the TCP connection and also we should
@@ -188,12 +206,12 @@ class Minibot:
         # Minibot system.
         if data:
             if data.decode('UTF-8') == 'i_am_the_base_station':
-                print("Basestation replied!", flush=True)
+                print("Basestation replied!")
             else:
                 # if verification fails we just print but don't do anything
                 # about the fact that verification failed.  Please fix when
                 # rewriting the security policy
-                print('Verification failed.', flush=True)
+                print('Verification failed.')
 
     def handle_readable_socks(self, read_ready_socks):
         """ Reads from each of the sockets that have received some data.  
@@ -265,7 +283,7 @@ class Minibot:
             errored_out_socks is a Micropython builtin list of sockets.
         """
         for sock in errored_out_socks:
-            print(f"Socket errored out!!!! {sock}", flush=True)
+            print(f"Socket errored out!!!! {sock}")
             # TODO handle more conditions instead of just
             # closing the socket
             self.close_sock(sock)
@@ -286,8 +304,9 @@ class Minibot:
         2. Closes the socket that the Minibot has been using, 
            basestation  
         """
-        print("Basestation Disconnected", flush=True)
-        _thread.start_new_thread(ece.stop, ())
+        print("Basestation Disconnected")
+        # _thread.start_new_thread(ece.stop, ())
+        drivetrain.set_effort(0, 0)
         self.close_sock(basestation_sock)
         self.bs_repr = None
 
@@ -379,22 +398,24 @@ class Minibot:
                 self.blockly_python_proc.spawn_script(self.script_str)
             self.script_str = ""
         elif key == "WHEELS":
-            # print("key WHEELS", flush=True)
+            print("key WHEELS")
             cmds_functions_map = {
-                "forward": ece.fwd,
-                "backward": ece.back,
-                "left": ece.left,
-                "right": ece.right,
+                "forward": (1, 1),
+                "backward": (-1, -1),
+                "left": (0, 1),
+                "right": (1, 0),
             }
             if value in cmds_functions_map:
                 # TODO use the appropriate power arg instead of 50 when
                 # that's implemented
-                _thread.start_new_thread(cmds_functions_map[value], (50))
+                arg = cmds_functions_map[value]
+                drivetrain.set_effort(arg[0], arg[1])
             else:
                 # kill any running Python/Blockly scripts
+                print("killing thread")
                 if self.blockly_python_proc.is_running():
                     self.blockly_python_proc.kill_thread()
-                _thread.start_new_thread(ece.stop, ())
+                drivetrain.set_effort(0, 0)
         elif key == "IR":
             return_val = []
             thread = _thread.start_new_thread(ece.read_ir, (return_val))
@@ -462,7 +483,6 @@ class Minibot:
             self.writable_sock_message_queue_key.append(sock)
             self.writable_sock_message_queue_value.append([])
             self.writable_sock_message_queue_value[socket_index].append(message)
-
 
     def sigint_handler(self):
         """ Closes open resources before terminating the program, when 
