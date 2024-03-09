@@ -48,9 +48,20 @@ export default class AddBot extends React.Component {
     }
 
     componentDidMount() {
+        const _this = this;
+        this._mounted = true;
+
         setInterval(this.refreshAvailableBots.bind(this), 500);
         document.getElementById("setup_control_tab").addEventListener(
-            "keydown", this.handleArrowKeyDown);
+            "keydown", function(event) {
+                if (_this._mounted) {
+                    _this.handleArrowKeyDown(event);
+                }
+            });
+    }
+
+    componentWillUnmount() {
+        this._mounted = false;
     }
 
     /*
