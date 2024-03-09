@@ -464,11 +464,11 @@ class Minibot:
             self.writable_sock_message_queue_value[socket_index].append(message)
 
 
-    def sigint_handler(self, sig: int, frame: object):
+    def sigint_handler(self):
         """ Closes open resources before terminating the program, when 
         receives a CTRL + C
         """
-        print("Minibot received CTRL + C", flush=True)
+        print("Minibot received CTRL + C")
         self.listener_sock.close()
         self.broadcast_sock.close()
         sys.exit(0)
