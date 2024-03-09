@@ -1,5 +1,5 @@
 core/CMakeFiles/apriltag.dir/common/homography.c.o: \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/common/homography.c \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common/homography.c \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/math.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/cdefs.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_symbol_aliasing.h \
@@ -35,7 +35,7 @@ core/CMakeFiles/apriltag.dir/common/homography.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_types/_ssize_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/secure/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/secure/_common.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/common/matd.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common/matd.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/assert.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/13.1.6/include/stddef.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/string.h \
@@ -44,7 +44,7 @@ core/CMakeFiles/apriltag.dir/common/homography.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/secure/_string.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/common/zarray.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common/zarray.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/stdlib.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/wait.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_types/_pid_t.h \
@@ -85,4 +85,4 @@ core/CMakeFiles/apriltag.dir/common/homography.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/malloc/_malloc.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_types/_dev_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_types/_mode_t.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/common/homography.h
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common/homography.h

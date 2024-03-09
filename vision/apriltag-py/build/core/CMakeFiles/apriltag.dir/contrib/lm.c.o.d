@@ -1,7 +1,7 @@
 core/CMakeFiles/apriltag.dir/contrib/lm.c.o: \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/contrib/lm.c \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/contrib/lm.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/common/matd.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/contrib/lm.c \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/contrib/lm.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common/matd.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/assert.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/cdefs.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_symbol_aliasing.h \

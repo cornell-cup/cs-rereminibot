@@ -53,10 +53,10 @@ RM = /opt/homebrew/Cellar/cmake/3.28.3/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py
+CMAKE_SOURCE_DIR = /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build
+CMAKE_BINARY_DIR = /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build
 
 # Include any dependencies generated for this target.
 include core/CMakeFiles/lm_test.dir/depend.make
@@ -70,18 +70,18 @@ include core/CMakeFiles/lm_test.dir/progress.make
 include core/CMakeFiles/lm_test.dir/flags.make
 
 core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o: core/CMakeFiles/lm_test.dir/flags.make
-core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o: /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/contrib/lm_test.cpp
+core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o: /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/contrib/lm_test.cpp
 core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o: core/CMakeFiles/lm_test.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o"
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o -MF CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o.d -o CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o -c /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/contrib/lm_test.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o"
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o -MF CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o.d -o CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o -c /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/contrib/lm_test.cpp
 
 core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/lm_test.dir/contrib/lm_test.cpp.i"
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/contrib/lm_test.cpp > CMakeFiles/lm_test.dir/contrib/lm_test.cpp.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/contrib/lm_test.cpp > CMakeFiles/lm_test.dir/contrib/lm_test.cpp.i
 
 core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/lm_test.dir/contrib/lm_test.cpp.s"
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/contrib/lm_test.cpp -o CMakeFiles/lm_test.dir/contrib/lm_test.cpp.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core && /Library/Developer/CommandLineTools/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/contrib/lm_test.cpp -o CMakeFiles/lm_test.dir/contrib/lm_test.cpp.s
 
 # Object files for target lm_test
 lm_test_OBJECTS = \
@@ -94,18 +94,18 @@ lm_test: core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o
 lm_test: core/CMakeFiles/lm_test.dir/build.make
 lm_test: lib/libapriltag.dylib
 lm_test: core/CMakeFiles/lm_test.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable ../lm_test"
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/lm_test.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable ../lm_test"
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/lm_test.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 core/CMakeFiles/lm_test.dir/build: lm_test
 .PHONY : core/CMakeFiles/lm_test.dir/build
 
 core/CMakeFiles/lm_test.dir/clean:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core && $(CMAKE_COMMAND) -P CMakeFiles/lm_test.dir/cmake_clean.cmake
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core && $(CMAKE_COMMAND) -P CMakeFiles/lm_test.dir/cmake_clean.cmake
 .PHONY : core/CMakeFiles/lm_test.dir/clean
 
 core/CMakeFiles/lm_test.dir/depend:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core/CMakeFiles/lm_test.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core/CMakeFiles/lm_test.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : core/CMakeFiles/lm_test.dir/depend
 

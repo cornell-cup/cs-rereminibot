@@ -1,5 +1,5 @@
 core/CMakeFiles/apriltag.dir/common/zmaxheap.c.o: \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/common/zmaxheap.c \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common/zmaxheap.c \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/stdlib.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/Availability.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/AvailabilityVersions.h \
@@ -81,6 +81,6 @@ core/CMakeFiles/apriltag.dir/common/zmaxheap.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/secure/_string.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/math.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/common/assert_with_unused.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common/assert_with_unused.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/assert.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/common/zmaxheap.h
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common/zmaxheap.h

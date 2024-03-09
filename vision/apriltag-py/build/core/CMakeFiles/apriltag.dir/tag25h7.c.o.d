@@ -1,5 +1,5 @@
 core/CMakeFiles/apriltag.dir/tag25h7.c.o: \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/tag25h7.c \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/tag25h7.c \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/stdlib.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/Availability.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/AvailabilityVersions.h \
@@ -65,7 +65,7 @@ core/CMakeFiles/apriltag.dir/tag25h7.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/malloc/_malloc.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_types/_dev_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_types/_mode_t.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/./apriltag.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/./apriltag.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/string.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_types/_rsize_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_types/_errno_t.h \
@@ -74,16 +74,16 @@ core/CMakeFiles/apriltag.dir/tag25h7.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/secure/_strings.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/secure/_common.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/secure/_string.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/./common/matd.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/./common/matd.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/assert.h \
   /Library/Developer/CommandLineTools/usr/lib/clang/13.1.6/include/stddef.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/./common/image_u8.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/common/image_f32.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/common/image_u8.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/./common/zarray.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/./common/workerpool.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/common/zarray.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/./common/timeprofile.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/./common/image_u8.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common/image_f32.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common/image_u8.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/./common/zarray.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/./common/workerpool.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common/zarray.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/./common/timeprofile.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/_stdio.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_types/_va_list.h \
@@ -106,7 +106,7 @@ core/CMakeFiles/apriltag.dir/tag25h7.c.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/time.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_types/_clock_t.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_select.h \
-  /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/common/time_util.h \
+  /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common/time_util.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/unistd.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/unistd.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk/usr/include/sys/_types/_posix_vdisable.h \

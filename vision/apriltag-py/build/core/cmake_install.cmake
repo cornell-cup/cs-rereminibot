@@ -1,4 +1,4 @@
-# Install script for directory: /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core
+# Install script for directory: /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,11 +38,11 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/apriltag_demo")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/apriltag_demo")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/apriltag_demo" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/apriltag_demo")
     execute_process(COMMAND /usr/bin/install_name_tool
-      -delete_rpath "/Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/lib"
+      -delete_rpath "/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/lib"
       "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/apriltag_demo")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/Library/Developer/CommandLineTools/usr/bin/strip" -u -r "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/apriltag_demo")
@@ -51,15 +51,15 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  include("/Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core/CMakeFiles/apriltag_demo.dir/install-cxx-module-bmi-Release.cmake" OPTIONAL)
+  include("/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core/CMakeFiles/apriltag_demo.dir/install-cxx-module-bmi-Release.cmake" OPTIONAL)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/maketags")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/bin" TYPE EXECUTABLE FILES "/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/maketags")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/maketags" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/maketags")
     execute_process(COMMAND /usr/bin/install_name_tool
-      -delete_rpath "/Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/lib"
+      -delete_rpath "/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/lib"
       "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/maketags")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/Library/Developer/CommandLineTools/usr/bin/strip" -u -r "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/bin/maketags")
@@ -68,11 +68,11 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  include("/Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core/CMakeFiles/maketags.dir/install-cxx-module-bmi-Release.cmake" OPTIONAL)
+  include("/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core/CMakeFiles/maketags.dir/install-cxx-module-bmi-Release.cmake" OPTIONAL)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/lib/libapriltag.dylib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE SHARED_LIBRARY FILES "/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/lib/libapriltag.dylib")
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libapriltag.dylib" AND
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libapriltag.dylib")
     if(CMAKE_INSTALL_DO_STRIP)
@@ -85,6 +85,6 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  include("/Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core/CMakeFiles/apriltag.dir/install-cxx-module-bmi-Release.cmake" OPTIONAL)
+  include("/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core/CMakeFiles/apriltag.dir/install-cxx-module-bmi-Release.cmake" OPTIONAL)
 endif()
 

@@ -57,10 +57,10 @@ RM = /opt/homebrew/Cellar/cmake/3.28.3/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py
+CMAKE_SOURCE_DIR = /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build
+CMAKE_BINARY_DIR = /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -132,14 +132,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/CMakeFiles /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core//CMakeFiles/progress.marks
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/CMakeFiles 0
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(CMAKE_COMMAND) -E cmake_progress_start /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/CMakeFiles /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core//CMakeFiles/progress.marks
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/clean
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/clean
 .PHONY : clean
 
 # The main clean target
@@ -148,22 +148,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/preinstall
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/preinstall
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 core/CMakeFiles/apriltag.dir/rule:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/apriltag.dir/rule
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/apriltag.dir/rule
 .PHONY : core/CMakeFiles/apriltag.dir/rule
 
 # Convenience name for target.
@@ -172,12 +172,12 @@ apriltag: core/CMakeFiles/apriltag.dir/rule
 
 # fast build rule for target.
 apriltag/fast:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/build
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/build
 .PHONY : apriltag/fast
 
 # Convenience name for target.
 core/CMakeFiles/apriltag_demo.dir/rule:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/apriltag_demo.dir/rule
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/apriltag_demo.dir/rule
 .PHONY : core/CMakeFiles/apriltag_demo.dir/rule
 
 # Convenience name for target.
@@ -186,12 +186,12 @@ apriltag_demo: core/CMakeFiles/apriltag_demo.dir/rule
 
 # fast build rule for target.
 apriltag_demo/fast:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag_demo.dir/build.make core/CMakeFiles/apriltag_demo.dir/build
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag_demo.dir/build.make core/CMakeFiles/apriltag_demo.dir/build
 .PHONY : apriltag_demo/fast
 
 # Convenience name for target.
 core/CMakeFiles/contour_test.dir/rule:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/contour_test.dir/rule
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/contour_test.dir/rule
 .PHONY : core/CMakeFiles/contour_test.dir/rule
 
 # Convenience name for target.
@@ -200,12 +200,12 @@ contour_test: core/CMakeFiles/contour_test.dir/rule
 
 # fast build rule for target.
 contour_test/fast:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/contour_test.dir/build.make core/CMakeFiles/contour_test.dir/build
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/contour_test.dir/build.make core/CMakeFiles/contour_test.dir/build
 .PHONY : contour_test/fast
 
 # Convenience name for target.
 core/CMakeFiles/lm_test.dir/rule:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/lm_test.dir/rule
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/lm_test.dir/rule
 .PHONY : core/CMakeFiles/lm_test.dir/rule
 
 # Convenience name for target.
@@ -214,12 +214,12 @@ lm_test: core/CMakeFiles/lm_test.dir/rule
 
 # fast build rule for target.
 lm_test/fast:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/lm_test.dir/build.make core/CMakeFiles/lm_test.dir/build
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/lm_test.dir/build.make core/CMakeFiles/lm_test.dir/build
 .PHONY : lm_test/fast
 
 # Convenience name for target.
 core/CMakeFiles/pdf_test.dir/rule:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/pdf_test.dir/rule
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/pdf_test.dir/rule
 .PHONY : core/CMakeFiles/pdf_test.dir/rule
 
 # Convenience name for target.
@@ -228,12 +228,12 @@ pdf_test: core/CMakeFiles/pdf_test.dir/rule
 
 # fast build rule for target.
 pdf_test/fast:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pdf_test.dir/build.make core/CMakeFiles/pdf_test.dir/build
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pdf_test.dir/build.make core/CMakeFiles/pdf_test.dir/build
 .PHONY : pdf_test/fast
 
 # Convenience name for target.
 core/CMakeFiles/maketags.dir/rule:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/maketags.dir/rule
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/maketags.dir/rule
 .PHONY : core/CMakeFiles/maketags.dir/rule
 
 # Convenience name for target.
@@ -242,12 +242,12 @@ maketags: core/CMakeFiles/maketags.dir/rule
 
 # fast build rule for target.
 maketags/fast:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/maketags.dir/build.make core/CMakeFiles/maketags.dir/build
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/maketags.dir/build.make core/CMakeFiles/maketags.dir/build
 .PHONY : maketags/fast
 
 # Convenience name for target.
 core/CMakeFiles/pose_test.dir/rule:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/pose_test.dir/rule
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 core/CMakeFiles/pose_test.dir/rule
 .PHONY : core/CMakeFiles/pose_test.dir/rule
 
 # Convenience name for target.
@@ -256,7 +256,7 @@ pose_test: core/CMakeFiles/pose_test.dir/rule
 
 # fast build rule for target.
 pose_test/fast:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pose_test.dir/build.make core/CMakeFiles/pose_test.dir/build
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pose_test.dir/build.make core/CMakeFiles/pose_test.dir/build
 .PHONY : pose_test/fast
 
 apriltag.o: apriltag.c.o
@@ -264,7 +264,7 @@ apriltag.o: apriltag.c.o
 
 # target to build an object file
 apriltag.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag.c.o
 .PHONY : apriltag.c.o
 
 apriltag.i: apriltag.c.i
@@ -272,7 +272,7 @@ apriltag.i: apriltag.c.i
 
 # target to preprocess a source file
 apriltag.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag.c.i
 .PHONY : apriltag.c.i
 
 apriltag.s: apriltag.c.s
@@ -280,7 +280,7 @@ apriltag.s: apriltag.c.s
 
 # target to generate assembly for a file
 apriltag.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag.c.s
 .PHONY : apriltag.c.s
 
 apriltag_demo.o: apriltag_demo.c.o
@@ -288,7 +288,7 @@ apriltag_demo.o: apriltag_demo.c.o
 
 # target to build an object file
 apriltag_demo.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag_demo.dir/build.make core/CMakeFiles/apriltag_demo.dir/apriltag_demo.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag_demo.dir/build.make core/CMakeFiles/apriltag_demo.dir/apriltag_demo.c.o
 .PHONY : apriltag_demo.c.o
 
 apriltag_demo.i: apriltag_demo.c.i
@@ -296,7 +296,7 @@ apriltag_demo.i: apriltag_demo.c.i
 
 # target to preprocess a source file
 apriltag_demo.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag_demo.dir/build.make core/CMakeFiles/apriltag_demo.dir/apriltag_demo.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag_demo.dir/build.make core/CMakeFiles/apriltag_demo.dir/apriltag_demo.c.i
 .PHONY : apriltag_demo.c.i
 
 apriltag_demo.s: apriltag_demo.c.s
@@ -304,7 +304,7 @@ apriltag_demo.s: apriltag_demo.c.s
 
 # target to generate assembly for a file
 apriltag_demo.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag_demo.dir/build.make core/CMakeFiles/apriltag_demo.dir/apriltag_demo.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag_demo.dir/build.make core/CMakeFiles/apriltag_demo.dir/apriltag_demo.c.s
 .PHONY : apriltag_demo.c.s
 
 apriltag_family.o: apriltag_family.c.o
@@ -312,7 +312,7 @@ apriltag_family.o: apriltag_family.c.o
 
 # target to build an object file
 apriltag_family.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag_family.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag_family.c.o
 .PHONY : apriltag_family.c.o
 
 apriltag_family.i: apriltag_family.c.i
@@ -320,7 +320,7 @@ apriltag_family.i: apriltag_family.c.i
 
 # target to preprocess a source file
 apriltag_family.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag_family.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag_family.c.i
 .PHONY : apriltag_family.c.i
 
 apriltag_family.s: apriltag_family.c.s
@@ -328,7 +328,7 @@ apriltag_family.s: apriltag_family.c.s
 
 # target to generate assembly for a file
 apriltag_family.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag_family.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag_family.c.s
 .PHONY : apriltag_family.c.s
 
 apriltag_quad_thresh.o: apriltag_quad_thresh.c.o
@@ -336,7 +336,7 @@ apriltag_quad_thresh.o: apriltag_quad_thresh.c.o
 
 # target to build an object file
 apriltag_quad_thresh.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag_quad_thresh.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag_quad_thresh.c.o
 .PHONY : apriltag_quad_thresh.c.o
 
 apriltag_quad_thresh.i: apriltag_quad_thresh.c.i
@@ -344,7 +344,7 @@ apriltag_quad_thresh.i: apriltag_quad_thresh.c.i
 
 # target to preprocess a source file
 apriltag_quad_thresh.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag_quad_thresh.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag_quad_thresh.c.i
 .PHONY : apriltag_quad_thresh.c.i
 
 apriltag_quad_thresh.s: apriltag_quad_thresh.c.s
@@ -352,7 +352,7 @@ apriltag_quad_thresh.s: apriltag_quad_thresh.c.s
 
 # target to generate assembly for a file
 apriltag_quad_thresh.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag_quad_thresh.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/apriltag_quad_thresh.c.s
 .PHONY : apriltag_quad_thresh.c.s
 
 common/getopt.o: common/getopt.c.o
@@ -360,7 +360,7 @@ common/getopt.o: common/getopt.c.o
 
 # target to build an object file
 common/getopt.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/getopt.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/getopt.c.o
 .PHONY : common/getopt.c.o
 
 common/getopt.i: common/getopt.c.i
@@ -368,7 +368,7 @@ common/getopt.i: common/getopt.c.i
 
 # target to preprocess a source file
 common/getopt.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/getopt.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/getopt.c.i
 .PHONY : common/getopt.c.i
 
 common/getopt.s: common/getopt.c.s
@@ -376,7 +376,7 @@ common/getopt.s: common/getopt.c.s
 
 # target to generate assembly for a file
 common/getopt.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/getopt.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/getopt.c.s
 .PHONY : common/getopt.c.s
 
 common/homography.o: common/homography.c.o
@@ -384,7 +384,7 @@ common/homography.o: common/homography.c.o
 
 # target to build an object file
 common/homography.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/homography.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/homography.c.o
 .PHONY : common/homography.c.o
 
 common/homography.i: common/homography.c.i
@@ -392,7 +392,7 @@ common/homography.i: common/homography.c.i
 
 # target to preprocess a source file
 common/homography.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/homography.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/homography.c.i
 .PHONY : common/homography.c.i
 
 common/homography.s: common/homography.c.s
@@ -400,7 +400,7 @@ common/homography.s: common/homography.c.s
 
 # target to generate assembly for a file
 common/homography.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/homography.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/homography.c.s
 .PHONY : common/homography.c.s
 
 common/image_f32.o: common/image_f32.c.o
@@ -408,7 +408,7 @@ common/image_f32.o: common/image_f32.c.o
 
 # target to build an object file
 common/image_f32.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_f32.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_f32.c.o
 .PHONY : common/image_f32.c.o
 
 common/image_f32.i: common/image_f32.c.i
@@ -416,7 +416,7 @@ common/image_f32.i: common/image_f32.c.i
 
 # target to preprocess a source file
 common/image_f32.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_f32.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_f32.c.i
 .PHONY : common/image_f32.c.i
 
 common/image_f32.s: common/image_f32.c.s
@@ -424,7 +424,7 @@ common/image_f32.s: common/image_f32.c.s
 
 # target to generate assembly for a file
 common/image_f32.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_f32.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_f32.c.s
 .PHONY : common/image_f32.c.s
 
 common/image_u32.o: common/image_u32.c.o
@@ -432,7 +432,7 @@ common/image_u32.o: common/image_u32.c.o
 
 # target to build an object file
 common/image_u32.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_u32.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_u32.c.o
 .PHONY : common/image_u32.c.o
 
 common/image_u32.i: common/image_u32.c.i
@@ -440,7 +440,7 @@ common/image_u32.i: common/image_u32.c.i
 
 # target to preprocess a source file
 common/image_u32.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_u32.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_u32.c.i
 .PHONY : common/image_u32.c.i
 
 common/image_u32.s: common/image_u32.c.s
@@ -448,7 +448,7 @@ common/image_u32.s: common/image_u32.c.s
 
 # target to generate assembly for a file
 common/image_u32.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_u32.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_u32.c.s
 .PHONY : common/image_u32.c.s
 
 common/image_u8.o: common/image_u8.c.o
@@ -456,7 +456,7 @@ common/image_u8.o: common/image_u8.c.o
 
 # target to build an object file
 common/image_u8.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_u8.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_u8.c.o
 .PHONY : common/image_u8.c.o
 
 common/image_u8.i: common/image_u8.c.i
@@ -464,7 +464,7 @@ common/image_u8.i: common/image_u8.c.i
 
 # target to preprocess a source file
 common/image_u8.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_u8.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_u8.c.i
 .PHONY : common/image_u8.c.i
 
 common/image_u8.s: common/image_u8.c.s
@@ -472,7 +472,7 @@ common/image_u8.s: common/image_u8.c.s
 
 # target to generate assembly for a file
 common/image_u8.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_u8.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/image_u8.c.s
 .PHONY : common/image_u8.c.s
 
 common/matd.o: common/matd.c.o
@@ -480,7 +480,7 @@ common/matd.o: common/matd.c.o
 
 # target to build an object file
 common/matd.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/matd.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/matd.c.o
 .PHONY : common/matd.c.o
 
 common/matd.i: common/matd.c.i
@@ -488,7 +488,7 @@ common/matd.i: common/matd.c.i
 
 # target to preprocess a source file
 common/matd.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/matd.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/matd.c.i
 .PHONY : common/matd.c.i
 
 common/matd.s: common/matd.c.s
@@ -496,7 +496,7 @@ common/matd.s: common/matd.c.s
 
 # target to generate assembly for a file
 common/matd.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/matd.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/matd.c.s
 .PHONY : common/matd.c.s
 
 common/pnm.o: common/pnm.c.o
@@ -504,7 +504,7 @@ common/pnm.o: common/pnm.c.o
 
 # target to build an object file
 common/pnm.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/pnm.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/pnm.c.o
 .PHONY : common/pnm.c.o
 
 common/pnm.i: common/pnm.c.i
@@ -512,7 +512,7 @@ common/pnm.i: common/pnm.c.i
 
 # target to preprocess a source file
 common/pnm.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/pnm.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/pnm.c.i
 .PHONY : common/pnm.c.i
 
 common/pnm.s: common/pnm.c.s
@@ -520,7 +520,7 @@ common/pnm.s: common/pnm.c.s
 
 # target to generate assembly for a file
 common/pnm.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/pnm.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/pnm.c.s
 .PHONY : common/pnm.c.s
 
 common/string_util.o: common/string_util.c.o
@@ -528,7 +528,7 @@ common/string_util.o: common/string_util.c.o
 
 # target to build an object file
 common/string_util.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/string_util.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/string_util.c.o
 .PHONY : common/string_util.c.o
 
 common/string_util.i: common/string_util.c.i
@@ -536,7 +536,7 @@ common/string_util.i: common/string_util.c.i
 
 # target to preprocess a source file
 common/string_util.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/string_util.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/string_util.c.i
 .PHONY : common/string_util.c.i
 
 common/string_util.s: common/string_util.c.s
@@ -544,7 +544,7 @@ common/string_util.s: common/string_util.c.s
 
 # target to generate assembly for a file
 common/string_util.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/string_util.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/string_util.c.s
 .PHONY : common/string_util.c.s
 
 common/svd22.o: common/svd22.c.o
@@ -552,7 +552,7 @@ common/svd22.o: common/svd22.c.o
 
 # target to build an object file
 common/svd22.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/svd22.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/svd22.c.o
 .PHONY : common/svd22.c.o
 
 common/svd22.i: common/svd22.c.i
@@ -560,7 +560,7 @@ common/svd22.i: common/svd22.c.i
 
 # target to preprocess a source file
 common/svd22.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/svd22.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/svd22.c.i
 .PHONY : common/svd22.c.i
 
 common/svd22.s: common/svd22.c.s
@@ -568,7 +568,7 @@ common/svd22.s: common/svd22.c.s
 
 # target to generate assembly for a file
 common/svd22.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/svd22.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/svd22.c.s
 .PHONY : common/svd22.c.s
 
 common/time_util.o: common/time_util.c.o
@@ -576,7 +576,7 @@ common/time_util.o: common/time_util.c.o
 
 # target to build an object file
 common/time_util.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/time_util.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/time_util.c.o
 .PHONY : common/time_util.c.o
 
 common/time_util.i: common/time_util.c.i
@@ -584,7 +584,7 @@ common/time_util.i: common/time_util.c.i
 
 # target to preprocess a source file
 common/time_util.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/time_util.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/time_util.c.i
 .PHONY : common/time_util.c.i
 
 common/time_util.s: common/time_util.c.s
@@ -592,7 +592,7 @@ common/time_util.s: common/time_util.c.s
 
 # target to generate assembly for a file
 common/time_util.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/time_util.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/time_util.c.s
 .PHONY : common/time_util.c.s
 
 common/unionfind.o: common/unionfind.c.o
@@ -600,7 +600,7 @@ common/unionfind.o: common/unionfind.c.o
 
 # target to build an object file
 common/unionfind.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/unionfind.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/unionfind.c.o
 .PHONY : common/unionfind.c.o
 
 common/unionfind.i: common/unionfind.c.i
@@ -608,7 +608,7 @@ common/unionfind.i: common/unionfind.c.i
 
 # target to preprocess a source file
 common/unionfind.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/unionfind.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/unionfind.c.i
 .PHONY : common/unionfind.c.i
 
 common/unionfind.s: common/unionfind.c.s
@@ -616,7 +616,7 @@ common/unionfind.s: common/unionfind.c.s
 
 # target to generate assembly for a file
 common/unionfind.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/unionfind.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/unionfind.c.s
 .PHONY : common/unionfind.c.s
 
 common/workerpool.o: common/workerpool.c.o
@@ -624,7 +624,7 @@ common/workerpool.o: common/workerpool.c.o
 
 # target to build an object file
 common/workerpool.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/workerpool.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/workerpool.c.o
 .PHONY : common/workerpool.c.o
 
 common/workerpool.i: common/workerpool.c.i
@@ -632,7 +632,7 @@ common/workerpool.i: common/workerpool.c.i
 
 # target to preprocess a source file
 common/workerpool.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/workerpool.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/workerpool.c.i
 .PHONY : common/workerpool.c.i
 
 common/workerpool.s: common/workerpool.c.s
@@ -640,7 +640,7 @@ common/workerpool.s: common/workerpool.c.s
 
 # target to generate assembly for a file
 common/workerpool.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/workerpool.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/workerpool.c.s
 .PHONY : common/workerpool.c.s
 
 common/zarray.o: common/zarray.c.o
@@ -648,7 +648,7 @@ common/zarray.o: common/zarray.c.o
 
 # target to build an object file
 common/zarray.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zarray.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zarray.c.o
 .PHONY : common/zarray.c.o
 
 common/zarray.i: common/zarray.c.i
@@ -656,7 +656,7 @@ common/zarray.i: common/zarray.c.i
 
 # target to preprocess a source file
 common/zarray.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zarray.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zarray.c.i
 .PHONY : common/zarray.c.i
 
 common/zarray.s: common/zarray.c.s
@@ -664,7 +664,7 @@ common/zarray.s: common/zarray.c.s
 
 # target to generate assembly for a file
 common/zarray.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zarray.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zarray.c.s
 .PHONY : common/zarray.c.s
 
 common/zhash.o: common/zhash.c.o
@@ -672,7 +672,7 @@ common/zhash.o: common/zhash.c.o
 
 # target to build an object file
 common/zhash.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zhash.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zhash.c.o
 .PHONY : common/zhash.c.o
 
 common/zhash.i: common/zhash.c.i
@@ -680,7 +680,7 @@ common/zhash.i: common/zhash.c.i
 
 # target to preprocess a source file
 common/zhash.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zhash.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zhash.c.i
 .PHONY : common/zhash.c.i
 
 common/zhash.s: common/zhash.c.s
@@ -688,7 +688,7 @@ common/zhash.s: common/zhash.c.s
 
 # target to generate assembly for a file
 common/zhash.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zhash.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zhash.c.s
 .PHONY : common/zhash.c.s
 
 common/zmaxheap.o: common/zmaxheap.c.o
@@ -696,7 +696,7 @@ common/zmaxheap.o: common/zmaxheap.c.o
 
 # target to build an object file
 common/zmaxheap.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zmaxheap.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zmaxheap.c.o
 .PHONY : common/zmaxheap.c.o
 
 common/zmaxheap.i: common/zmaxheap.c.i
@@ -704,7 +704,7 @@ common/zmaxheap.i: common/zmaxheap.c.i
 
 # target to preprocess a source file
 common/zmaxheap.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zmaxheap.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zmaxheap.c.i
 .PHONY : common/zmaxheap.c.i
 
 common/zmaxheap.s: common/zmaxheap.c.s
@@ -712,7 +712,7 @@ common/zmaxheap.s: common/zmaxheap.c.s
 
 # target to generate assembly for a file
 common/zmaxheap.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zmaxheap.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/common/zmaxheap.c.s
 .PHONY : common/zmaxheap.c.s
 
 contrib/apriltag_quad_contour.o: contrib/apriltag_quad_contour.c.o
@@ -720,7 +720,7 @@ contrib/apriltag_quad_contour.o: contrib/apriltag_quad_contour.c.o
 
 # target to build an object file
 contrib/apriltag_quad_contour.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/apriltag_quad_contour.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/apriltag_quad_contour.c.o
 .PHONY : contrib/apriltag_quad_contour.c.o
 
 contrib/apriltag_quad_contour.i: contrib/apriltag_quad_contour.c.i
@@ -728,7 +728,7 @@ contrib/apriltag_quad_contour.i: contrib/apriltag_quad_contour.c.i
 
 # target to preprocess a source file
 contrib/apriltag_quad_contour.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/apriltag_quad_contour.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/apriltag_quad_contour.c.i
 .PHONY : contrib/apriltag_quad_contour.c.i
 
 contrib/apriltag_quad_contour.s: contrib/apriltag_quad_contour.c.s
@@ -736,7 +736,7 @@ contrib/apriltag_quad_contour.s: contrib/apriltag_quad_contour.c.s
 
 # target to generate assembly for a file
 contrib/apriltag_quad_contour.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/apriltag_quad_contour.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/apriltag_quad_contour.c.s
 .PHONY : contrib/apriltag_quad_contour.c.s
 
 contrib/apriltag_vis.o: contrib/apriltag_vis.c.o
@@ -744,7 +744,7 @@ contrib/apriltag_vis.o: contrib/apriltag_vis.c.o
 
 # target to build an object file
 contrib/apriltag_vis.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/apriltag_vis.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/apriltag_vis.c.o
 .PHONY : contrib/apriltag_vis.c.o
 
 contrib/apriltag_vis.i: contrib/apriltag_vis.c.i
@@ -752,7 +752,7 @@ contrib/apriltag_vis.i: contrib/apriltag_vis.c.i
 
 # target to preprocess a source file
 contrib/apriltag_vis.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/apriltag_vis.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/apriltag_vis.c.i
 .PHONY : contrib/apriltag_vis.c.i
 
 contrib/apriltag_vis.s: contrib/apriltag_vis.c.s
@@ -760,7 +760,7 @@ contrib/apriltag_vis.s: contrib/apriltag_vis.c.s
 
 # target to generate assembly for a file
 contrib/apriltag_vis.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/apriltag_vis.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/apriltag_vis.c.s
 .PHONY : contrib/apriltag_vis.c.s
 
 contrib/box.o: contrib/box.c.o
@@ -768,7 +768,7 @@ contrib/box.o: contrib/box.c.o
 
 # target to build an object file
 contrib/box.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/box.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/box.c.o
 .PHONY : contrib/box.c.o
 
 contrib/box.i: contrib/box.c.i
@@ -776,7 +776,7 @@ contrib/box.i: contrib/box.c.i
 
 # target to preprocess a source file
 contrib/box.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/box.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/box.c.i
 .PHONY : contrib/box.c.i
 
 contrib/box.s: contrib/box.c.s
@@ -784,7 +784,7 @@ contrib/box.s: contrib/box.c.s
 
 # target to generate assembly for a file
 contrib/box.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/box.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/box.c.s
 .PHONY : contrib/box.c.s
 
 contrib/contour.o: contrib/contour.c.o
@@ -792,7 +792,7 @@ contrib/contour.o: contrib/contour.c.o
 
 # target to build an object file
 contrib/contour.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/contour.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/contour.c.o
 .PHONY : contrib/contour.c.o
 
 contrib/contour.i: contrib/contour.c.i
@@ -800,7 +800,7 @@ contrib/contour.i: contrib/contour.c.i
 
 # target to preprocess a source file
 contrib/contour.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/contour.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/contour.c.i
 .PHONY : contrib/contour.c.i
 
 contrib/contour.s: contrib/contour.c.s
@@ -808,7 +808,7 @@ contrib/contour.s: contrib/contour.c.s
 
 # target to generate assembly for a file
 contrib/contour.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/contour.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/contour.c.s
 .PHONY : contrib/contour.c.s
 
 contrib/contour_test.o: contrib/contour_test.c.o
@@ -816,7 +816,7 @@ contrib/contour_test.o: contrib/contour_test.c.o
 
 # target to build an object file
 contrib/contour_test.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/contour_test.dir/build.make core/CMakeFiles/contour_test.dir/contrib/contour_test.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/contour_test.dir/build.make core/CMakeFiles/contour_test.dir/contrib/contour_test.c.o
 .PHONY : contrib/contour_test.c.o
 
 contrib/contour_test.i: contrib/contour_test.c.i
@@ -824,7 +824,7 @@ contrib/contour_test.i: contrib/contour_test.c.i
 
 # target to preprocess a source file
 contrib/contour_test.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/contour_test.dir/build.make core/CMakeFiles/contour_test.dir/contrib/contour_test.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/contour_test.dir/build.make core/CMakeFiles/contour_test.dir/contrib/contour_test.c.i
 .PHONY : contrib/contour_test.c.i
 
 contrib/contour_test.s: contrib/contour_test.c.s
@@ -832,7 +832,7 @@ contrib/contour_test.s: contrib/contour_test.c.s
 
 # target to generate assembly for a file
 contrib/contour_test.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/contour_test.dir/build.make core/CMakeFiles/contour_test.dir/contrib/contour_test.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/contour_test.dir/build.make core/CMakeFiles/contour_test.dir/contrib/contour_test.c.s
 .PHONY : contrib/contour_test.c.s
 
 contrib/lm.o: contrib/lm.c.o
@@ -840,7 +840,7 @@ contrib/lm.o: contrib/lm.c.o
 
 # target to build an object file
 contrib/lm.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/lm.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/lm.c.o
 .PHONY : contrib/lm.c.o
 
 contrib/lm.i: contrib/lm.c.i
@@ -848,7 +848,7 @@ contrib/lm.i: contrib/lm.c.i
 
 # target to preprocess a source file
 contrib/lm.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/lm.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/lm.c.i
 .PHONY : contrib/lm.c.i
 
 contrib/lm.s: contrib/lm.c.s
@@ -856,7 +856,7 @@ contrib/lm.s: contrib/lm.c.s
 
 # target to generate assembly for a file
 contrib/lm.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/lm.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/lm.c.s
 .PHONY : contrib/lm.c.s
 
 contrib/lm_test.o: contrib/lm_test.cpp.o
@@ -864,7 +864,7 @@ contrib/lm_test.o: contrib/lm_test.cpp.o
 
 # target to build an object file
 contrib/lm_test.cpp.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/lm_test.dir/build.make core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/lm_test.dir/build.make core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.o
 .PHONY : contrib/lm_test.cpp.o
 
 contrib/lm_test.i: contrib/lm_test.cpp.i
@@ -872,7 +872,7 @@ contrib/lm_test.i: contrib/lm_test.cpp.i
 
 # target to preprocess a source file
 contrib/lm_test.cpp.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/lm_test.dir/build.make core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/lm_test.dir/build.make core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.i
 .PHONY : contrib/lm_test.cpp.i
 
 contrib/lm_test.s: contrib/lm_test.cpp.s
@@ -880,7 +880,7 @@ contrib/lm_test.s: contrib/lm_test.cpp.s
 
 # target to generate assembly for a file
 contrib/lm_test.cpp.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/lm_test.dir/build.make core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/lm_test.dir/build.make core/CMakeFiles/lm_test.dir/contrib/lm_test.cpp.s
 .PHONY : contrib/lm_test.cpp.s
 
 contrib/maketags.o: contrib/maketags.c.o
@@ -888,7 +888,7 @@ contrib/maketags.o: contrib/maketags.c.o
 
 # target to build an object file
 contrib/maketags.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/maketags.dir/build.make core/CMakeFiles/maketags.dir/contrib/maketags.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/maketags.dir/build.make core/CMakeFiles/maketags.dir/contrib/maketags.c.o
 .PHONY : contrib/maketags.c.o
 
 contrib/maketags.i: contrib/maketags.c.i
@@ -896,7 +896,7 @@ contrib/maketags.i: contrib/maketags.c.i
 
 # target to preprocess a source file
 contrib/maketags.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/maketags.dir/build.make core/CMakeFiles/maketags.dir/contrib/maketags.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/maketags.dir/build.make core/CMakeFiles/maketags.dir/contrib/maketags.c.i
 .PHONY : contrib/maketags.c.i
 
 contrib/maketags.s: contrib/maketags.c.s
@@ -904,7 +904,7 @@ contrib/maketags.s: contrib/maketags.c.s
 
 # target to generate assembly for a file
 contrib/maketags.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/maketags.dir/build.make core/CMakeFiles/maketags.dir/contrib/maketags.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/maketags.dir/build.make core/CMakeFiles/maketags.dir/contrib/maketags.c.s
 .PHONY : contrib/maketags.c.s
 
 contrib/pdf_test.o: contrib/pdf_test.cpp.o
@@ -912,7 +912,7 @@ contrib/pdf_test.o: contrib/pdf_test.cpp.o
 
 # target to build an object file
 contrib/pdf_test.cpp.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pdf_test.dir/build.make core/CMakeFiles/pdf_test.dir/contrib/pdf_test.cpp.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pdf_test.dir/build.make core/CMakeFiles/pdf_test.dir/contrib/pdf_test.cpp.o
 .PHONY : contrib/pdf_test.cpp.o
 
 contrib/pdf_test.i: contrib/pdf_test.cpp.i
@@ -920,7 +920,7 @@ contrib/pdf_test.i: contrib/pdf_test.cpp.i
 
 # target to preprocess a source file
 contrib/pdf_test.cpp.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pdf_test.dir/build.make core/CMakeFiles/pdf_test.dir/contrib/pdf_test.cpp.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pdf_test.dir/build.make core/CMakeFiles/pdf_test.dir/contrib/pdf_test.cpp.i
 .PHONY : contrib/pdf_test.cpp.i
 
 contrib/pdf_test.s: contrib/pdf_test.cpp.s
@@ -928,7 +928,7 @@ contrib/pdf_test.s: contrib/pdf_test.cpp.s
 
 # target to generate assembly for a file
 contrib/pdf_test.cpp.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pdf_test.dir/build.make core/CMakeFiles/pdf_test.dir/contrib/pdf_test.cpp.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pdf_test.dir/build.make core/CMakeFiles/pdf_test.dir/contrib/pdf_test.cpp.s
 .PHONY : contrib/pdf_test.cpp.s
 
 contrib/pdfutil.o: contrib/pdfutil.c.o
@@ -936,7 +936,7 @@ contrib/pdfutil.o: contrib/pdfutil.c.o
 
 # target to build an object file
 contrib/pdfutil.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/pdfutil.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/pdfutil.c.o
 .PHONY : contrib/pdfutil.c.o
 
 contrib/pdfutil.i: contrib/pdfutil.c.i
@@ -944,7 +944,7 @@ contrib/pdfutil.i: contrib/pdfutil.c.i
 
 # target to preprocess a source file
 contrib/pdfutil.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/pdfutil.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/pdfutil.c.i
 .PHONY : contrib/pdfutil.c.i
 
 contrib/pdfutil.s: contrib/pdfutil.c.s
@@ -952,7 +952,7 @@ contrib/pdfutil.s: contrib/pdfutil.c.s
 
 # target to generate assembly for a file
 contrib/pdfutil.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/pdfutil.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/pdfutil.c.s
 .PHONY : contrib/pdfutil.c.s
 
 contrib/pose.o: contrib/pose.c.o
@@ -960,7 +960,7 @@ contrib/pose.o: contrib/pose.c.o
 
 # target to build an object file
 contrib/pose.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/pose.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/pose.c.o
 .PHONY : contrib/pose.c.o
 
 contrib/pose.i: contrib/pose.c.i
@@ -968,7 +968,7 @@ contrib/pose.i: contrib/pose.c.i
 
 # target to preprocess a source file
 contrib/pose.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/pose.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/pose.c.i
 .PHONY : contrib/pose.c.i
 
 contrib/pose.s: contrib/pose.c.s
@@ -976,7 +976,7 @@ contrib/pose.s: contrib/pose.c.s
 
 # target to generate assembly for a file
 contrib/pose.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/pose.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/contrib/pose.c.s
 .PHONY : contrib/pose.c.s
 
 contrib/pose_test.o: contrib/pose_test.c.o
@@ -984,7 +984,7 @@ contrib/pose_test.o: contrib/pose_test.c.o
 
 # target to build an object file
 contrib/pose_test.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pose_test.dir/build.make core/CMakeFiles/pose_test.dir/contrib/pose_test.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pose_test.dir/build.make core/CMakeFiles/pose_test.dir/contrib/pose_test.c.o
 .PHONY : contrib/pose_test.c.o
 
 contrib/pose_test.i: contrib/pose_test.c.i
@@ -992,7 +992,7 @@ contrib/pose_test.i: contrib/pose_test.c.i
 
 # target to preprocess a source file
 contrib/pose_test.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pose_test.dir/build.make core/CMakeFiles/pose_test.dir/contrib/pose_test.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pose_test.dir/build.make core/CMakeFiles/pose_test.dir/contrib/pose_test.c.i
 .PHONY : contrib/pose_test.c.i
 
 contrib/pose_test.s: contrib/pose_test.c.s
@@ -1000,7 +1000,7 @@ contrib/pose_test.s: contrib/pose_test.c.s
 
 # target to generate assembly for a file
 contrib/pose_test.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pose_test.dir/build.make core/CMakeFiles/pose_test.dir/contrib/pose_test.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/pose_test.dir/build.make core/CMakeFiles/pose_test.dir/contrib/pose_test.c.s
 .PHONY : contrib/pose_test.c.s
 
 g2d.o: g2d.c.o
@@ -1008,7 +1008,7 @@ g2d.o: g2d.c.o
 
 # target to build an object file
 g2d.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/g2d.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/g2d.c.o
 .PHONY : g2d.c.o
 
 g2d.i: g2d.c.i
@@ -1016,7 +1016,7 @@ g2d.i: g2d.c.i
 
 # target to preprocess a source file
 g2d.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/g2d.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/g2d.c.i
 .PHONY : g2d.c.i
 
 g2d.s: g2d.c.s
@@ -1024,7 +1024,7 @@ g2d.s: g2d.c.s
 
 # target to generate assembly for a file
 g2d.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/g2d.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/g2d.c.s
 .PHONY : g2d.c.s
 
 tag16h5.o: tag16h5.c.o
@@ -1032,7 +1032,7 @@ tag16h5.o: tag16h5.c.o
 
 # target to build an object file
 tag16h5.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag16h5.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag16h5.c.o
 .PHONY : tag16h5.c.o
 
 tag16h5.i: tag16h5.c.i
@@ -1040,7 +1040,7 @@ tag16h5.i: tag16h5.c.i
 
 # target to preprocess a source file
 tag16h5.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag16h5.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag16h5.c.i
 .PHONY : tag16h5.c.i
 
 tag16h5.s: tag16h5.c.s
@@ -1048,7 +1048,7 @@ tag16h5.s: tag16h5.c.s
 
 # target to generate assembly for a file
 tag16h5.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag16h5.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag16h5.c.s
 .PHONY : tag16h5.c.s
 
 tag25h7.o: tag25h7.c.o
@@ -1056,7 +1056,7 @@ tag25h7.o: tag25h7.c.o
 
 # target to build an object file
 tag25h7.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag25h7.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag25h7.c.o
 .PHONY : tag25h7.c.o
 
 tag25h7.i: tag25h7.c.i
@@ -1064,7 +1064,7 @@ tag25h7.i: tag25h7.c.i
 
 # target to preprocess a source file
 tag25h7.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag25h7.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag25h7.c.i
 .PHONY : tag25h7.c.i
 
 tag25h7.s: tag25h7.c.s
@@ -1072,7 +1072,7 @@ tag25h7.s: tag25h7.c.s
 
 # target to generate assembly for a file
 tag25h7.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag25h7.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag25h7.c.s
 .PHONY : tag25h7.c.s
 
 tag25h9.o: tag25h9.c.o
@@ -1080,7 +1080,7 @@ tag25h9.o: tag25h9.c.o
 
 # target to build an object file
 tag25h9.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag25h9.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag25h9.c.o
 .PHONY : tag25h9.c.o
 
 tag25h9.i: tag25h9.c.i
@@ -1088,7 +1088,7 @@ tag25h9.i: tag25h9.c.i
 
 # target to preprocess a source file
 tag25h9.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag25h9.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag25h9.c.i
 .PHONY : tag25h9.c.i
 
 tag25h9.s: tag25h9.c.s
@@ -1096,7 +1096,7 @@ tag25h9.s: tag25h9.c.s
 
 # target to generate assembly for a file
 tag25h9.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag25h9.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag25h9.c.s
 .PHONY : tag25h9.c.s
 
 tag36artoolkit.o: tag36artoolkit.c.o
@@ -1104,7 +1104,7 @@ tag36artoolkit.o: tag36artoolkit.c.o
 
 # target to build an object file
 tag36artoolkit.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36artoolkit.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36artoolkit.c.o
 .PHONY : tag36artoolkit.c.o
 
 tag36artoolkit.i: tag36artoolkit.c.i
@@ -1112,7 +1112,7 @@ tag36artoolkit.i: tag36artoolkit.c.i
 
 # target to preprocess a source file
 tag36artoolkit.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36artoolkit.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36artoolkit.c.i
 .PHONY : tag36artoolkit.c.i
 
 tag36artoolkit.s: tag36artoolkit.c.s
@@ -1120,7 +1120,7 @@ tag36artoolkit.s: tag36artoolkit.c.s
 
 # target to generate assembly for a file
 tag36artoolkit.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36artoolkit.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36artoolkit.c.s
 .PHONY : tag36artoolkit.c.s
 
 tag36h10.o: tag36h10.c.o
@@ -1128,7 +1128,7 @@ tag36h10.o: tag36h10.c.o
 
 # target to build an object file
 tag36h10.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36h10.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36h10.c.o
 .PHONY : tag36h10.c.o
 
 tag36h10.i: tag36h10.c.i
@@ -1136,7 +1136,7 @@ tag36h10.i: tag36h10.c.i
 
 # target to preprocess a source file
 tag36h10.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36h10.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36h10.c.i
 .PHONY : tag36h10.c.i
 
 tag36h10.s: tag36h10.c.s
@@ -1144,7 +1144,7 @@ tag36h10.s: tag36h10.c.s
 
 # target to generate assembly for a file
 tag36h10.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36h10.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36h10.c.s
 .PHONY : tag36h10.c.s
 
 tag36h11.o: tag36h11.c.o
@@ -1152,7 +1152,7 @@ tag36h11.o: tag36h11.c.o
 
 # target to build an object file
 tag36h11.c.o:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36h11.c.o
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36h11.c.o
 .PHONY : tag36h11.c.o
 
 tag36h11.i: tag36h11.c.i
@@ -1160,7 +1160,7 @@ tag36h11.i: tag36h11.c.i
 
 # target to preprocess a source file
 tag36h11.c.i:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36h11.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36h11.c.i
 .PHONY : tag36h11.c.i
 
 tag36h11.s: tag36h11.c.s
@@ -1168,7 +1168,7 @@ tag36h11.s: tag36h11.c.s
 
 # target to generate assembly for a file
 tag36h11.c.s:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36h11.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(MAKE) $(MAKESILENT) -f core/CMakeFiles/apriltag.dir/build.make core/CMakeFiles/apriltag.dir/tag36h11.c.s
 .PHONY : tag36h11.c.s
 
 # Help Target
@@ -1315,6 +1315,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

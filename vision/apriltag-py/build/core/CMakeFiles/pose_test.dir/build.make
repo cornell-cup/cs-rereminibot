@@ -53,10 +53,10 @@ RM = /opt/homebrew/Cellar/cmake/3.28.3/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py
+CMAKE_SOURCE_DIR = /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build
+CMAKE_BINARY_DIR = /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build
 
 # Include any dependencies generated for this target.
 include core/CMakeFiles/pose_test.dir/depend.make
@@ -70,18 +70,18 @@ include core/CMakeFiles/pose_test.dir/progress.make
 include core/CMakeFiles/pose_test.dir/flags.make
 
 core/CMakeFiles/pose_test.dir/contrib/pose_test.c.o: core/CMakeFiles/pose_test.dir/flags.make
-core/CMakeFiles/pose_test.dir/contrib/pose_test.c.o: /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/contrib/pose_test.c
+core/CMakeFiles/pose_test.dir/contrib/pose_test.c.o: /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/contrib/pose_test.c
 core/CMakeFiles/pose_test.dir/contrib/pose_test.c.o: core/CMakeFiles/pose_test.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object core/CMakeFiles/pose_test.dir/contrib/pose_test.c.o"
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core && /Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT core/CMakeFiles/pose_test.dir/contrib/pose_test.c.o -MF CMakeFiles/pose_test.dir/contrib/pose_test.c.o.d -o CMakeFiles/pose_test.dir/contrib/pose_test.c.o -c /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/contrib/pose_test.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object core/CMakeFiles/pose_test.dir/contrib/pose_test.c.o"
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core && /Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT core/CMakeFiles/pose_test.dir/contrib/pose_test.c.o -MF CMakeFiles/pose_test.dir/contrib/pose_test.c.o.d -o CMakeFiles/pose_test.dir/contrib/pose_test.c.o -c /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/contrib/pose_test.c
 
 core/CMakeFiles/pose_test.dir/contrib/pose_test.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/pose_test.dir/contrib/pose_test.c.i"
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core && /Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/contrib/pose_test.c > CMakeFiles/pose_test.dir/contrib/pose_test.c.i
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core && /Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/contrib/pose_test.c > CMakeFiles/pose_test.dir/contrib/pose_test.c.i
 
 core/CMakeFiles/pose_test.dir/contrib/pose_test.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/pose_test.dir/contrib/pose_test.c.s"
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core && /Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core/contrib/pose_test.c -o CMakeFiles/pose_test.dir/contrib/pose_test.c.s
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core && /Library/Developer/CommandLineTools/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/contrib/pose_test.c -o CMakeFiles/pose_test.dir/contrib/pose_test.c.s
 
 # Object files for target pose_test
 pose_test_OBJECTS = \
@@ -94,18 +94,18 @@ pose_test: core/CMakeFiles/pose_test.dir/contrib/pose_test.c.o
 pose_test: core/CMakeFiles/pose_test.dir/build.make
 pose_test: lib/libapriltag.dylib
 pose_test: core/CMakeFiles/pose_test.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable ../pose_test"
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pose_test.dir/link.txt --verbose=$(VERBOSE)
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable ../pose_test"
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pose_test.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 core/CMakeFiles/pose_test.dir/build: pose_test
 .PHONY : core/CMakeFiles/pose_test.dir/build
 
 core/CMakeFiles/pose_test.dir/clean:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core && $(CMAKE_COMMAND) -P CMakeFiles/pose_test.dir/cmake_clean.cmake
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core && $(CMAKE_COMMAND) -P CMakeFiles/pose_test.dir/cmake_clean.cmake
 .PHONY : core/CMakeFiles/pose_test.dir/clean
 
 core/CMakeFiles/pose_test.dir/depend:
-	cd /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/core /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core /Users/matthewmcauley/cornell/cup-robotics/cs-reminibot/vision/apriltag-py/build/core/CMakeFiles/pose_test.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core /Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/build/core/CMakeFiles/pose_test.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : core/CMakeFiles/pose_test.dir/depend
 
