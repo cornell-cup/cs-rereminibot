@@ -1,9 +1,3 @@
-# from ctypes import c_char_p
-# from multiprocessing import Process, Manager, Value
-# import os
-# import importlib
-# import sys
-
 import _thread
 from emotion import *
 
@@ -26,7 +20,7 @@ class BlocklyPythonProcess:
     def get_exec_result(self) -> str:
         """ Gets the execution result of the last blockly / python script """
         # Try to acquire lock (blocking=False, equivalent to waitflag=0)
-        success = self.result_lock.acquire(waitflag=0)
+        success = self.result_lock.acquire()
         if success:
             if self.result:
                 self.result_lock.release()
@@ -43,13 +37,9 @@ class BlocklyPythonProcess:
         return self.thread is not None
 
     def kill_thread(self):
-        # send kill signal to process
-        # self.thread.terminate()
-        # wait for the process to terminate completely
-        # self.thread.join()
         self.thread_stop_flag = True
         self.thread = None
-        self.result_lock.acquire(waitflag=1)
+        self.result_lock.acquire()
         self.result = "Killed by user"
         self.result_lock.release()
     
@@ -65,17 +55,8 @@ class BlocklyPythonProcess:
         Arguments:
             code:  The code of the script that will be spawned
         """
-        # script_name = "bot_script.py"
         program = self.process_string(code)
         program = ''.join(program)
-
-        # write the script to a file which we'll execute
-        # file_dir is the path to folder this file is in
-        # file_dir = os.path.dirname(os.path.realpath(__file__))
-        # script_file = open(file_dir + "/scripts/" + script_name, 'w+')
-        # script_file.write(program)
-        # script_file.close()
-
         # create a shared variable of type "string" between the child
         # process and the current process
 
@@ -94,7 +75,6 @@ class BlocklyPythonProcess:
         # Run the Python program in a different process so that we
         # don't need to wait for it to terminate and we can kill it
         # whenever we want.
-        # self.thread = _thread.start_new_thread(run_script, (script_name,))
         self.exec_script_str(program)
 
     def process_string(self, value: str) -> [str]:
@@ -107,8 +87,6 @@ class BlocklyPythonProcess:
         """
         cmds = value.splitlines()
         program = []
-        program.append("from scripts." + self.BOT_LIB_FUNCS + " import *\n")
-        program.append("import time\n")
 
         # Inject emotional code
         init_emotional_system(program)        
@@ -120,7 +98,7 @@ class BlocklyPythonProcess:
             program.append(cmds[i] + "\n")
         return program
     
-    def exec_script_str(self, program: [str]):
+    def exec_script_str(self, program: str):
         self.thread_alive = True
         self.result_lock.acquire()
         try:
@@ -148,28 +126,3 @@ class BlocklyPythonProcess:
             
         self.result_lock.release()
         self.thread_alive = False
-
-    # def run_script(self, scriptname: str):
-    #     """
-    #     Loads a script and runs it.
-    #     Args:
-    #         scriptname: The name of the script to run.
-    #     """
-    #     # Cache invalidation and module refreshes are needed to ensure
-    #     # the most recent script is executed
-
-    #     try:
-    #         index = scriptname.find(".")
-    #         # new script is created under script folder with the script_names
-    #         # invalidate_caches ensures that the new script file can be found later when importing the module
-    #         importlib.invalidate_caches()
-    #         script_name = "scripts." + scriptname[0: index]
-    #         script = importlib.import_module(script_name)
-    #         # re-compile and re-execute the script
-    #         # reset the variables and object references
-    #         importlib.reload(script)
-    #         script.run()
-    #         self.result = "Successful execution"
-    #     except Exception as exception:
-    #         str_exception = str(type(exception)) + ": " + str(exception)
-    #         self.result = str_exception
