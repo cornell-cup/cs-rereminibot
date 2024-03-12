@@ -166,11 +166,11 @@ def main():
                     discovered_ids.remove(id)
             
             # prints DEVICE_ID tag id x y z angle
-            print("id,actual_x,actual_y,actual_angle")
-            average_locations.sort(key=lambda entry : int(entry["id"]))     
-            [print("{},{},{},{}".format(location["id"], location["x"], location["y"], location["orientation"])) for location in average_locations]
-            while len(location_history) >= MAX_LOCATION_HISTORY_LENGTH:
-                location_history.pop(0)
+            # print("id,actual_x,actual_y,actual_angle")
+            # average_locations.sort(key=lambda entry : int(entry["id"]))     
+            # [print("{},{},{},{}".format(location["id"], location["x"], location["y"], location["orientation"])) for location in average_locations]
+            # while len(location_history) >= MAX_LOCATION_HISTORY_LENGTH:
+            #     location_history.pop(0)
 
             data_for_BS["position_data"] = average_locations
             data_for_BS["TIMESTAMP"] = time.time()

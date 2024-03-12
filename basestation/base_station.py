@@ -57,6 +57,10 @@ class BaseStation:
     def __init__(self, app_debug=False, reuseport = config.reuseport):
         self.active_bots = {}
         self.reuseport = reuseport
+        self.vision_snapshot = {}
+        self.vision_object_map = {}
+        self.virtual_objects = {}
+        self.vision_log = []
 
         self.blockly_function_map = {
             "move_forward": "drivetrain.set_effort(1, 1)",
@@ -502,6 +506,231 @@ class BaseStation:
         """ Edits the local context based on input.
         """
         return self.chatbot.edit_context_by_id(idx, context)
+
+    # ==================== Vision =================================
+
+    def update_vision_snapshot(self, value):
+        """ Adds value to vision snapshot based on device id"""
+        self.vision_snapshot[value["DEVICE_ID"]] = {"DEVICE_CENTER_X": value["DEVICE_CENTER_X"], "DEVICE_CENTER_Y": value["DEVICE_CENTER_Y"], "TIMESTAMP": value["TIMESTAMP"], "position_data" : value["position_data"]}
+
+    def update_vision_object_map(self, update):
+        """ Updates vision object mapping. """
+        if "mappings" in update and "add" in update and type(update["mappings"]) is list and len(update["mappings"]) > 0:
+            if update["add"]:
+                self.remove_multiple_from_vision_object_map(update["mappings"])
+                self.add_multiple_to_vision_object_map(update["mappings"])
+            else:
+                self.remove_multiple_from_vision_object_map(update["mappings"])
+        elif "mapping" in update and "add" in update:
+            if update["add"]:
+                self.remove_from_vision_object_map(update["mapping"])
+                self.add_to_vision_object_map(update["mapping"])
+            else:
+                self.remove_from_vision_object_map(update["mapping"])
+        else:
+            print("The vision object map was not given a valid update")
+            
+
+    def add_to_vision_object_map(self, object_mapping):
+        """ Adds single mapping from the vision object map based on mapping's id """
+        if "id" in object_mapping and "name" in object_mapping and "type" in object_mapping and "virtual_room_id" in object_mapping:
+            if not (object_mapping["virtual_room_id"] in self.vision_object_map):
+                self.vision_object_map[object_mapping["virtual_room_id"]] = {}
+            self.vision_object_map[object_mapping["virtual_room_id"]][object_mapping["id"]] = {
+                "name": object_mapping["name"], 
+                "type": object_mapping["type"],                         
+                "length": object_mapping["length"] if "length" in object_mapping else None, 
+                "width": object_mapping["width"] if "width" in object_mapping else None, 
+                "radius": object_mapping["radius"] if "radius" in object_mapping else None, 
+                "height": object_mapping["height"] if "height" in object_mapping else None, 
+                "shape": object_mapping["shape"] if "shape" in object_mapping else None, 
+                "color": object_mapping["color"] if "color" in object_mapping else None, 
+                "deltas_to_vertices": object_mapping["deltas_to_vertices"] if "deltas_to_vertices" in object_mapping else None, 
+                "radiusY": object_mapping["radiusY"] if "radiusY" in object_mapping else None, 
+            }
+        else:
+            print("The vision object map was not given a valid update")
+
+    def add_multiple_to_vision_object_map(self, object_mappings):
+        """ Adds multiple mappings from the vision object map based on mappings' ids """
+        for value in object_mappings:
+            self.add_to_vision_object_map(value)
+    
+    def remove_from_vision_object_map(self, object_mapping):
+        """ Removes single mapping from the vision object map based on mapping's id """
+        if "virtual_room_id" in object_mapping and object_mapping["virtual_room_id"] in self.vision_object_map and "id" in object_mapping:
+            self.vision_object_map[object_mapping["virtual_room_id"]].pop(object_mapping["id"], None)
+        else:
+            print("The vision object map was not given a valid update")
+
+    def remove_multiple_from_vision_object_map(self, object_mappings):
+        """ Removes multiple mappings from the vision object map based on mappings' ids """
+        for value in object_mappings:
+            self.remove_from_vision_object_map(value)
+        
+    def get_raw_vision_data(self):
+        """ Returns most recent vision data """
+        return self.vision_snapshot if self.vision_snapshot else None
+    
+    def get_vision_data(self, query_params):
+        """ Returns most recent vision data """
+        return list(filter(lambda data_entry: self.matchesQuery(data_entry, query_params), self.get_estimated_positions(True, query_params["virtual_room_id"]))) 
+
+    def get_worlds(self, virtual_room_id, world_width, world_height, cell_size, excluded_ids):
+        vision_data = self.get_vision_data({"virtual_room_id": virtual_room_id})
+        worlds = WorldBuilder.from_vision_data_all(vision_data, world_width, world_height, cell_size, excluded_ids)
+        return worlds
+
+    def matchesQuery(self, data_entry, query_params):
+        matches = True
+        if query_params != None:
+            if "ids" in query_params:
+                matches &= data_entry["id"] in query_params["ids"]
+            if "id" in query_params:
+                matches &= data_entry["id"] == query_params["id"]
+        return matches
+
+            
+
+    # to be used for simulation
+    def get_vision_data_by_id(self, query_params):
+        """ Returns position data of an object given its id """
+        id = query_params["id"]
+        allVisionData = self.get_vision_data(query_params)
+        for object in allVisionData:
+            if object["id"] == id:
+                return object
+        print("Warning: Vision data for the object with the given ID could not be found")
+        return None
+
+    def get_vision_data_by_ids(self, ids):
+        """ Returns position data of multiple objects given a list of ids """
+        allVisionData = self.get_vision_data()
+        objects = []
+        for object in allVisionData:
+            if object["id"] == ids:
+                objects.append(object)
+        if len(objects) < len(ids):
+            print("Warning: Vision data for some of the objects with the given ID could not be found")
+        return objects
+
+    def get_vision_object_map(self):
+        """ Returns the mapping of vision objects to their corresponding ids """
+        return self.vision_object_map if self.vision_object_map else {}
+
+    def get_virtual_objects(self):
+        """ Returns the dictionary of virtual objects """
+        return self.virtual_objects if self.virtual_objects else {}
+
+    def get_estimated_positions(self, use_vision_log=False, virtual_room_id=None):
+        """ Returns the estimated positions of all apriltags detected by all cameras based on vision snapshot data """
+        object_positions = {}
+        estimated_positions = []
+        for device_id, device_data in self.vision_snapshot.items():
+            for position_entry in device_data["position_data"]:
+                if not (position_entry["id"] in object_positions):
+                    object_positions[position_entry["id"]] = []
+                object_positions[position_entry["id"]].append(
+                    {
+                        "distance_from_camera_center": distance(device_data["DEVICE_CENTER_X"], device_data["DEVICE_CENTER_Y"], position_entry["image_x"], position_entry["image_y"]),
+                        "x": position_entry["x"], 
+                        "y": position_entry["y"], 
+                        "orientation": position_entry["orientation"]
+                    }
+                )
+        if use_vision_log and len(self.vision_log) > 0:
+            for object_position_data in self.vision_log[-1]["POSITION_DATA"]:
+                estimated_position = self.format_estimated_position(object_position_data["id"], object_position_data["x"], object_position_data["y"], object_position_data["orientation"], virtual_room_id=virtual_room_id, is_physical=True)
+                estimated_positions.append(
+                    estimated_position
+                )
+        else:
+            for object_id, object_position_data in object_positions.items():
+                estimated_x, estimated_y, estimated_orientation = self.get_estimated_position_data(object_position_data)
+                estimated_position = self.format_estimated_position(object_id, estimated_x, estimated_y, estimated_orientation, virtual_room_id=virtual_room_id, is_physical=True)
+                estimated_positions.append(
+                    estimated_position
+                )
+        if virtual_room_id and virtual_room_id in self.virtual_objects:
+            for virtual_object_id, virtual_object_data in self.virtual_objects[virtual_room_id].items():
+                estimated_position = self.format_estimated_position(virtual_object_id, virtual_object_data["x"], virtual_object_data["y"], virtual_object_data["orientation"], virtual_object_data=virtual_object_data, virtual_room_id=virtual_room_id)
+                
+                estimated_positions.append(
+                    estimated_position
+                )
+        return estimated_positions
+
+    def format_estimated_position(self, object_id, estimated_x, estimated_y, estimated_orientation, virtual_object_data=None,virtual_room_id=None, is_physical=False):
+        estimated_position = {
+                "id": object_id, 
+                "name": None,
+                "type": None,
+                "deltas_to_vertices": None,
+                "length": None,
+                "width": None, 
+                "radius": None, 
+                "radiusY": None, 
+                "height": None, 
+                "shape": None, 
+                "color": None, 
+                "x": estimated_x, 
+                "y": estimated_y, 
+                "orientation": estimated_orientation,
+                "is_physical": is_physical
+            }
+        if virtual_object_data:
+            for key in list(estimated_position.keys()):
+                if estimated_position[key] == None:
+                    estimated_position[key] = virtual_object_data[key] if key in virtual_object_data else None
+        if virtual_room_id and virtual_room_id in self.vision_object_map:
+            for key in list(estimated_position.keys()):
+                if estimated_position[key] == None:
+                    estimated_position[key] = self.vision_object_map[virtual_room_id][object_id][key] if object_id in self.vision_object_map[virtual_room_id] else None
+        for key in list(estimated_position.keys()):
+            if estimated_position[key] == None:
+                estimated_position.pop(key, None) 
+        return estimated_position
+
+    def get_estimated_position_data(self, apriltag_position_data):
+        """ Returns the estimated position of an apriltag detected by all cameras based on apriltage position data """
+        x = 0
+        y = 0
+        orientation = 0
+        weighted_divisor = 0
+        for position_entry in apriltag_position_data:
+            distance = round(position_entry["distance_from_camera_center"],3) if round(position_entry["distance_from_camera_center"],3) > 0 else .0001
+            weight = 1/distance
+            x += weight * position_entry["x"]
+            y += weight * position_entry["y"]
+            orientation += weight * position_entry["orientation"]
+            weighted_divisor += weight
+        x /= weighted_divisor
+        y /= weighted_divisor
+        orientation /= weighted_divisor
+        return x, y, orientation
+
+ 
+
+    def get_vision_log(self):
+        """
+        Returns entire vision log.
+        """
+        return self.vision_log
+
+    def vision_monitior(self):
+        """
+        Removes stale data from vision snapshot
+        Updates the vision log with current positions from vision snapshot. 
+        Size of log based on MAX_VISION_LOG_LENGTH
+        """
+        while True:
+            for device_id in list(self.vision_snapshot.keys()):
+                if time.time() - self.vision_snapshot[device_id]["TIMESTAMP"] > VISION_DATA_HOLD_THRESHOLD:
+                    self.vision_snapshot.pop(device_id, None)
+            self.vision_log.append({"TIMESTAMP": time.time(), "POSITION_DATA": self.get_estimated_positions()})
+            while len(self.vision_log) > MAX_VISION_LOG_LENGTH:
+                self.vision_log.pop(0)
+            time.sleep(1/VISION_UPDATE_FREQUENCY) 
 
     # ==================== GETTERS and SETTERS ====================
     @property

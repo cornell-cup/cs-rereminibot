@@ -128,9 +128,9 @@ def mode():
 @index_bp.route('/vision', methods=['POST', 'GET'])
 def vision():
     """Updates vision status"""
-    # TODO add FPS tracking on server side
     if request.method == 'POST':
         info = request.get_json()
+        print("vision info: " + str(info))
         base_station.update_vision_snapshot(info)
         return json.dumps(True), status.HTTP_200_OK
     else:
