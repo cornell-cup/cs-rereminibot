@@ -88,6 +88,8 @@ class BlocklyPythonProcess:
         cmds = value.splitlines()
         program = []
 
+        program.append("import time")
+
         # Inject emotional code
         init_emotional_system(program)        
 
