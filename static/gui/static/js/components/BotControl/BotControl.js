@@ -6,7 +6,7 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import InformationBoxModal from "../utils/InformationBoxModal.js";
 import { INFOBOXTYPE, INFOBOXID, INFO_ICON, } from "../utils/Constants.js";
-import './expression_animation.css';
+
 library.add(faInfoCircle);
 
 
@@ -97,11 +97,8 @@ function BotControl({
             </div>
             < InformationBoxModal type={INFOBOXTYPE.EXPRESSION} />
           </div>
-          <body>
-            <div class="sprite"></div>
-            <script src="expression_animation.js"></script>
-            <div></div>
-          </body>
+          <div className="sprite"></div>
+          <script src="expression_animation.js"></script>
         </div>
       </div>
 
