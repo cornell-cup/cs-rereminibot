@@ -58,16 +58,16 @@ class BaseStation:
         self.active_bots = {}
         self.reuseport = reuseport
 
-        self.blockly_function_map = {
-            "move_forward": "drivetrain.set_effort(1, 1)",
-            "move_backward": "drivetrain.set_effort(-1, -1)",
-            "turn_clockwise": "drivetrain.set_effort(1, 0)",
-            "turn_counter_clockwise": "drivetrain.set_effort(0, 1)",
+        blockly_function_map = {
+            "move_forward": "bot_script.sendKV(\"WHEELS\",(pow,pow))",
+            "move_backward": "bot_script.sendKV(\"WHEELS\",(-pow,-pow))",
+            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",(pow,0))",
+            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",(0,pow))",
             # "move_forward_distance": "fwd_dst",
             # "move_backward_distance": "back_dst",
             # "move_to": "move_to",
             "wait": "time.sleep",        
-            "stop": "drivetrain.set_effort(0, 0)"
+            "stop": "bot_script.sendKV(\"WHEELS\",(0,0))"
             # "set_wheel_power": "ECE_wheel_pwr",
             # "turn_clockwise": "right",     
             # "turn_counter_clockwise": "left",
@@ -291,7 +291,7 @@ class BaseStation:
         # 2nd group is for func name, 3rd group is for args,
         # 4th group is for anything else (additional whitespace,
         # ":" for end of if condition, etc)
-        pattern = r"(.*)bot.(\w*)\((.*)\)(.*)"
+        pattern = r"(.*)bot\.(\w+)\(([^)]*)\)(.*)"
         regex = re.compile(pattern)
         program_lines = script.split('\n')
         parsed_program = []
@@ -299,24 +299,35 @@ class BaseStation:
             match = regex.match(line)
             # match group 2: command, such as move_forward
             # match group 3: argument, such as power like 100
-            if match:
+            while match:
                 command = match.group(2)
                 argument = str(match.group(3))
+
                 if command in self.blockly_function_map:
                     func = self.blockly_function_map[command]
                 else:
                     func = command
+
                 if command == "wait":
                     func = func + "(" + argument + ")"
+                    
+                elif func.startswith("bot_script.sendKV(\"WHEELS\","):
+                    if argument != '':
+                        float_power = float(argument) / 100
+                        func = func.replace("pow",str(float_power))   
+                
                 whitespace = match.group(1)
                 if not whitespace:
                     whitespace = ""
                 parsed_line = whitespace
                 # adding ; for multiline execution in exec
-                parsed_line += func + ";"
-                parsed_program.append(parsed_line + "\n")
-            else:
-                parsed_program.append(line + '\n')  # "normal" Python
+                parsed_line += func
+                parsed_line += match.group(4)
+
+                line = parsed_line
+                match = regex.match(line)
+            
+            parsed_program.append(line + '\n') 
         parsed_program_string = "".join(parsed_program)
         return parsed_program_string
 
