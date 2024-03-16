@@ -5,7 +5,8 @@ import MovementControls from "./MovementControl/MovementControl.js";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import InformationBoxModal from "../utils/InformationBoxModal.js";
-import { INFOBOXTYPE, INFOBOXID, INFO_ICON } from "../utils/Constants.js";
+import { INFOBOXTYPE, INFOBOXID, INFO_ICON, } from "../utils/Constants.js";
+import './expression_animation.css';
 library.add(faInfoCircle);
 
 
@@ -62,6 +63,7 @@ function BotControl({
                 />
               </h3>
             </div>
+
             {/* <UltimateGridview
               view_width={520}
               view_height={520}
@@ -70,7 +72,36 @@ function BotControl({
               defaultEnabled={false}
               experimentalFeaturesEnabled={true} /> */}
             < InformationBoxModal type={INFOBOXTYPE.VISION} />
-          </div >
+          </div>
+          <div className="control-option">
+            {/* <div id="component_view" className="box"> */}
+            <div className="mb-3 d-flex">
+
+              <h3 className="small-title">
+                Current Expression
+                <span style={{ leftMargin: "0.5em" }}> </span>
+
+                <input
+                  className="info-box"
+                  type="image"
+                  data-toggle="modal"
+                  data-target={"#" + INFOBOXID.EXPRESSION}
+                  src={INFO_ICON}
+                  width="18"
+                  height="18"
+                />
+
+
+              </h3>
+
+            </div>
+            < InformationBoxModal type={INFOBOXTYPE.EXPRESSION} />
+          </div>
+          <body>
+            <div class="sprite"></div>
+            <script src="expression_animation.js"></script>
+            <div></div>
+          </body>
         </div>
       </div>
 
@@ -79,3 +110,5 @@ function BotControl({
 }
 
 export default BotControl;
+
+
