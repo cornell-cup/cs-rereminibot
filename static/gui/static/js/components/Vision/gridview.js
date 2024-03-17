@@ -151,7 +151,7 @@ const GridView = (props) => {
   }
 
   //returns an array of x and y deltas from center point to vertices of a regular polygon with a given numberOfSides and a given sideLength
-  generateRegularPolygonDeltas(numberOfSides, sideLength) {
+  const generateRegularPolygonDeltas = (numberOfSides, sideLength) => {
     const individualVertexAngle = 2 * Math.PI / numberOfSides;
     const radius = Math.sqrt(sideLength * sideLength / (2 - 2 * Math.cos(individualVertexAngle)));
     const initialAngleOffset = -Math.PI / 2 + (numberOfSides % 2 == 0 ? individualVertexAngle / 2 : 0);
@@ -162,11 +162,11 @@ const GridView = (props) => {
     return deltas;
   }
 
-  getDeltasFromVerticesXAndY(x, y, vertices) {
+  const getDeltasFromVerticesXAndY = (x, y, vertices) => {
     return vertices.map((vertex) => ({ x: vertex['x'] - x, y: vertex['y'] - y }));
   }
 
-  getPolygonInfoFromVertices(vertices) {
+  const getPolygonInfoFromVertices = (vertices) => {
     const center = vertices.reduce(
       (previousValue, currentValue) => ({ x: previousValue['x'] + currentValue['x'] / vertices.length, y: previousValue['y'] + currentValue['y'] / vertices.length }),
       { x: 0, y: 0 }
@@ -460,8 +460,8 @@ const GridView = (props) => {
   }
 
 
-
-  return (
+  if (displayOn) {
+    return (
     <React.Fragment>
       {!props.defaultEnabled && <button
         onClick={toggleVisionDisplay}
@@ -483,9 +483,9 @@ const GridView = (props) => {
         )}
       </TransformWrapper>
     </React.Fragment>
-
-  );
-
+    );}
+   
+  else { return (<div></div>); }
 }
 
 export default withCookies(GridView);

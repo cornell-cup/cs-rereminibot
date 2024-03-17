@@ -590,8 +590,6 @@ class BaseStation:
                 matches &= data_entry["id"] == query_params["id"]
         return matches
 
-            
-
     # to be used for simulation
     def get_vision_data_by_id(self, query_params):
         """ Returns position data of an object given its id """
