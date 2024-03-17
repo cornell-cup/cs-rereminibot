@@ -8,6 +8,7 @@ import time
 
 # Minibot imports.
 from .basestation_init import base_station
+
 from flask import current_app
 
 # Error messages
@@ -19,6 +20,7 @@ chatbot_bp = Blueprint('chatbot',
 
 @chatbot_bp.route('/chatbot-context', methods=['POST', 'GET'])
 def chatbot_context():
+    print ("reached here")
     if request.method == 'POST':
         data = request.get_json()
         command = data['command']
@@ -75,3 +77,27 @@ def chatbot_ask():
         question = data['question']
         answer = base_station.chatbot_compute_answer(question)
         return json.dumps(answer), status.HTTP_200_OK
+    
+    
+@chatbot_bp.route("/chatbot-upload", methods=["POST", "GET"])
+def chatbot_upload():
+    if request.method == "POST":
+        content_header = request.headers["Upload-Content"]
+        if content_header == "filenames":
+            data = request.get_json()
+            filename = data["filename"]
+            base_station.update_chatbot_context("I have uploaded files: " + filename)
+            return json.dumps(True), status.HTTP_200_OK
+        else:
+            data = request.get_json()
+            filename = data["script_name"]
+            fileData = data["script_code"]
+            userEmail = data["login_email"]
+            base_station.chatbot_upload_file(fileData, filename, userEmail)
+            return json.dumps(True), status.HTTP_200_OK
+    else:
+        filename_header = request.headers["File-Name"]
+        user_header = request.headers["User-Email"]
+        return base_station.chatbot_get_upload(filename_header, user_header)
+
+    

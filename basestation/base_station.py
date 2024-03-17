@@ -24,6 +24,8 @@ from string import digits, ascii_lowercase, ascii_uppercase
 from typing import Any, Dict, List, Tuple, Optional
 from copy import deepcopy
 import subprocess
+from basestation import ChatbotWrapper
+ 
 
 MAX_VISION_LOG_LENGTH = 1000
 VISION_UPDATE_FREQUENCY = 30
@@ -57,6 +59,7 @@ class BaseStation:
     def __init__(self, app_debug=False, reuseport = config.reuseport):
         self.active_bots = {}
         self.reuseport = reuseport
+        self.chatbot = ChatbotWrapper.ChatbotWrapper()
 
         self.blockly_function_map = {
             "move_forward": "fwd",         "move_backward": "back",
