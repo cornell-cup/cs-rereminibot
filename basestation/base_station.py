@@ -58,24 +58,13 @@ class BaseStation:
         self.active_bots = {}
         self.reuseport = reuseport
 
-        blockly_function_map = {
-            "move_forward": "bot_script.sendKV(\"WHEELS\",(pow,pow))",
-            "move_backward": "bot_script.sendKV(\"WHEELS\",(-pow,-pow))",
-            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",(pow,0))",
-            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",(0,pow))",
-            # "move_forward_distance": "fwd_dst",
-            # "move_backward_distance": "back_dst",
-            # "move_to": "move_to",
+        self.blockly_function_map = {
+            "move_forward": "bot_script.sendKV(\"WHEELS\",\"forward\")",
+            "move_backward": "bot_script.sendKV(\"WHEELS\",\"backward\")",
+            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"left\")",
+            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"right\")",
             "wait": "time.sleep",        
-            "stop": "bot_script.sendKV(\"WHEELS\",(0,0))"
-            # "set_wheel_power": "ECE_wheel_pwr",
-            # "turn_clockwise": "right",     
-            # "turn_counter_clockwise": "left",
-            # "turn_clockwise_angle": "right_angle",     
-            # "turn_counter_clockwise_angle": "left_angle",
-            # "turn_to": "turn_to",
-            # "move_servo": "move_servo",    
-            # "read_ultrasonic": "read_ultrasonic",
+            "stop": "bot_script.sendKV(\"WHEELS\",\"stop\")"
         }
         # functions that run continuously, and hence need to be started
         # in a new thread on the Minibot otherwise the Minibot will get
@@ -264,12 +253,34 @@ class BaseStation:
         """Sends a python program to the specific bot"""
         bot = self.get_bot(bot_name)
         # reset the previous script_exec_result
-        bot.script_exec_result = None
+        if bot.script_exec_result_lock.acquire(blocking=False):
+            bot.script_exec_result = "Waiting for execution completion"
+            bot.script_exec_result_lock.release()
+        
         parsed_program_string = self.parse_program(script)
-        print("parsed program string")
-        print(parsed_program_string)
+        # print("parsed program string")
+        # print(parsed_program_string)
+        
+        # Run the script in a separate thread
+        threading.Thread(target=self.run_bot_script, args=[bot_name, parsed_program_string]).start()
+
         # Now actually send to the bot
-        bot.sendKV("SCRIPTS", parsed_program_string)
+        # bot.sendKV("SCRIPTS", parsed_program_string)
+
+    def run_bot_script(self, bot_name: str, program_string: str):
+        bot_script = self.get_bot(bot_name)
+        try:
+            exec(program_string)
+            bot_script.script_exec_result_lock.acquire(timeout=5)
+            bot_script.script_exec_result = "Successful execution"
+            print(bot_script.script_exec_result)
+            bot_script.script_exec_result_lock.release()
+        except Exception as exception:
+            str_exception = str(type(exception)) + ": " + str(exception)
+            print("exception in python code")
+            bot_script.script_exec_result_lock.acquire(timeout=5)
+            bot_script.script_exec_result = str_exception
+            bot_script.script_exec_result_lock.release()
 
     # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
     #     script = query_params['script_code']
@@ -310,11 +321,12 @@ class BaseStation:
 
                 if command == "wait":
                     func = func + "(" + argument + ")"
-                    
-                elif func.startswith("bot_script.sendKV(\"WHEELS\","):
-                    if argument != '':
-                        float_power = float(argument) / 100
-                        func = func.replace("pow",str(float_power))   
+
+                # TODO: implement custom power  
+                # elif func.startswith("bot_script.sendKV(\"WHEELS\","):
+                #     if argument != '':
+                #         float_power = float(argument) / 100
+                #         func = func.replace("pow",str(float_power))   
                 
                 whitespace = match.group(1)
                 if not whitespace:
@@ -341,12 +353,19 @@ class BaseStation:
         """ Retrieve the last script's execution result from the specified bot.
         """
         bot = self.get_bot(bot_name)
+        if bot.script_exec_result_lock.acquire(blocking=False):
+            script_exec_result = bot.script_exec_result
+            bot.script_exec_result_lock.release()
+            return script_exec_result
+        else:
+            return "Waiting for execution completion"
+        
         # request the bot to send the script execution result
-        bot.sendKV("SCRIPT_EXEC_RESULT", "")
+        # bot.sendKV("SCRIPT_EXEC_RESULT", "")
         # try reading to see if the bot has replied
-        bot.readKV()
+        # bot.readKV()
         # this value might be None if the bot hasn't replied yet
-        return bot.script_exec_result
+        # return bot.script_exec_result
 
     # ==================== DATABASE ====================
     def login(self, email: str, password: str) -> Tuple[int, Optional[str]]:

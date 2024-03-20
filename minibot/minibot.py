@@ -373,6 +373,7 @@ class Minibot:
                 "backward": (-1, -1),
                 "left": (0, 1),
                 "right": (1, 0),
+                "stop": (0, 0),
             }
             if value in cmds_functions_map:
                 # TODO use the appropriate power arg instead of 50 when

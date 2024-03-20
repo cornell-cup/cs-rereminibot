@@ -164,7 +164,7 @@ class PythonEditor extends React.Component {
                 else
                     console.log(error);
             })
-        }, 500);
+        }, 1000);
     }
 
     render() {
