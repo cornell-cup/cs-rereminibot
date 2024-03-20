@@ -185,7 +185,7 @@ def error_message_update():
         error_json = {"error_msg": NO_BOT_ERROR_MSG}
         return json.dumps(error_json), status.HTTP_400_BAD_REQUEST
     script_exec_result = base_station.get_bot_script_exec_result(bot_name)
-    if not script_exec_result:
+    if script_exec_result == "Waiting for execution completion":
         code = -1
     else:
         # invariant: submission_id is not None inside this block

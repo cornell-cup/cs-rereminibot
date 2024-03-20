@@ -7,15 +7,15 @@ import threading
 import math
 
 blockly_function_map = {
-    "move_forward": "bot_script.sendKV(\"WHEELS\",(pow,pow))",
-    "move_backward": "bot_script.sendKV(\"WHEELS\",(-pow,-pow))",
-    "turn_clockwise": "bot_script.sendKV(\"WHEELS\",(pow,0))",
-    "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",(0,pow))",
+    "move_forward": "bot_script.sendKV(\"WHEELS\",\"forward\")",
+    "move_backward": "bot_script.sendKV(\"WHEELS\",\"backward\")",
+    "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"left\")",
+    "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"right\")",
     # "move_forward_distance": "fwd_dst",
     # "move_backward_distance": "back_dst",
     # "move_to": "move_to",
     "wait": "time.sleep",        
-    "stop": "bot_script.sendKV(\"WHEELS\",(0,0))"
+    "stop": "bot_script.sendKV(\"WHEELS\",\"stop\")"
     # "set_wheel_power": "ECE_wheel_pwr",
     # "turn_clockwise": "right",     
     # "turn_counter_clockwise": "left",
@@ -51,10 +51,10 @@ def parse_program(script: str) -> str:
             if command == "wait":
                     func = func + "(" + argument + ")"
                     
-            elif func.startswith("bot_script.sendKV(\"WHEELS\","):
-                if argument != '':
-                    float_power = float(argument) / 100
-                    func = func.replace("pow",str(float_power))   
+            # elif func.startswith("bot_script.sendKV(\"WHEELS\","):
+            #     if argument != '':
+            #         float_power = float(argument) / 100
+            #         func = func.replace("pow",str(float_power))   
 
             whitespace = match.group(1)
             if not whitespace:
