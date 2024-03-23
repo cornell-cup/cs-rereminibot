@@ -13,9 +13,10 @@
 .sprite {
   width: var(--sprite-width);
   height: var(--sprite-height);
-  background-image: url('../img/Expressions/Eyes_Roll.png');
+  background-color: black;
+  /* background-image: url('../img/Expressions/Eyes_Roll.png'); */
   /* Path to your spritesheet image */
-  animation: spriteAnimationKeyframes 2s steps(30) infinite;
+  animation: spriteAnimationKeyframes 0.5s steps(30) infinite;
   animation-timing-function: step-end;
 }
 
