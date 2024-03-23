@@ -7,23 +7,20 @@
   /* Number of sprites per row */
   --sprite-rows: 6;
   /* Number of rows */
+  --frame-count: 30;
 }
 
 .sprite {
   width: var(--sprite-width);
   height: var(--sprite-height);
-  background-image: url('Eyes_Roll.png');
+  background-image: url('../img/Expressions/Eyes_Roll.png');
   /* Path to your spritesheet image */
-  animation: infinite steps(var(--sprites-per-row));
-  animation-name: sprite-animation;
+  animation: spriteAnimationKeyframes 2s steps(30) infinite;
+  animation-timing-function: step-end;
 }
 
-@keyframes sprite-animation {
-  from {
-    background-position: 0 0;
-  }
-
-  to {
-    background-position: calc(-1 * (var(--sprites-per-row) * var(--sprite-width) - var(--sprite-width))) calc(-1 * (var(--sprite-rows) * var(--sprite-height) - var(--sprite-height)));
-  }
+@keyframes spriteAnimationKeyframes {
+  0% { background-position: 0 0; }
+  50% { background-position: 0 -960px; }
+  100% { background-position: 0 -1920px; }
 }

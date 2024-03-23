@@ -1,0 +1,34 @@
+{
+  "idle": {
+    "frame_width": 480,
+    "frame_height": 320,
+    "num_columns": 5,
+    "num_rows": 4,
+    "frame_count": 20,
+    "sheet_src": "Eyes_Idle.png"
+  },
+  "roll": {
+    "frame_width": 480,
+    "frame_height": 320,
+    "num_columns": 5,
+    "num_rows": 6,
+    "frame_count": 30,
+    "sheet_src": "Eyes_Roll.png"
+  },
+  "brow_raise": {
+    "frame_width": 480,
+    "frame_height": 320,
+    "num_columns": 5,
+    "num_rows": 6,
+    "frame_count": 30,
+    "sheet_src": "Eyes_Eyebrow_Raise.png"
+  },
+  "excited": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "num_columns": 5,
+    "num_rows": 13,
+    "frame_count": 63,
+    "sheet_src": "Excited.png"
+  }
+}
