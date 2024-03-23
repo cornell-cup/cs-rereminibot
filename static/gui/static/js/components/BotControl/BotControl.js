@@ -18,7 +18,9 @@ function BotControl({
   activeMicComponent,
   setActiveMicComponent,
   botVoiceControlMic,
-  setBotVoiceControlMic }) {
+  setBotVoiceControlMic,
+  expressionRef }) {
+  console.log(expressionRef);
   return (
     <div className="row">
       <div className="col-md">
@@ -97,8 +99,7 @@ function BotControl({
             </div>
             < InformationBoxModal type={INFOBOXTYPE.EXPRESSION} />
           </div>
-          <div className="sprite"></div>
-          <script src="expression_animation.js"></script>
+          <div className="sprite" ref={expressionRef}></div>
         </div>
       </div>
 
