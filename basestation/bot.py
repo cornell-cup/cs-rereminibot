@@ -1,7 +1,8 @@
 import socket
 import time
 from typing import Optional
-from threading import Lock
+
+from basestation.util.locked_variable import LockedVariable
 
 class Bot:
     """ Represents a Minibot that the Basestation is connected to, it is a 
@@ -33,8 +34,8 @@ class Bot:
         self._name = bot_name
         self.last_status_time = time.time()
         self.is_socket_connected = True
-        self.script_exec_result_lock = Lock()
-        self.script_exec_result = None
+        self.script_exec_result_var = LockedVariable(None, "Waiting for execution completion")
+        self.script_alive_var = LockedVariable(False, True)
 
     def try_receive_data(self, peek: bool = False) -> Optional[str]:
         """ Tries to receive data from the Minibot. 
@@ -117,11 +118,3 @@ class Bot:
     @property
     def name(self):
         return self._name
-
-    @property
-    def script_exec_result(self):
-        return self._script_exec_result
-
-    @script_exec_result.setter
-    def script_exec_result(self, value: str):
-        self._script_exec_result = value
