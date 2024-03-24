@@ -229,6 +229,8 @@ class BaseStation:
     @make_thread_safe
     def move_bot_wheels(self, bot_name: str, direction: str, power: str):
         """ Gives wheels power based on user input """
+        # stop currently running script (if any)
+        self.stop_bot_script(bot_name)
         bot = self.get_bot(bot_name)
         direction = direction.lower()
         bot.sendKV("WHEELS", direction)
@@ -256,13 +258,7 @@ class BaseStation:
         parsed_program_string = self.parse_program(script)
 
         bot = self.get_bot(bot_name)
-        script_alive = bot.script_alive_var.get_with_lock(True, timeout=-1)
-        if script_alive and self.script_thread != None:
-            # stop current running script and send stop command to the bot
-            bot.script_exec_result_var.set_with_lock(True, "Stopping the current program in execution", timeout=1)
-            res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(self.script_thread.ident), ctypes.py_object(SystemExit))
-            print("interrupting the thread executing the script, result: " + str(res))
-            bot.sendKV("WHEELS", "STOP")
+        self.stop_bot_script(bot_name)
         
         # reset the previous script_exec_result
         bot.script_exec_result_var.set_with_lock(False, "Waiting for execution completion")
@@ -284,6 +280,16 @@ class BaseStation:
             print(str_exception)
             
         bot_script.script_alive_var.set_with_lock(True, False, timeout=-1)
+
+    def stop_bot_script(self, bot_name: str):
+        bot = self.get_bot(bot_name)
+        script_alive = bot.script_alive_var.get_with_lock(True, timeout=-1)
+        if script_alive and self.script_thread != None:
+            # stop current running script and send stop command to the bot
+            bot.script_exec_result_var.set_with_lock(True, "Stop current program in execution", timeout=1)
+            res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(self.script_thread.ident), ctypes.py_object(SystemExit))
+            print("interrupting the thread executing the script, result: " + str(res))
+            bot.sendKV("WHEELS", "STOP")
 
     # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
     #     script = query_params['script_code']
