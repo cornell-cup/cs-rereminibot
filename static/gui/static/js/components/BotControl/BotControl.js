@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import AddBot from "./SetupBot/AddBot.js";
+import ExpressionAnimation from "../Expression/ExpressionAnimation.js";
 import MovementControls from "./MovementControl/MovementControl.js";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
@@ -18,9 +19,7 @@ function BotControl({
   activeMicComponent,
   setActiveMicComponent,
   botVoiceControlMic,
-  setBotVoiceControlMic,
-  expressionRef }) {
-  console.log(expressionRef);
+  setBotVoiceControlMic}) {
   return (
     <div className="row">
       <div className="col-md">
@@ -29,6 +28,35 @@ function BotControl({
           setSelectedBotName={setSelectedBotName}
           selectedBotStyle={selectedBotStyle}
           setSelectedBotStyle={setSelectedBotStyle}
+        />
+        <div className="control-option">
+            {/* <div id="component_view" className="box"> */}
+            <div className="mb-3 d-flex">
+
+              <h3 className="small-title">
+                Current Expression
+                <span style={{ leftMargin: "0.5em" }}> </span>
+
+                <input
+                  className="info-box"
+                  type="image"
+                  data-toggle="modal"
+                  data-target={"#" + INFOBOXID.EXPRESSION}
+                  src={INFO_ICON}
+                  width="18"
+                  height="18"
+                />
+
+
+              </h3>
+
+            </div>
+            < InformationBoxModal type={INFOBOXTYPE.EXPRESSION} />
+       </div>
+        <ExpressionAnimation
+          startingExpression={"brow_raise"}
+          startingFPS={20}
+          refreshRate={60}
         />
       </div>
 
@@ -75,31 +103,6 @@ function BotControl({
               experimentalFeaturesEnabled={true} /> */}
             < InformationBoxModal type={INFOBOXTYPE.VISION} />
           </div>
-          <div className="control-option">
-            {/* <div id="component_view" className="box"> */}
-            <div className="mb-3 d-flex">
-
-              <h3 className="small-title">
-                Current Expression
-                <span style={{ leftMargin: "0.5em" }}> </span>
-
-                <input
-                  className="info-box"
-                  type="image"
-                  data-toggle="modal"
-                  data-target={"#" + INFOBOXID.EXPRESSION}
-                  src={INFO_ICON}
-                  width="18"
-                  height="18"
-                />
-
-
-              </h3>
-
-            </div>
-            < InformationBoxModal type={INFOBOXTYPE.EXPRESSION} />
-          </div>
-          <div className="sprite" ref={expressionRef}></div>
         </div>
       </div>
 

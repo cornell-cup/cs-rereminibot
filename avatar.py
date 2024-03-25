@@ -179,6 +179,9 @@ class Avatar:
 
         # Compute time difference from last update
         delta_t = current_time - self._prev_update_time
+
+        # Update value of previous update timestamp
+        self._prev_update_time = current_time
         
         # Get current expression spritesheet
         current_expression = self._expressions[self._current_expression]
@@ -191,9 +194,6 @@ class Avatar:
 
         while self._current_frame < 0:
             self._current_frame += current_expression._frame_count
-
-        # Update value of previous update timestamp
-        self._prev_update_time = current_time
 
     def get_current_display(self):
         """

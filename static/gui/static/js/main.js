@@ -15,7 +15,6 @@ import {
 // Minibot components import
 import Navbar from './components/Navbar.js';
 import Platform from './components/Platform.js';
-import * as expr_funcs from './components/Expression/ExpressionAnimation.js';
 import Chatbot from './components/Chatbot/chatbot2.js';
 
 // Utils import
@@ -99,20 +98,22 @@ function ClientGUI({ }) {
    ****************************************************************************
    */
 
-  // Use useRef to create a reference to the sprite element
-  const expressionRef = useRef(null);
+   // Empty dependency array ensures the effect runs only once after mount
 
-  useEffect(() => {
-    if(expressionRef.current){
-      try{
-        expr_funcs.setAnimation("excited", 15);
-      }
-      catch(error)
-      {
-        console.error('An error occurred while running setAnimation():', error.message);
-      }
-    }
-  }, [expressionRef.current]); // Empty dependency array ensures the effect runs only once after mount
+  // // Use useRef to create a reference to the sprite element
+  // const expressionRef = useRef(null);
+
+  // useEffect(() => {
+  //   if(expressionRef.current){
+  //     try{
+  //       expr_funcs.setAnimation("excited", 15);
+  //     }
+  //     catch(error)
+  //     {
+  //       console.error('An error occurred while running setAnimation():', error.message);
+  //     }
+  //   }
+  // }, [expressionRef.current]);
 
   /****************************************************************************/
 
@@ -148,8 +149,6 @@ function ClientGUI({ }) {
 
             contextHistoryLoaded={contextHistoryLoaded}
             setContextHistoryLoaded={setContextHistoryLoaded}
-
-            expressionRef={expressionRef}
           />
         </div>
         <Chatbot

@@ -102,8 +102,6 @@ const Platform = withCookies((props) => {
                     activeMicComponent={props.activeMicComponent}
                     botVoiceControlMic={props.botVoiceControlMic}
                     setBotVoiceControlMic={props.setBotVoiceControlMic}
-
-                    expressionRef={props.expressionRef}
                   />
                 </VirtualEnviromentContext.Provider>
               </PythonCodeContext.Provider>
