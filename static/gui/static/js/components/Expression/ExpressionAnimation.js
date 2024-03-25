@@ -43,7 +43,7 @@ function ExpressionAnimation({ startingExpression = null, startingFPS = 10, refr
     };
   }, [refreshRate, basestationAvatar.currentExpression]);
 
-  return <canvas ref={canvasRef} width={480} height={320}/>;
+  return <canvas ref={canvasRef} width={480} height={320} style={{ backgroundColor: 'black', border: '2px solid white' }}/>;
 }
 
 export default ExpressionAnimation;
