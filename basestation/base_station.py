@@ -65,23 +65,12 @@ class BaseStation:
         self.reuseport = reuseport
 
         self.blockly_function_map = {
-            "move_forward": "drivetrain.set_effort(1, 1)",
-            "move_backward": "drivetrain.set_effort(-1, -1)",
-            "turn_clockwise": "drivetrain.set_effort(1, 0)",
-            "turn_counter_clockwise": "drivetrain.set_effort(0, 1)",
-            # "move_forward_distance": "fwd_dst",
-            # "move_backward_distance": "back_dst",
-            # "move_to": "move_to",
+            "move_forward": "bot_script.sendKV(\"WHEELS\",\"forward\")",
+            "move_backward": "bot_script.sendKV(\"WHEELS\",\"backward\")",
+            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"left\")",
+            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"right\")",
             "wait": "time.sleep",        
-            "stop": "drivetrain.set_effort(0, 0)"
-            # "set_wheel_power": "ECE_wheel_pwr",
-            # "turn_clockwise": "right",     
-            # "turn_counter_clockwise": "left",
-            # "turn_clockwise_angle": "right_angle",     
-            # "turn_counter_clockwise_angle": "left_angle",
-            # "turn_to": "turn_to",
-            # "move_servo": "move_servo",    
-            # "read_ultrasonic": "read_ultrasonic",
+            "stop": "bot_script.sendKV(\"WHEELS\",\"stop\")"
         }
         # functions that run continuously, and hence need to be started
         # in a new thread on the Minibot otherwise the Minibot will get
@@ -267,42 +256,34 @@ class BaseStation:
         """Sends a python program to the specific bot"""
         bot = self.get_bot(bot_name)
         # reset the previous script_exec_result
-        bot.script_exec_result = None
-        parsed_program_string = self.parse_program(script)
-        print("parsed program string")
-        print(parsed_program_string)
+        if bot.script_exec_result_lock.acquire(blocking=False):
+            bot.script_exec_result = "Waiting for execution completion"
+            bot.script_exec_result_lock.release()
         
+        parsed_program_string = self.parse_program(script)
+        # print("parsed program string")
+        # print(parsed_program_string)
+        
+        # Run the script in a separate thread
+        threading.Thread(target=self.run_bot_script, args=[bot_name, parsed_program_string]).start()
+
         # Now actually send to the bot
-        script_size = len(parsed_program_string.encode("utf-8"))
-        if script_size + \
-           len(BaseStation.START_CMD_TOKEN) + \
-           len(BaseStation.END_CMD_TOKEN) + \
-           len("SCRIPTS,") + BaseStation.SOCKET_BUFFER_PADDING < BaseStation.SOCKET_BUFFER_SIZE:
-            bot.sendKV("SCRIPTS", parsed_program_string)
-        else:
-            # NOTE: "SCRIPT_BEG", "SCRIPT_MID", and "SCRIPT_END" must all have the same
-            # length for this to work correctly
-            chunk_size = BaseStation.SOCKET_BUFFER_SIZE - \
-                                len(BaseStation.START_CMD_TOKEN) - \
-                                len(BaseStation.END_CMD_TOKEN) - \
-                                len("SCRIPT_BEG,") - BaseStation.SOCKET_BUFFER_PADDING
+        # bot.sendKV("SCRIPTS", parsed_program_string)
 
-            num_chunks = math.ceil(script_size / chunk_size)
-            print(num_chunks)
-            bot.sendKV("SCRIPT_BEG", parsed_program_string[:chunk_size])
-            print("SCRIPT_BEG:")
-            print(parsed_program_string[:chunk_size])
-            if num_chunks > 2:
-                for i in range(num_chunks - 2):
-                    bot.sendKV("SCRIPT_MID", parsed_program_string[chunk_size*(i+1):chunk_size*(i+2)])
-                    print("SCRIPT_MID:")
-                    print(parsed_program_string[chunk_size*(i+1):chunk_size*(i+2)])
-
-            bot.sendKV("SCRIPT_END", parsed_program_string[chunk_size*(num_chunks-1):])
-            print("SCRIPT_END:")
-            print(parsed_program_string[chunk_size*(num_chunks-1):]) 
-
-            
+    def run_bot_script(self, bot_name: str, program_string: str):
+        bot_script = self.get_bot(bot_name)
+        try:
+            exec(program_string)
+            bot_script.script_exec_result_lock.acquire(timeout=5)
+            bot_script.script_exec_result = "Successful execution"
+            print(bot_script.script_exec_result)
+            bot_script.script_exec_result_lock.release()
+        except Exception as exception:
+            str_exception = str(type(exception)) + ": " + str(exception)
+            print("exception in python code")
+            bot_script.script_exec_result_lock.acquire(timeout=5)
+            bot_script.script_exec_result = str_exception
+            bot_script.script_exec_result_lock.release()
 
     # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
     #     script = query_params['script_code']
@@ -335,12 +316,21 @@ class BaseStation:
             while match:
                 command = match.group(2)
                 argument = str(match.group(3))
+
                 if command in self.blockly_function_map:
                     func = self.blockly_function_map[command]
                 else:
                     func = command
+
                 if command == "wait":
                     func = func + "(" + argument + ")"
+
+                # TODO: implement custom power  
+                # elif func.startswith("bot_script.sendKV(\"WHEELS\","):
+                #     if argument != '':
+                #         float_power = float(argument) / 100
+                #         func = func.replace("pow",str(float_power))   
+                
                 whitespace = match.group(1)
                 if not whitespace:
                     whitespace = ""
@@ -366,12 +356,19 @@ class BaseStation:
         """ Retrieve the last script's execution result from the specified bot.
         """
         bot = self.get_bot(bot_name)
+        if bot.script_exec_result_lock.acquire(blocking=False):
+            script_exec_result = bot.script_exec_result
+            bot.script_exec_result_lock.release()
+            return script_exec_result
+        else:
+            return "Waiting for execution completion"
+        
         # request the bot to send the script execution result
-        bot.sendKV("SCRIPT_EXEC_RESULT", "")
+        # bot.sendKV("SCRIPT_EXEC_RESULT", "")
         # try reading to see if the bot has replied
-        bot.readKV()
+        # bot.readKV()
         # this value might be None if the bot hasn't replied yet
-        return bot.script_exec_result
+        # return bot.script_exec_result
 
     # ==================== DATABASE ====================
     def login(self, email: str, password: str) -> Tuple[int, Optional[str]]:
