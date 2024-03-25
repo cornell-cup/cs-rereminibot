@@ -72,10 +72,18 @@ def chatbot_context():
 
 @chatbot_bp.route('/chatbot-ask', methods=['POST', 'GET'])
 def chatbot_ask():
-    if request.method == 'POST':
+    if request.method == "POST":
         data = request.get_json()
-        question = data['question']
-        answer = base_station.chatbot_compute_answer(question)
+        question = data["question"]
+        if question.lower().startswith("gpt:") or question.lower().startswith(
+            "chatgpt:"
+        ):
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo", messages=[{"role": "user", "content": question}]
+            )
+            answer = response["choices"][0]["message"]["content"]
+        else:
+            answer = base_station.chatbot_compute_answer(question)
         return json.dumps(answer), status.HTTP_200_OK
     
     
