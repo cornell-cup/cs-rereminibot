@@ -447,7 +447,7 @@ Blockly.Python['create_emotion'] = function (block) {
   var processed_eas = emotion_action_steps.substring(2, emotion_action_steps.length - 1).replaceAll("\n  ", "\\n"); 
 
   // TODO: Assemble python into code variable.
-  var code =  'emotion_repo[' + emotion_name + '] = Emotion(' + emotion_name + ',';
+  var code = 'self.emotion_repo[' + emotion_name + '] = Emotion(' + emotion_name + ',';
   code += '\"' + processed_eas + '\"';
   code += ')\n';
   return code;
@@ -560,7 +560,7 @@ Blockly.Python['set_current_expression'] = function (block) {
   var expression_name = Blockly.Python.valueToCode(block, 'expression_name', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'pass #TODO Implement backend for \'Set Current Expression\' block\n';
+  var code = 'self.current_expression = ' + expression_name + '\n';
   return code;
 };
 
@@ -573,7 +573,7 @@ Blockly.Blocks['clear_current_expression'] = {
 Blockly.Python['clear_current_expression'] = function (block) {
 
   // TODO: Assemble python into code variable.
-  var code = 'pass #TODO Implement backend for \'Clear Current Expression\' block\n';
+  var code = 'self.current_expression = None\n';
   return code;
 };
 
@@ -584,9 +584,9 @@ Blockly.Blocks['set_current_playback_speed'] = {
 };
 
 Blockly.Python['set_current_playback_speed'] = function (block) {
-  var emotion_name = Blockly.Python.valueToCode(block, 'new_speed', Blockly.Python.ORDER_NONE);
+  var new_speed = Blockly.Python.valueToCode(block, 'new_speed', Blockly.Python.ORDER_NONE);
 
   // TODO: Assemble python into code variable.
-  var code = 'pass #TODO Implement backend for \'Set Current Playback Speed\' block\n';
+  var code = 'self.current_expression_playback_speed = ' + new_speed + '\n';
   return code;
 };

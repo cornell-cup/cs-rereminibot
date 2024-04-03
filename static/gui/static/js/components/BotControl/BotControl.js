@@ -54,8 +54,6 @@ function BotControl({
             < InformationBoxModal type={INFOBOXTYPE.EXPRESSION} />
        </div>
         <ExpressionAnimation
-          startingExpression={"excited"}
-          startingFPS={20}
           refreshRate={60}
         />
       </div>

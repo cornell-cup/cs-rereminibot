@@ -80,7 +80,8 @@ def script():
     script_code = data['script_code']
     login_email = data['login_email']
     try:
-        print("script code",script_code)
+        print("Script code:")
+        print(script_code)
         submission = base_station.save_submission(script_code, login_email)
         print("submissions",submission)
         submission_id = submission.id
@@ -193,6 +194,18 @@ def error_message_update():
         code = 1 if script_exec_result == "Successful execution" else 0
     response_dict = {"result": script_exec_result, "code": code}
     return json.dumps(response_dict), status.HTTP_200_OK
+
+
+@index_bp.route('/expression-update', methods=['POST'])
+def check_expression():
+    current_expression = base_station.get_current_expression()
+    if current_expression is None:
+        current_expression = "none"
+    current_speed = base_station.get_current_expression_playback_speed()
+    response_dict = {"expression" : current_expression,
+                     "speed" : current_speed}
+    return json.dumps(response_dict), status.HTTP_200_OK
+
 
 
 @index_bp.route('/login', methods=['POST'])

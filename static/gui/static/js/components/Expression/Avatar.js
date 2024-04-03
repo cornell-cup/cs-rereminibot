@@ -12,6 +12,7 @@ export class AvatarJS
     this.currentExpression = null;
     this.currentPlaybackSpeed = currentPlaybackSpeed;
     this.currentFrame = 0.0;
+    this.restartOnNextUpdate = true;
     this.autoSaveExpressions = autoSaveExpressions;
 
     let setArbitraryStartingExpression = Object.keys(expressions).length > 0;
@@ -70,9 +71,9 @@ export class AvatarJS
 
   saveExpressionsJson(path) {
     try {
-        const fs = require('fs');
-        fs.writeFileSync(path, JSON.stringify(this.jsonExpressionsDict, null, 2));
-        return true;
+        // const fs = require('fs');
+        // fs.writeFileSync(path, JSON.stringify(this.jsonExpressionsDict, null, 2));
+        return false;
     } catch (error) {
         console.error(error);
         return false;
@@ -93,17 +94,24 @@ export class AvatarJS
     return this.expressions[expressionName] || null;
   }
 
+  clearCurrentExpression() {
+    this.currentExpression = null;
+  }
+
   setCurrentExpression(expressionName) {
     if (expressionName === this.currentExpression) {
       return true;
     }
-    if (expressionName === null || expressionName === "") {
-      console.log("Null/Empty Expression Name");
-      return false;
+    if (expressionName === null || 
+        expressionName === "" || 
+        expressionName === "none") {
+      this.clearCurrentExpression();
+      return true;
     }
     if (this.expressions.hasOwnProperty(expressionName)) {
       this.currentExpression = expressionName;
-      this.currentFrame = 0;
+      this.restartOnNextUpdate = true;
+      console.log("Current Frame Reset!");
       return true;
     }
     return false;
@@ -124,13 +132,20 @@ export class AvatarJS
 
     // Get time since last frame
     const currentTime = Date.now();
-    const deltaTime = (currentTime - this.prevUpdateTime) / 1000;
-    
+
+    if(this.restartOnNextUpdate){
+      this.currentFrame = 0.0;
+      this.restartOnNextUpdate = false;
+    }
+    else{
+      const deltaTime = (currentTime - this.prevUpdateTime) / 1000;
+
+      // Compute temporal position of new frame (frame index but with decimals)
+      this.currentFrame += deltaTime * this.currentPlaybackSpeed;
+    }
+
     // Update previous frame time variable
     this.prevUpdateTime = currentTime;
-
-    // Compute temporal position of new frame (frame index but with decimals)
-    this.currentFrame += deltaTime * this.currentPlaybackSpeed;
 
     // Keep the temporal position with the range [0, total number of frames)
     while (this.currentFrame >= this.currentExpression.frameCount) {
@@ -142,9 +157,9 @@ export class AvatarJS
     }
   }
 
-  drawCurrentDisplay(canvas) {
+  drawCurrentDisplay(canvas) {  
     if(!this.validCurrentExpression())
-        return false;
+      return false;
 
     return this.expressions[this.currentExpression].drawFrame(this.currentFrame, canvas);
   }
