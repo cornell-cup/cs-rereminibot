@@ -1,7 +1,4 @@
-from scripts.ece_dummy_ops import * # REMOVE THIS LINE FOR ACTUAL ROBOT USE
-
 def init_emotional_system(program):
-    program.append("emotion_repo = {}\n")
     program.append("added_emotions = {}\n")
     program.append("current_emotion = None\n")
 

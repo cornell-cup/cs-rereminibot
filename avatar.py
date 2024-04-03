@@ -34,6 +34,7 @@ class Avatar:
         self._current_expression = None
         self._current_playback_speed = current_playback_speed
         self._current_frame = 0.0
+        self.restartOnNextUpdate = True
 
         self.auto_save_expressions = auto_save_expressions
 
@@ -153,6 +154,11 @@ class Avatar:
         
         if expression_name == self._current_expression:
             return True
+        if expression_name is None or \
+            expression_name == "" or \
+            expression_name == "none":
+            self.clear_current_expression()
+            return True
         try:
             self._expressions[expression_name]
             self._current_expression = expression_name
@@ -160,7 +166,13 @@ class Avatar:
             return True
         except KeyError as e:
             return False
-        
+
+    def clear_current_expression(self):
+        """
+        Sets the avatar's current expression to None.
+        """
+        self._current_expression = None  
+
     def set_playback_speed(self, new_speed : float):
         """
         Sets the avatar's playback speed to the specified value. 
@@ -177,17 +189,22 @@ class Avatar:
         # Get current time
         current_time = time.time()
 
-        # Compute time difference from last update
-        delta_t = current_time - self._prev_update_time
+        if self.restartOnNextUpdate:
+            self._current_frame = 0.0
+            self.restartOnNextUpdate = False
+        else:
+            # Compute time difference from last update
+            delta_t = current_time - self._prev_update_time
+
+             # Update current frame
+            self._current_frame += delta_t * self._current_playback_speed
 
         # Update value of previous update timestamp
         self._prev_update_time = current_time
         
-        # Get current expression spritesheet
+        # Get current expression spritesheet 
+        # TODO: Handle 'None' case
         current_expression = self._expressions[self._current_expression]
-
-        # Update current frame
-        self._current_frame += delta_t * self._current_playback_speed
 
         while self._current_frame >= current_expression._frame_count:
             self._current_frame -= current_expression._frame_count

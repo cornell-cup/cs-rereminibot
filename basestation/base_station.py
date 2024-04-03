@@ -19,6 +19,8 @@ from basestation.databases.user_database import db
 # imports from basestation util
 from basestation.util.stoppable_thread import StoppableThread, ThreadSafeVariable
 
+from basestation.emotion_bs import *
+
 from random import choice, randint
 from string import digits, ascii_lowercase, ascii_uppercase
 from typing import Any, Dict, List, Tuple, Optional
@@ -134,6 +136,12 @@ class BaseStation:
             "procs": dict(),
             "next_req_id": 0
         }
+
+        # Emotional System Variables (Possibly Upgrade to Handle Multiple Bots)
+        self.emotion_repo = {}
+        self.current_expression = None
+        self.current_expression_playback_speed = 30
+        
 
     # ==================== BOTS ====================
 
@@ -273,10 +281,13 @@ class BaseStation:
     def run_bot_script(self, bot_name: str, program_string: str):
         bot_script = self.get_bot(bot_name)
         try:
+            print("Current Expression:", self.current_expression)
+            print("Executing Program...")
             exec(program_string)
             bot_script.script_exec_result_lock.acquire(timeout=5)
             bot_script.script_exec_result = "Successful execution"
             print(bot_script.script_exec_result)
+            print("Current Expression:", self.current_expression)
             bot_script.script_exec_result_lock.release()
         except Exception as exception:
             str_exception = str(type(exception)) + ": " + str(exception)
@@ -309,6 +320,9 @@ class BaseStation:
         regex = re.compile(pattern)
         program_lines = script.split('\n')
         parsed_program = []
+
+        init_emotional_system(parsed_program)
+
         for line in program_lines:
             match = regex.match(line)
             # match group 2: command, such as move_forward
@@ -369,6 +383,12 @@ class BaseStation:
         # bot.readKV()
         # this value might be None if the bot hasn't replied yet
         # return bot.script_exec_result
+
+    def get_current_expression(self):
+        return self.current_expression
+    
+    def get_current_expression_playback_speed(self):
+        return self.current_expression_playback_speed
 
     # ==================== DATABASE ====================
     def login(self, email: str, password: str) -> Tuple[int, Optional[str]]:

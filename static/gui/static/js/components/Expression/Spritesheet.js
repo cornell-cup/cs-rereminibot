@@ -32,7 +32,6 @@ export class SpritesheetJS{
         if (!this.loadedCorrectly || !canvas)
             return false;
     
-        const context = canvas.getContext('2d');
         while (frameNumber >= this.frameCount) {
             frameNumber -= this.frameCount;
         }
@@ -46,7 +45,7 @@ export class SpritesheetJS{
         const col = frameIndex % numFramesH;
         const sx = col * this.frameWidth;
         const sy = row * this.frameHeight;
-        context.clearRect(0, 0, canvas.width, canvas.height);
+        const context = canvas.getContext('2d');
         context.drawImage(this.fullSpritesheet, sx, sy, this.frameWidth, this.frameHeight, 0, 0, canvas.width, canvas.height);
         return true;
     }

@@ -1,5 +1,5 @@
 import _thread
-from emotion import *
+from emotion_mb import *
 
 class BlocklyPythonProcess:
     """ Stores the process which is executing the Blockly / Python script
@@ -91,7 +91,7 @@ class BlocklyPythonProcess:
         program.append("import time")
 
         # Inject emotional code
-        init_emotional_system(program)        
+        # init_emotional_system(program)        
 
         # TODO: convert threading after replacing BOT_LIB_FUNCS files
         # program += "from threading import *\n"
