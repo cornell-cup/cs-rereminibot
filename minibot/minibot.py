@@ -84,10 +84,6 @@ class Minibot:
         self.writable_sock_message_queue_value = []
         self.bs_repr = None
         self.sock_lists = [self.readable_socks, self.writable_socks, self.errorable_socks]
-
-        self.long_script_str = ""
-
-        self.blockly_python_proc = BlocklyPythonProcess(BOT_LIB_FUNCS)
         
     def main(self):
         """ Implements the main activity loop for the Minibot.  This activity 
@@ -367,10 +363,13 @@ class Minibot:
             if self.bs_repr is not None:
                 self.bs_repr.update_status_time()
             self.sendKV(sock, key, "ACTIVE")
-        elif key == "SCRIPT_EXEC_RESULT":
-            # getting result of execution and sending it to basestation
-            script_exec_result = self.blockly_python_proc.get_exec_result()
-            self.sendKV(sock, key, script_exec_result)
+        elif key == "SCRIPT_EXEC_RESULT" or key == "SCRIPT":
+            # notify attempts for executing commands no longer in use
+            print("executing commands no longer in use")
+        # elif key == "SCRIPT_EXEC_RESULT":
+        #     # getting result of execution and sending it to basestation
+        #     script_exec_result = self.blockly_python_proc.get_exec_result()
+        #     self.sendKV(sock, key, script_exec_result)
         elif key == "MODE":
             if value == "object_detection":
                 _thread.start_new_thread(ece.object_detection, ())
@@ -378,25 +377,25 @@ class Minibot:
                 _thread.start_new_thread(ece.line_follow, ())
         elif key == "PORTS":
             ece.set_ports(value)
-        elif key == "SCRIPTS":
-            # The script is always named bot_script.py.
-            if len(value) > 0:
-                self.blockly_python_proc.spawn_script(value)
-        elif key == "SCRIPT_BEG":
-            print("BEG Value:")
-            print(value)
-            self.script_str = value
-        elif key == "SCRIPT_MID":
-            print("MID Value:")
-            print(value)
-            self.script_str += value
-        elif key == "SCRIPT_END":
-            print("END Value:")
-            print(value)
-            self.script_str += value
-            if(len(self.script_str) > 0):
-                self.blockly_python_proc.spawn_script(self.script_str)
-            self.script_str = ""
+        # elif key == "SCRIPTS":
+        #     # The script is always named bot_script.py.
+        #     if len(value) > 0:
+        #         self.blockly_python_proc.spawn_script(value)
+        # elif key == "SCRIPT_BEG":
+        #     print("BEG Value:")
+        #     print(value)
+        #     self.script_str = value
+        # elif key == "SCRIPT_MID":
+        #     print("MID Value:")
+        #     print(value)
+        #     self.script_str += value
+        # elif key == "SCRIPT_END":
+        #     print("END Value:")
+        #     print(value)
+        #     self.script_str += value
+        #     if(len(self.script_str) > 0):
+        #         self.blockly_python_proc.spawn_script(self.script_str)
+        #     self.script_str = ""
         elif key == "WHEELS":
             print("key WHEELS")
             cmds_functions_map = {
@@ -412,10 +411,6 @@ class Minibot:
                 arg = cmds_functions_map[value]
                 drivetrain.set_effort(arg[0], arg[1])
             else:
-                # kill any running Python/Blockly scripts
-                print("killing thread")
-                if self.blockly_python_proc.is_running():
-                    self.blockly_python_proc.kill_thread()
                 drivetrain.set_effort(0, 0)
         elif key == "IR":
             return_val = []
