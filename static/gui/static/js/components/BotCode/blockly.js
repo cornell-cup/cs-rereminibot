@@ -576,14 +576,12 @@ export default class MinibotBlockly extends React.Component {
     stopBlockly() {
         axios({
             method: 'POST',
-            url: '/wheels',
+            url: '/stop-script',
             headers: {
                 'Content-Type': 'application/json'
             },
             data: JSON.stringify({
-                bot_name: this.props.selectedBotName,
-                direction: "stop",
-                power: 0,
+                bot_name: this.props.selectedBotName
             })
         }).catch(function (error) {
             if (error.response.data.error_msg.length > 0)

@@ -8,6 +8,7 @@ import sys
 import time
 import threading
 import math
+import ctypes
 
 from basestation.bot import Bot
 from basestation import config
@@ -131,6 +132,7 @@ class BaseStation:
             "stop": "Minibot stops",
         }
 
+        self.script_thread = None
         # Keep track of any built-in scripts that are running / should run next
         self.builtin_script_state = {
             "procs": dict(),
@@ -238,6 +240,8 @@ class BaseStation:
     @make_thread_safe
     def move_bot_wheels(self, bot_name: str, direction: str, power: str):
         """ Gives wheels power based on user input """
+        # stop currently running script (if any)
+        self.stop_bot_script(bot_name)
         bot = self.get_bot(bot_name)
         direction = direction.lower()
         bot.sendKV("WHEELS", direction)
@@ -262,39 +266,43 @@ class BaseStation:
 
     def send_bot_script(self, bot_name: str, script: str):
         """Sends a python program to the specific bot"""
-        bot = self.get_bot(bot_name)
-        # reset the previous script_exec_result
-        if bot.script_exec_result_lock.acquire(blocking=False):
-            bot.script_exec_result = "Waiting for execution completion"
-            bot.script_exec_result_lock.release()
-        
         parsed_program_string = self.parse_program(script)
-        # print("parsed program string")
-        # print(parsed_program_string)
-        
-        # Run the script in a separate thread
-        threading.Thread(target=self.run_bot_script, args=[bot_name, parsed_program_string]).start()
 
-        # Now actually send to the bot
-        # bot.sendKV("SCRIPTS", parsed_program_string)
+        bot = self.get_bot(bot_name)
+        self.stop_bot_script(bot_name)
+        
+        # reset the previous script_exec_result
+        bot.script_exec_result_var.set_with_lock(False, "Waiting for execution completion")
+
+        # Run the script in a separate thread
+        self.script_thread = threading.Thread(target=self.run_bot_script, args=[bot_name, parsed_program_string])
+        self.script_thread.start()
 
     def run_bot_script(self, bot_name: str, program_string: str):
         bot_script = self.get_bot(bot_name)
+        bot_script.script_alive_var.set_with_lock(True, True, timeout=-1)
         try:
             print("Current Expression:", self.current_expression)
             print("Executing Program...")
             exec(program_string)
-            bot_script.script_exec_result_lock.acquire(timeout=5)
-            bot_script.script_exec_result = "Successful execution"
-            print(bot_script.script_exec_result)
-            print("Current Expression:", self.current_expression)
-            bot_script.script_exec_result_lock.release()
+            bot_script.script_exec_result_var.set_with_lock(True, "Successful execution", timeout=5)
         except Exception as exception:
             str_exception = str(type(exception)) + ": " + str(exception)
-            print("exception in python code")
-            bot_script.script_exec_result_lock.acquire(timeout=5)
-            bot_script.script_exec_result = str_exception
-            bot_script.script_exec_result_lock.release()
+            bot_script.script_exec_result_var.set_with_lock(True, str_exception, timeout=5)
+            print("exception encountered in running the program")
+            print(str_exception)
+            
+        bot_script.script_alive_var.set_with_lock(True, False, timeout=-1)
+
+    def stop_bot_script(self, bot_name: str):
+        bot = self.get_bot(bot_name)
+        script_alive = bot.script_alive_var.get_with_lock(True, timeout=-1)
+        if script_alive and self.script_thread != None:
+            # stop current running script and send stop command to the bot
+            bot.script_exec_result_var.set_with_lock(True, "Stop current program in execution", timeout=1)
+            res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(self.script_thread.ident), ctypes.py_object(SystemExit))
+            print("interrupting the thread executing the script, result: " + str(res))
+            bot.sendKV("WHEELS", "STOP")
 
     # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
     #     script = query_params['script_code']
@@ -370,12 +378,7 @@ class BaseStation:
         """ Retrieve the last script's execution result from the specified bot.
         """
         bot = self.get_bot(bot_name)
-        if bot.script_exec_result_lock.acquire(blocking=False):
-            script_exec_result = bot.script_exec_result
-            bot.script_exec_result_lock.release()
-            return script_exec_result
-        else:
-            return "Waiting for execution completion"
+        return bot.script_exec_result_var.get_with_lock(False)
         
         # request the bot to send the script execution result
         # bot.sendKV("SCRIPT_EXEC_RESULT", "")
