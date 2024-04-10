@@ -191,7 +191,6 @@ class Minibot:
         # except timeout:
         #     print("Timed out", flush=True)
         except OSError as e:
-            print(e)
             print("Try again")
 
         # TODO this security policy is stupid.  We should be doing
@@ -329,15 +328,15 @@ class Minibot:
 
             token_len = len(Minibot.START_CMD_TOKEN)
             key = data_str[start + token_len:comma]
-            if(key == "SCRIPT_BEG"):
-                print("BEG Data:")
-                print(data_str)
-            if(key == "SCRIPT_MID"):
-                print("MID Data:")
-                print(data_str)
-            if(key == "SCRIPT_END"):
-                print("END Data:")
-                print(data_str)
+            # if(key == "SCRIPT_BEG"):
+            #     print("BEG Data:")
+            #     print(data_str)
+            # if(key == "SCRIPT_MID"):
+            #     print("MID Data:")
+            #     print(data_str)
+            # if(key == "SCRIPT_END"):
+            #     print("END Data:")
+            #     print(data_str)
             value = data_str[comma + 1:end]
             # executes command with key,value
             self.execute_command(sock, key, value)
@@ -512,7 +511,6 @@ if __name__ == "__main__":
     if args.is_simulation: # and args.comm_mode == 1:
         import scripts.ece_dummy_ops as ece
         BOT_LIB_FUNCS = "ece_dummy_ops"
-        print("Using Port", args.port_number)
     #elif args.is_simulation and args.comm_mode == 2:
         # import scripts.ece_dummy_ops2 as ece
         # BOT_LIB_FUNCS = "ece_dummy_ops2"
