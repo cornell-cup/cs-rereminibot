@@ -283,8 +283,16 @@ class BaseStation:
         bot_script.script_alive_var.set_with_lock(True, True, timeout=-1)
         try:
             print("Current Expression:", self.current_expression)
+            print("Parsed Program:")
+            print(program_string)
             print("Executing Program...")
-            exec(program_string)
+            exec_globals = {
+                'bot_script': bot_script,
+                'Emotion' : Emotion,
+                'self' : self,
+                }
+            exec(program_string, exec_globals)  # Pass bot_script to exec()
+            print("Finished Executing Program!")
             bot_script.script_exec_result_var.set_with_lock(True, "Successful execution", timeout=5)
         except Exception as exception:
             str_exception = str(type(exception)) + ": " + str(exception)
@@ -329,6 +337,8 @@ class BaseStation:
         program_lines = script.split('\n')
         parsed_program = []
 
+        parsed_program.append("import time\n")
+
         init_emotional_system(parsed_program)
 
         for line in program_lines:
@@ -365,6 +375,8 @@ class BaseStation:
                 match = regex.match(line)
             
             parsed_program.append(line + '\n') 
+
+        parsed_program.append("time.sleep(1)\n")
         parsed_program_string = "".join(parsed_program)
         return parsed_program_string
 
