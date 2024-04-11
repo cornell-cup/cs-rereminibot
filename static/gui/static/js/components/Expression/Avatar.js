@@ -133,6 +133,9 @@ export class AvatarJS
     // Get time since last frame
     const currentTime = Date.now();
 
+    console.log("Current Time:", currentTime);
+    console.log("Previous Time:", this.prevUpdateTime);
+
     if(this.restartOnNextUpdate){
       this.currentFrame = 0.0;
       this.restartOnNextUpdate = false;
@@ -140,21 +143,28 @@ export class AvatarJS
     else{
       const deltaTime = (currentTime - this.prevUpdateTime) / 1000;
 
+      console.log("Current Frame (Pre):", this.currentFrame);
       // Compute temporal position of new frame (frame index but with decimals)
       this.currentFrame += deltaTime * this.currentPlaybackSpeed;
+
+      console.log("Current Frame (Post):", this.currentFrame);
     }
 
     // Update previous frame time variable
     this.prevUpdateTime = currentTime;
 
+    const numFrames = this.expressions[this.currentExpression].frameCount;
+
     // Keep the temporal position with the range [0, total number of frames)
-    while (this.currentFrame >= this.currentExpression.frameCount) {
-        this.currentFrame -= this.currentExpression.frameCount;
+    while (this.currentFrame >= numFrames) {
+        this.currentFrame -= numFrames;
     }
 
     while (this.currentFrame < 0) {
-        this.currentFrame += this.currentExpression.frameCount;
+        this.currentFrame += numFrames;
     }
+
+    console.log("Current Frame (Mod):", this.currentFrame);
   }
 
   drawCurrentDisplay(canvas) {  
