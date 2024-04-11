@@ -129,6 +129,13 @@ export class AvatarJS
       // console.log(`Current Expression: ${this.currentExpression}`); 
       return;
     }
+    
+    const numFrames = this.expressions[this.currentExpressionName].frameCount;
+
+    if(numFrames == null || isNaN(numFrames)){
+      console.error("Null or NaN number of frames encountered! This should not happen!");
+      return;
+    }
 
     // Get time since last frame
     const currentTime = Date.now();
@@ -146,8 +153,6 @@ export class AvatarJS
 
     // Update previous frame time variable
     this.prevUpdateTime = currentTime;
-
-    const numFrames = this.expressions[this.currentExpressionName].frameCount;
 
     // Keep the temporal position with the range [0, total number of frames)
     while (this.currentFrame >= numFrames) {
