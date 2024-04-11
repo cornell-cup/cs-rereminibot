@@ -8,6 +8,7 @@ import sys
 import time
 import threading
 import math
+import ctypes
 
 from basestation.bot import Bot
 from basestation import config
@@ -59,23 +60,12 @@ class BaseStation:
         self.reuseport = reuseport
 
         self.blockly_function_map = {
-            "move_forward": "drivetrain.set_effort(1, 1)",
-            "move_backward": "drivetrain.set_effort(-1, -1)",
-            "turn_clockwise": "drivetrain.set_effort(1, 0)",
-            "turn_counter_clockwise": "drivetrain.set_effort(0, 1)",
-            # "move_forward_distance": "fwd_dst",
-            # "move_backward_distance": "back_dst",
-            # "move_to": "move_to",
+            "move_forward": "bot_script.sendKV(\"WHEELS\",\"forward\")",
+            "move_backward": "bot_script.sendKV(\"WHEELS\",\"backward\")",
+            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"left\")",
+            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"right\")",
             "wait": "time.sleep",        
-            "stop": "drivetrain.set_effort(0, 0)"
-            # "set_wheel_power": "ECE_wheel_pwr",
-            # "turn_clockwise": "right",     
-            # "turn_counter_clockwise": "left",
-            # "turn_clockwise_angle": "right_angle",     
-            # "turn_counter_clockwise_angle": "left_angle",
-            # "turn_to": "turn_to",
-            # "move_servo": "move_servo",    
-            # "read_ultrasonic": "read_ultrasonic",
+            "stop": "bot_script.sendKV(\"WHEELS\",\"stop\")"
         }
         # functions that run continuously, and hence need to be started
         # in a new thread on the Minibot otherwise the Minibot will get
@@ -136,6 +126,7 @@ class BaseStation:
             "stop": "Minibot stops",
         }
 
+        self.script_thread = None
         # Keep track of any built-in scripts that are running / should run next
         self.builtin_script_state = {
             "procs": dict(),
@@ -238,6 +229,8 @@ class BaseStation:
     @make_thread_safe
     def move_bot_wheels(self, bot_name: str, direction: str, power: str):
         """ Gives wheels power based on user input """
+        # stop currently running script (if any)
+        self.stop_bot_script(bot_name)
         bot = self.get_bot(bot_name)
         direction = direction.lower()
         bot.sendKV("WHEELS", direction)
@@ -262,14 +255,41 @@ class BaseStation:
 
     def send_bot_script(self, bot_name: str, script: str):
         """Sends a python program to the specific bot"""
-        bot = self.get_bot(bot_name)
-        # reset the previous script_exec_result
-        bot.script_exec_result = None
         parsed_program_string = self.parse_program(script)
-        print("parsed program string")
-        print(parsed_program_string)
-        # Now actually send to the bot
-        bot.sendKV("SCRIPTS", parsed_program_string)
+
+        bot = self.get_bot(bot_name)
+        self.stop_bot_script(bot_name)
+        
+        # reset the previous script_exec_result
+        bot.script_exec_result_var.set_with_lock(False, "Waiting for execution completion")
+
+        # Run the script in a separate thread
+        self.script_thread = threading.Thread(target=self.run_bot_script, args=[bot_name, parsed_program_string])
+        self.script_thread.start()
+
+    def run_bot_script(self, bot_name: str, program_string: str):
+        bot_script = self.get_bot(bot_name)
+        bot_script.script_alive_var.set_with_lock(True, True, timeout=-1)
+        try:
+            exec(program_string)
+            bot_script.script_exec_result_var.set_with_lock(True, "Successful execution", timeout=5)
+        except Exception as exception:
+            str_exception = str(type(exception)) + ": " + str(exception)
+            bot_script.script_exec_result_var.set_with_lock(True, str_exception, timeout=5)
+            print("exception encountered in running the program")
+            print(str_exception)
+            
+        bot_script.script_alive_var.set_with_lock(True, False, timeout=-1)
+
+    def stop_bot_script(self, bot_name: str):
+        bot = self.get_bot(bot_name)
+        script_alive = bot.script_alive_var.get_with_lock(True, timeout=-1)
+        if script_alive and self.script_thread != None:
+            # stop current running script and send stop command to the bot
+            bot.script_exec_result_var.set_with_lock(True, "Stop current program in execution", timeout=1)
+            res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(self.script_thread.ident), ctypes.py_object(SystemExit))
+            print("interrupting the thread executing the script, result: " + str(res))
+            bot.sendKV("WHEELS", "STOP")
 
     # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
     #     script = query_params['script_code']
@@ -291,7 +311,7 @@ class BaseStation:
         # 2nd group is for func name, 3rd group is for args,
         # 4th group is for anything else (additional whitespace,
         # ":" for end of if condition, etc)
-        pattern = r"(.*)bot.(\w*)\((.*)\)(.*)"
+        pattern = r"(.*)bot\.(\w+)\(([^)]*)\)(.*)"
         regex = re.compile(pattern)
         program_lines = script.split('\n')
         parsed_program = []
@@ -299,24 +319,36 @@ class BaseStation:
             match = regex.match(line)
             # match group 2: command, such as move_forward
             # match group 3: argument, such as power like 100
-            if match:
+            while match:
                 command = match.group(2)
                 argument = str(match.group(3))
+
                 if command in self.blockly_function_map:
                     func = self.blockly_function_map[command]
                 else:
                     func = command
+
                 if command == "wait":
                     func = func + "(" + argument + ")"
+
+                # TODO: implement custom power  
+                # elif func.startswith("bot_script.sendKV(\"WHEELS\","):
+                #     if argument != '':
+                #         float_power = float(argument) / 100
+                #         func = func.replace("pow",str(float_power))   
+                
                 whitespace = match.group(1)
                 if not whitespace:
                     whitespace = ""
                 parsed_line = whitespace
                 # adding ; for multiline execution in exec
-                parsed_line += func + ";"
-                parsed_program.append(parsed_line + "\n")
-            else:
-                parsed_program.append(line + '\n')  # "normal" Python
+                parsed_line += func
+                parsed_line += match.group(4)
+
+                line = parsed_line
+                match = regex.match(line)
+            
+            parsed_program.append(line + '\n') 
         parsed_program_string = "".join(parsed_program)
         return parsed_program_string
 
@@ -330,12 +362,14 @@ class BaseStation:
         """ Retrieve the last script's execution result from the specified bot.
         """
         bot = self.get_bot(bot_name)
+        return bot.script_exec_result_var.get_with_lock(False)
+        
         # request the bot to send the script execution result
-        bot.sendKV("SCRIPT_EXEC_RESULT", "")
+        # bot.sendKV("SCRIPT_EXEC_RESULT", "")
         # try reading to see if the bot has replied
-        bot.readKV()
+        # bot.readKV()
         # this value might be None if the bot hasn't replied yet
-        return bot.script_exec_result
+        # return bot.script_exec_result
 
     # ==================== DATABASE ====================
     def login(self, email: str, password: str) -> Tuple[int, Optional[str]]:

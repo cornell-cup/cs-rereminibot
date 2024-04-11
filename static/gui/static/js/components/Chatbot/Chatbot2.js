@@ -294,15 +294,15 @@ function Chatbot2({
 
   // rendering front end HTML elements
   return (
-    <div class={"floating-chat enter " + expand} style={expand === "expand" ? (right ? styles.leftWindow : styles.rightWindow) : styles.empty}
+    <div className={"floating-chat enter " + expand} style={expand === "expand" ? (right ? styles.leftWindow : styles.rightWindow) : styles.empty}
       onClick={(e) => openChatbox(e)}> {/* add 'expand' to class for this to turn into a chat */}
-      <i class="fa fa-comments" aria-hidden={true}></i>
-      <div class={"chat " + enter}> {/* add 'enter' to class for the rest to display */}
-        <div class="header">
+      <i className="fa fa-comments" aria-hidden={true}></i>
+      <div className={"chat " + enter}> {/* add 'enter' to class for the rest to display */}
+        <div className="header">
           {/* buttons in the header used for changing appearance of the window */}
-          <div class="popup">
+          <div className="popup">
             <button id="popupBut" onClick={(e) => toggleChangeFont(e)}><FontAwesomeIcon icon={Icons.faEllipsisV} /></button>
-            <span class="popuptext" id="myPopup" style={canChangeFont ? { visibility: 'visible' } : { visibility: 'hidden' }}>
+            <span className="popuptext" id="myPopup" style={canChangeFont ? { visibility: 'visible' } : { visibility: 'hidden' }}>
               <button>
                 <FontAwesomeIcon icon={Icons.faInfo} onClick={(e) => alertInfo(e)} />
               </button>
@@ -318,7 +318,7 @@ function Chatbot2({
           </div>
           <button id="contextLabel" onClick={(e) => toggleMode(e)}> {contextMode ? "Q&A Mode" : "Command Mode"}</button>
           &nbsp;
-          <span class="title" style={fontSize.header}>
+          <span className="title" style={fontSize.header}>
             {selectedBotName}
           </span>
           {/* close button in the header */}
@@ -332,25 +332,25 @@ function Chatbot2({
         </div>
 
         {/* messages sent by both the chatbot and user, timestamp below */}
-        <ul class="messages" id="scroll">
-          <div class="date" style={fontSize.body}>{date}</div>
-          <hr class="timeBreak" />
+        <ul className="messages" id="scroll">
+          <div className="date" style={fontSize.body}>{date}</div>
+          <hr className="timeBreak" />
           {messages.map((item) => (
             <div key={item.id}>
-              <li class={item.who} time={item.timeStamp} style={fontSize.body}>{
+              <li className={item.who} time={item.timeStamp} style={fontSize.body}>{
                 isAnimating & messages[messages.length - 1] == item ?
-                <img src = "https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" width="5%"/>
-                : item.message
-                }
+                  <img src="https://media.tenor.com/On7kvXhzml4AAAAj/loading-gif.gif" width="5%" />
+                  : item.message
+              }
               </li>
-              <li class={"timestamp " + item.who + "t"} style={fontSize.body}>{item.timeStamp}</li>
+              <li className={"timestamp " + item.who + "t"} style={fontSize.body}>{item.timeStamp}</li>
             </div>
           ))}
           <span ref={messagesEndRef}></span>
         </ul>
-        <div class="footer">
+        <div className="footer">
           {/* textbox for the user to enter text messages */}
-          <textarea rows="3" cols="70" class="text-box" id="textbox"
+          <textarea rows="3" cols="70" className="text-box" id="textbox"
             onChange={changeInputText} value={inputText}
             placeholder={contextMode ? "Enter a context/question" : selectedBotName != "" ?
               "Click the microphone to send a command" : "Please connect to a Minibot!"}

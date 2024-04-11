@@ -78,7 +78,7 @@ function BotVoiceControl({
   return (
     <React.Fragment>
       <div id="speech-button" className="row">
-        <input class="text-box" id="textbox" onChange={setInputText}
+        <input className="text-box" id="textbox" onChange={setInputText}
           value={selectedBotName != "" ? inputText : "Please connect to a Minibot!"}>
 
         </input>

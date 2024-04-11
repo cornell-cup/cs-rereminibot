@@ -67,6 +67,16 @@ def wheels():
     base_station.move_bot_wheels(bot_name, direction, power)
     return json.dumps(True), status.HTTP_200_OK
 
+@index_bp.route('stop-script', methods=['POST'])
+def stop_script():
+    """ Make Minibot stop running the Python script (if any) """
+    data = request.get_json()
+    bot_name = data['bot_name']
+    if not bot_name:
+        error_json = {"error_msg": NO_BOT_ERROR_MSG}
+        return json.dumps(error_json), status.HTTP_400_BAD_REQUEST
+    base_station.stop_bot_script(bot_name)
+    return json.dumps(True), status.HTTP_200_OK
 
 @index_bp.route('/script', methods=['POST'])
 def script():
@@ -185,7 +195,7 @@ def error_message_update():
         error_json = {"error_msg": NO_BOT_ERROR_MSG}
         return json.dumps(error_json), status.HTTP_400_BAD_REQUEST
     script_exec_result = base_station.get_bot_script_exec_result(bot_name)
-    if not script_exec_result:
+    if script_exec_result == "Waiting for execution completion":
         code = -1
     else:
         # invariant: submission_id is not None inside this block
