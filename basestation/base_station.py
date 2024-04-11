@@ -376,7 +376,7 @@ class BaseStation:
             
             parsed_program.append(line + '\n') 
 
-        parsed_program.append("time.sleep(1)\n")
+        parsed_program.append("time.sleep(1)\n") #TODO Possibly Remove
         parsed_program_string = "".join(parsed_program)
         return parsed_program_string
 
