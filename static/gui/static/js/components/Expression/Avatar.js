@@ -9,7 +9,7 @@ export class AvatarJS
   constructor(expressions = {}, currentExpression = null, currentPlaybackSpeed = 10.0, autoSaveExpressions = false) {
     this.expressions = expressions;
     this.jsonExpressionsDict = {};
-    this.currentExpression = null;
+    this.currentExpressionName = null;
     this.currentPlaybackSpeed = currentPlaybackSpeed;
     this.currentFrame = 0.0;
     this.restartOnNextUpdate = true;
@@ -19,13 +19,13 @@ export class AvatarJS
 
     if (currentExpression !== null) {
         if (expressions.hasOwnProperty(currentExpression)) {
-            this.currentExpression = currentExpression;
+            this.currentExpressionName = currentExpression;
             setArbitraryStartingExpression = false;
         }
     }
 
     if (setArbitraryStartingExpression) {
-        this.currentExpression = Object.keys(expressions)[0];
+        this.currentExpressionName = Object.keys(expressions)[0];
     }
 
     this.prevUpdateTime = Date.now();
@@ -81,13 +81,13 @@ export class AvatarJS
   }
 
   validCurrentExpression() {
-    const expressionNotPresent = !this.expressions.hasOwnProperty(this.currentExpression);
-    const expressionNull = this.currentExpression === null;
+    const expressionNotPresent = !this.expressions.hasOwnProperty(this.currentExpressionName);
+    const expressionNull = this.currentExpressionName === null;
     
     if(expressionNull || expressionNotPresent)
         return false;
 
-    return this.expressions[this.currentExpression].loadedCorrectly;
+    return this.expressions[this.currentExpressionName].loadedCorrectly;
   }
 
   getExpression(expressionName) {
@@ -95,11 +95,11 @@ export class AvatarJS
   }
 
   clearCurrentExpression() {
-    this.currentExpression = null;
+    this.currentExpressionName = null;
   }
 
   setCurrentExpression(expressionName) {
-    if (expressionName === this.currentExpression) {
+    if (expressionName === this.currentExpressionName) {
       return true;
     }
     if (expressionName === null || 
@@ -109,7 +109,7 @@ export class AvatarJS
       return true;
     }
     if (this.expressions.hasOwnProperty(expressionName)) {
-      this.currentExpression = expressionName;
+      this.currentExpressionName = expressionName;
       this.restartOnNextUpdate = true;
       console.log("Current Frame Reset!");
       return true;
@@ -133,9 +133,6 @@ export class AvatarJS
     // Get time since last frame
     const currentTime = Date.now();
 
-    console.log("Current Time:", currentTime);
-    console.log("Previous Time:", this.prevUpdateTime);
-
     if(this.restartOnNextUpdate){
       this.currentFrame = 0.0;
       this.restartOnNextUpdate = false;
@@ -143,17 +140,14 @@ export class AvatarJS
     else{
       const deltaTime = (currentTime - this.prevUpdateTime) / 1000;
 
-      console.log("Current Frame (Pre):", this.currentFrame);
       // Compute temporal position of new frame (frame index but with decimals)
       this.currentFrame += deltaTime * this.currentPlaybackSpeed;
-
-      console.log("Current Frame (Post):", this.currentFrame);
     }
 
     // Update previous frame time variable
     this.prevUpdateTime = currentTime;
 
-    const numFrames = this.expressions[this.currentExpression].frameCount;
+    const numFrames = this.expressions[this.currentExpressionName].frameCount;
 
     // Keep the temporal position with the range [0, total number of frames)
     while (this.currentFrame >= numFrames) {
@@ -163,21 +157,19 @@ export class AvatarJS
     while (this.currentFrame < 0) {
         this.currentFrame += numFrames;
     }
-
-    console.log("Current Frame (Mod):", this.currentFrame);
   }
 
   drawCurrentDisplay(canvas) {  
     if(!this.validCurrentExpression())
       return false;
 
-    return this.expressions[this.currentExpression].drawFrame(this.currentFrame, canvas);
+    return this.expressions[this.currentExpressionName].drawFrame(this.currentFrame, canvas);
   }
 
   getCurrentFrameCount() {
     if(!this.validCurrentExpression())
         return 0;
-    return this.expressions[this.currentExpression].frameCount;
+    return this.expressions[this.currentExpressionName].frameCount;
   }
 
   getExpressionNames() {
