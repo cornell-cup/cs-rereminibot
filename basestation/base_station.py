@@ -9,6 +9,9 @@ import time
 import threading
 import math
 import ctypes
+import json
+import queue
+from time import sleep
 
 from basestation.bot import Bot
 from basestation import config
@@ -19,6 +22,7 @@ from basestation.databases.user_database import db
 
 # imports from basestation util
 from basestation.util.stoppable_thread import StoppableThread, ThreadSafeVariable
+import basestation.piVision.pb_utils as pb_utils
 
 from random import choice, randint
 from string import digits, ascii_lowercase, ascii_uppercase
@@ -67,6 +71,10 @@ class BaseStation:
             "wait": "time.sleep",        
             "stop": "bot_script.sendKV(\"WHEELS\",\"stop\")"
         }
+
+        self.py_commands = queue.Queue()
+        self.pb_map = {}
+        self.pb_stopped = True
         # functions that run continuously, and hence need to be started
         # in a new thread on the Minibot otherwise the Minibot will get
         # stuck in an infinite loop and will be unable to receive
@@ -94,10 +102,6 @@ class BaseStation:
         # machine, because some machines can have multiple Network Interface
         # Cards, and therefore will have multiple ip_addresses
         server_address = ("0.0.0.0", 5001)
-        
-
-    
-
         
         # checks if vision can see april tag by checking lenth of vision_log
         # self.connections = BaseConnection()
@@ -234,24 +238,6 @@ class BaseStation:
         bot = self.get_bot(bot_name)
         direction = direction.lower()
         bot.sendKV("WHEELS", direction)
-        
-    # def set_bot_mode(self, bot_name: str, mode: str):
-    #     """ Set the bot to either line follow or object detection mode """
-    #     bot = self.get_bot(bot_name)
-
-    #     if mode == "object_detection":
-    #         self.bot_vision_server = subprocess.Popen(
-    #             ['python', './basestation/piVision/server.py', '-p MobileNetSSD_deploy.prototxt', 
-    #             '-m', 'MobileNetSSD_deploy.caffemodel', '-mW', '2', '-mH', '2', '-v', '1'])
-    #     elif mode == "color_detection":
-    #         self.bot_vision_server = subprocess.Popen(
-    #             ['python', './basestation/piVision/server.py', '-p MobileNetSSD_deploy.prototxt', 
-    #             '-m', 'MobileNetSSD_deploy.caffemodel', '-mW', '2', '-mH', '2', '-v', '2'])
-    #     else:
-    #         if self.bot_vision_server:
-    #             self.bot_vision_server.kill()
-
-    #     bot.sendKV("MODE", mode)
 
     def send_bot_script(self, bot_name: str, script: str):
         """Sends a python program to the specific bot"""
@@ -438,6 +424,92 @@ class BaseStation:
         user.custom_function = custom_function
         db.session.commit()
         return True
+
+    def get_custom_function(self):
+        if not self.login_email:
+            return False, ""
+
+        user = User.query.filter(User.email == self.login_email).first()
+        return True, user.custom_function
+    
+    # ==================== PHYSICAL BLOCKLY ==================================
+    def get_next_py_command(self):
+        if(self.py_commands.qsize() == 0):
+            return ""
+        val = self.py_commands.get(False)
+        return val
+
+    def get_rfid(self, bot_name: str):
+        bot = self.get_bot(bot_name)
+        bot.sendKV("RFID", 4)
+        bot.readKV()
+        print("rfid tag: " + bot.rfid_tags, flush=True)
+        return bot.rfid_tags
+
+    @make_thread_safe
+    def set_bot_mode(self, bot_name: str, mode: str, pb_map: json):
+        """ Set the bot to either line follow or object detection mode """
+        bot = self.get_bot(bot_name)
+        pb_map = str(pb_map)
+        if mode == "physical-blockly" or mode == "physical-blockly-2":
+            self.pb_stopped = False
+            if mode == 'physical-blockly':
+                #print("starting physical blockly thread")
+                self.physical_blockly(bot_name, 0, pb_map)
+            else:
+                #print("starting physical blockly 2 thread")
+                self.physical_blockly(bot_name, 1, pb_map)
+        # elif mode == "object_detection":
+        #     self.bot_vision_server = subprocess.Popen(
+        #         ['python', './basestation/piVision/server.py', '-p MobileNetSSD_deploy.prototxt',
+        #          '-m', 'MobileNetSSD_deploy.caffemodel', '-mW', '2', '-mH', '2', '-v', '1'])
+        # elif mode == "color_detection":
+        #     self.bot_vision_server = subprocess.Popen(
+        #         ['python', './basestation/piVision/server.py', '-p MobileNetSSD_deploy.prototxt',
+        #          '-m', 'MobileNetSSD_deploy.caffemodel', '-mW', '2', '-mH', '2', '-v', '2'])
+        # else:
+        #     if self.bot_vision_server:
+        #         self.bot_vision_server.kill()
+        bot.sendKV("MODE", mode)
+    
+    def physical_blockly(self, bot_name: str, mode: str, pb_map: json):
+        rfid_tags = queue.Queue()
+        pb_map = json.loads(pb_map)
+        print(pb_map)
+        
+        def tag_producer():
+            while not self.pb_stopped:
+                tag = self.get_rfid(bot_name)
+                rfid_tags.put(tag)
+                sleep(1.0)
+            
+        def tag_consumer():
+            while not self.pb_stopped:
+                #print("queue size: " + str(rfid_tags.qsize()), flush=True)
+                try:
+                    tag = rfid_tags.get(block=False).strip()
+                    if tag in pb_map.keys():
+                        tag = pb_map[tag]
+                        task = pb_utils.classify(tag, pb_utils.commands)
+                        py_code = pb_utils.pythonCode[task[1]]
+
+                        if mode == '1':
+                            if(py_code[0:3] == "bot"):
+                                # TODO: implement sending command from basestation
+                                # pb_utils.send_request(bot_name, task)
+                                pass
+                        self.py_commands.put("pb:" + py_code)
+                except:
+                    pass
+                sleep(1.0)
+                
+        threading.Thread(target=tag_consumer).start()
+        threading.Thread(target=tag_producer).start()
+    
+    def end_physical_blockly(self):
+        self.pb_stopped = True
+        self.py_commands = queue.Queue()
+        print("ending physical blockly thread")
 
     # ==================== NEW SPEECH RECOGNITION ============================
     def send_command(self, bot_name, command):
