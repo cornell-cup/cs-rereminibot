@@ -119,7 +119,7 @@ def make_crc_message(data):
     end = bytes([ord(x) for x in "RT"])
     
     # return start + data_hash_bytes + bytes(data) + end
-    return start + bytes(data) + end
+    return start + bytes(data) + end + "\n"
 
 # Validate whether a message is complete
 def validate_crc_message(msg, data_len=DATA_LEN):
@@ -132,7 +132,7 @@ def validate_crc_message(msg, data_len=DATA_LEN):
                     the 2 start chars, 2 end chars, and checksum
     """
     start_ok = (msg[0] == ord('C') and msg[1] == ord('C'))
-    end_ok = (msg[-2] == ord('R') and msg[-1] == ord('T'))
+    end_ok = (msg[-2] == ord('R') and msg[-1] == ord('T')) or (msg[-3] == ord('R') and msg[-2] == ord('T') and msg[-1] == ord('\n'))
     # data_hash = crc16(msg[4:4+data_len])
     # msg_hash = int.from_bytes(msg[2:4], 'big')  # bytes 2 and 3
     # hash_ok = (data_hash == msg_hash)
@@ -146,4 +146,7 @@ def unpack_crc_message(msg):
     # return msg[4:-2] 
 
     # unpacking w/o checksum
-    return msg[2:-2]
+    if msg[-1] == ord('\n'):
+        return msg[2:-3]
+    else:
+        return msg[2:-2]
