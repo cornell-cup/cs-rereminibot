@@ -408,9 +408,10 @@ class Minibot:
         elif key == "RFID":
             def pass_tags(self, sock: socket, key: str, value: str):
                 returned_tags = [0, 0, 0, 0]
-                ece.rfid(value, returned_tags)
+                # replace with direct call to the rfid sensor here
+                # ece.rfid(value, returned_tags)
                 self.sendKV(sock, key, ' '.join(str(e) for e in returned_tags))
-                
+    
             _thread.start_new_thread(pass_tags, (self, sock, key, value))
         elif key == "TESTRFID":
             def test_rfid(self, sock: socket, key: str, value: str):
