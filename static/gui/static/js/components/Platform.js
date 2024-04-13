@@ -24,6 +24,7 @@ import BotControl from './BotControl/BotControl.js';
 import Dashboard from './Analytics/dashboard.js';
 import History from './Analytics/submissionHistory.js';
 import ContextHistory from './ContextHistory/ContextHistory.js';
+import PhysicalBlockly from './PhysicalBlockly/PhysicalBlockly.js';
 
 // Utils import
 import VirtualEnviroment from './utils/VirtualEnviroment.js';
@@ -60,6 +61,8 @@ const Platform = withCookies((props) => {
   const [loginEmail, setLoginEmail] = useState(props.cookies.get('current_user_email') || "");
   const [virtualRoomId, setVirtualRoomId] = useState(props.cookies.get('virtual_room_id') || nanoid())
   const [virtualEnviroment, setVirtualEnviroment] = useState(new VirtualEnviroment([], []));
+
+  const [pb, setPb] = useState("");
 
   useEffect(() => {
     let tmp_email = props.cookies.get('current_user_email') || "";
@@ -143,6 +146,17 @@ const Platform = withCookies((props) => {
               loginEmail={loginEmail}
               contextHistoryLoaded={props.contextHistoryLoaded}
               setContextHistoryLoaded={props.setContextHistoryLoaded}
+            />
+          </Route>
+          
+          <Route path="/physical-blockly">
+            <PhysicalBlockly
+              selectedBotName={props.selectedBotName}
+              pb={pb}
+              setPb={setPb}
+              setPythonCode={setPythonCode}
+              setBlocklyXml={setBlocklyXml}
+              setPythonCodeState = {setPythonCodeState}
             />
           </Route>
 

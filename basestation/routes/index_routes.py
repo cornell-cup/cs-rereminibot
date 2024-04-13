@@ -47,6 +47,10 @@ def discover_bots():
     base_station.listen_for_minibot_broadcast()
     return json.dumps(True), status.HTTP_200_OK
 
+@index_bp.route('/get-py-command', methods=['GET'])
+def get_py_command(): 
+    v = base_station.get_next_py_command()
+    return json.dumps(v)
 
 @index_bp.route('/active-bots', methods=['GET'])
 def active_bots():
@@ -131,9 +135,21 @@ def mode():
         error_json = {"error_msg": NO_BOT_ERROR_MSG}
         return json.dumps(error_json), status.HTTP_400_BAD_REQUEST
     mode = data['mode']
-    base_station.set_bot_mode(bot_name, mode)
+    pb_map = data['pb_map']
+    base_station.set_bot_mode(bot_name, mode, pb_map)
     return json.dumps(True), status.HTTP_200_OK
 
+@index_bp.route('/start_physical_blockly', methods=['POST'])
+def start_physical_blockly():
+    data = request.get_json()
+    bot_name = data['bot_name']
+    rfid = base_station.get_rfid(bot_name)
+    return json.dumps(rfid), status.HTTP_200_OK
+
+@index_bp.route('/end_physical_blockly', methods=['GET'])
+def end_physical_blockly():
+    base_station.end_physical_blockly()
+    return json.dumps(True), status.HTTP_200_OK
 
 @index_bp.route('/vision', methods=['POST', 'GET'])
 def vision():
@@ -286,6 +302,15 @@ def update_custom_function():
     else:
         return json.dumps({'error': ''}), status.HTTP_200_OK
 
+@index_bp.route('/get_custom_function/', methods=['GET'])
+def get_custom_function():
+    """Gets the logged in user's custom functions"""
+    result = base_station.get_custom_function()
+    
+    if result[0]:
+        return json.dumps(result[1]), status.HTTP_200_OK
+    else:
+        return json.dumps({'error': 'Not logged in'}), status.HTTP_401_UNAUTHORIZED
 
 @index_bp.route('/speech_recognition', methods=['POST', 'GET'])
 def speech_recognition():

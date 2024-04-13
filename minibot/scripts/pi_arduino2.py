@@ -1,12 +1,10 @@
-# import spidev
 from machine import SPI, Pin
 import time
 import _thread
-# import threading
 import scripts.message_utils as msglib
 
 # spi = spidev.SpiDev()
-spi = SPI(pi_bus, baudrate=400000)
+spi = SPI(0, baudrate=400000)
 
 class TransmitLock():
     # TODO: implement this class with condition variables

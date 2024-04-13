@@ -1,4 +1,6 @@
 from XRPLib.defaults import *
+import qwiic_rfid
+
 from blockly_python_process import BlocklyPythonProcess
 from bs_repr import BS_Repr
 
@@ -370,10 +372,10 @@ class Minibot:
         elif key == "WHEELS":
             print("key WHEELS")
             cmds_functions_map = {
-                "forward": (1, 1),
-                "backward": (-1, -1),
-                "left": (0, 1),
-                "right": (1, 0),
+                "forward": (0.5, 0.5),
+                "backward": (-0.5, -0.5),
+                "left": (0, 0.5),
+                "right": (0.5, 0),
                 "stop": (0, 0),
             }
             if value in cmds_functions_map:
@@ -406,12 +408,19 @@ class Minibot:
             else:
                 self.sendKV(sock, key, "")
         elif key == "RFID":
-            def pass_tags(self, sock: socket, key: str, value: str):
-                returned_tags = [0, 0, 0, 0]
-                ece.rfid(value, returned_tags)
-                self.sendKV(sock, key, ' '.join(str(e) for e in returned_tags))
+            # def pass_tags(self, sock: socket, key: str, value: str):
+            #     returned_tags = [0, 0, 0, 0]
+            #     ece.rfid(value, returned_tags)
+            #     self.sendKV(sock, key, ' '.join(str(e) for e in returned_tags))
                 
-            _thread.start_new_thread(pass_tags, (self, sock, key, value))
+            # _thread.start_new_thread(pass_tags, (self, sock, key, value))
+            rfid = qwiic_rfid.QwiicRFID(address = 0x7D)
+            if rfid.begin():
+                tag = rfid.getTag()
+                print(tag)
+                self.sendKV(sock, key, tag)
+            else:
+                self.sendKV(sock, key, "")
         elif key == "TESTRFID":
             def test_rfid(self, sock: socket, key: str, value: str):
                 start_time = time.time()
