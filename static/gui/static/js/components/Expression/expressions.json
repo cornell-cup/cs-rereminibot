@@ -18,7 +18,7 @@
     "sheet_src": "Eyes_Eyebrow_Raise.png"
   },
   "excited": {
-    "frame_width": 320,
+    "frame_width": 480,
     "frame_height": 320,
     "frame_count": 63,
     "sheet_src": "Excited.png"
