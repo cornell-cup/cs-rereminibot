@@ -85,15 +85,15 @@ class Avatar:
         if self.auto_save_expressions:
             self.save_expressions_json("expressions.json")
 
-    def load_expressions_json(self, src : str):
+    def load_expressions_json(self, json_src : str, img_parent_dir : str = ""):
         """
         """
         temp_dict = {}
         try:
-            with open(src, "r") as read_file:
+            with open(json_src, "r") as read_file:
                 temp_dict = json.load(read_file)
                 for key in temp_dict.keys():
-                    sheet = Spritesheet(src=temp_dict[key]["sheet_src"],
+                    sheet = Spritesheet(src=img_parent_dir + temp_dict[key]["sheet_src"],
                                 frame_width=temp_dict[key]["frame_width"],
                                 frame_height=temp_dict[key]["frame_height"],
                                 frame_count=temp_dict[key]["frame_count"])
