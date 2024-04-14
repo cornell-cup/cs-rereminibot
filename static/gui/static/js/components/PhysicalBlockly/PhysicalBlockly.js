@@ -30,11 +30,11 @@ const commands = ['Move Forward', 'Move Backward', 'Turn Left', 'Turn Right', 'S
 const noControlCommands = ['Move Forward', 'Move Backward', 'Turn Left', 'Turn Right', 'Stop'];
 const choices = ["red", "orange", "yellow", "green", "blue"];
 const tagMapping = [
-	"110631159936",
-	"110641412160",
 	"1107815185135",
 	"1107696200239",
+	"110631159936",
 	"1107911474124",
+	"110641412160",
 ];
 
 const customCommand = new Map();
@@ -116,16 +116,24 @@ export default class PhysicalBlockly extends React.Component {
 		const _this = this;
 		clearInterval(this.state.detectionCall);
 		//post request to basestation to stop the process
-		axios.get('/end_physical_blockly')
-			.then(function (response) {
-				// If there is loop num or custom block to be filled
-				if (_this.state.loopvar > 0 || (_this.state.customBlockFillCount > 0 && _this.state.customBlocks.length > 0)) {
-					$('#customModal').modal('show');
-				} else {
-					_this.setState({ stage: 0, tabs: 0, loopvar: 0, lastBlock: null, blockStack: [], loopList: [] });
-				}
+		axios({
+			method: 'POST',
+			url:'/end_physical_blockly',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			data: JSON.stringify({
+				bot_name: _this.props.selectedBotName
+			})
+		}).then(function (response) {
+			// If there is loop num or custom block to be filled
+			if (_this.state.loopvar > 0 || (_this.state.customBlockFillCount > 0 && _this.state.customBlocks.length > 0)) {
+				$('#customModal').modal('show');
+			} else {
+				_this.setState({ stage: 0, tabs: 0, loopvar: 0, lastBlock: null, blockStack: [], loopList: [] });
+			}
 
-			});
+		});
 	}
 
 	// getCustomBlocks() {

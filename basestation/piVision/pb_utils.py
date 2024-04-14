@@ -1,6 +1,3 @@
-import json
-import requests
-
 pythonCode = {
     "forward": "bot.move_forward(100)",
     "backward": "bot.move_backward(100)",
@@ -14,11 +11,11 @@ pythonCode = {
 
 commands = {
     "commands": {
-        "turn left": ["1107815185135"],
-        "turn right": ["1107696200239"],
-        "go forwards": ["110631159936"],
-        "go backwards": ["110641412160"],
-        "stop": ["1107911474124"],
+        "turn left": ["110631159936"],
+        "turn right": ["1107911474124"],
+        "go forwards": ["1107815185135"],
+        "go backwards": ["1107696200239"],
+        "stop": ["110641412160"],
         #repeat, end, and custom block have dummy tags, same as dummy_ops2 and physical_blockly
         "repeat": ["9 110 7 244"],
         "end": ["201 127 7 244"],
@@ -28,19 +25,19 @@ commands = {
     "tagRangeEnd": 23
 }
 
-def send_request(bot_name, args):
-    url = "http://localhost:8080/wheels"
-    headers = {
-        "Content-Type": "application/json"
-    }
+# def send_request(bot_name, args):
+#     url = "http://localhost:8080/wheels"
+#     headers = {
+#         "Content-Type": "application/json"
+#     }
 
-    data = json.dumps({
-        "bot_name": bot_name,
-        "direction": args[1],
-        "power": "5",
-        "mode": "physical blockly"
-    })
-    requests.post(url, data=data, headers=headers)
+#     data = json.dumps({
+#         "bot_name": bot_name,
+#         "direction": args[1],
+#         "power": "5",
+#         "mode": "physical blockly"
+#     })
+#     requests.post(url, data=data, headers=headers)
 
 def classify(command, commands):
         if command in commands["commands"]["turn left"]:
