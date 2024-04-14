@@ -72,6 +72,8 @@ class BaseStation:
             "stop": "bot_script.sendKV(\"WHEELS\",\"stop\")"
         }
 
+        self.wheel_directions = ["forward", "backward", "left", "right", "stop"]
+
         self.py_commands = queue.Queue()
         self.pb_map = {}
         self.pb_stopped = True
@@ -472,10 +474,9 @@ class BaseStation:
         #         self.bot_vision_server.kill()
         bot.sendKV("MODE", mode)
     
-    def physical_blockly(self, bot_name: str, mode: str, pb_map: json):
+    def physical_blockly(self, bot_name: str, mode: int, pb_map: json):
         rfid_tags = queue.Queue()
         pb_map = json.loads(pb_map)
-        print(pb_map)
         
         def tag_producer():
             while not self.pb_stopped:
@@ -492,12 +493,10 @@ class BaseStation:
                         tag = pb_map[tag]
                         task = pb_utils.classify(tag, pb_utils.commands)
                         py_code = pb_utils.pythonCode[task[1]]
-
-                        if mode == '1':
-                            if(py_code[0:3] == "bot"):
-                                # TODO: implement sending command from basestation
-                                # pb_utils.send_request(bot_name, task)
-                                pass
+                        if mode == 1:
+                            print(py_code)
+                            if py_code[0:3] == "bot" and task[1] in self.wheel_directions:
+                                self.move_bot_wheels(bot_name, task[1], "100")
                         self.py_commands.put("pb:" + py_code)
                 except:
                     pass
@@ -506,9 +505,10 @@ class BaseStation:
         threading.Thread(target=tag_consumer).start()
         threading.Thread(target=tag_producer).start()
     
-    def end_physical_blockly(self):
+    def end_physical_blockly(self, bot_name: str):
         self.pb_stopped = True
         self.py_commands = queue.Queue()
+        self.move_bot_wheels(bot_name, "STOP", "100")
         print("ending physical blockly thread")
 
     # ==================== NEW SPEECH RECOGNITION ============================
