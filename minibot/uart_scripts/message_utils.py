@@ -2,7 +2,7 @@
 # import spidev
 from machine import SPI, Pin
 import time
-from scripts.crc import crc16
+from uart_scripts.crc import crc16
 
 # Example setup code
 # spi = spidev.SpiDev()
