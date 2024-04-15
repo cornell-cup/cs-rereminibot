@@ -156,6 +156,9 @@ class PythonEditor extends React.Component {
                     // result has arrived so go ahead and clear the interval (stop polling
                     // the server)
                     clearInterval(interval);
+                } else {
+                    // black
+                    document.getElementById("error-message").style.color = "#000000";
                 }
             }).catch((error) => {
                 clearInterval(interval);
