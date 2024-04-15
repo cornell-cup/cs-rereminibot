@@ -497,7 +497,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    import scripts.ece_dummy_ops as ece
+    import uart_scripts.ece_dummy_ops as ece
     BOT_LIB_FUNCS = "ece_dummy_ops"
     print("Using Port", args.port_number)
 
