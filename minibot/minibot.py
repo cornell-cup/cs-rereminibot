@@ -402,8 +402,8 @@ class Minibot:
             cmds_functions_map = {
                 "forward": (0.5, 0.5),
                 "backward": (-0.5, -0.5),
-                "left": (0, 0.5),
-                "right": (0.5, 0),
+                "left": (-0.5, 0.5),
+                "right": (0.5, -0.5),
                 "stop": (0, 0),
             }
             if value in cmds_functions_map:
@@ -518,16 +518,16 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.is_simulation: # and args.comm_mode == 1:
-        import scripts.ece_dummy_ops as ece
+        import uart_scripts.ece_dummy_ops as ece
         BOT_LIB_FUNCS = "ece_dummy_ops"
     #elif args.is_simulation and args.comm_mode == 2:
-        # import scripts.ece_dummy_ops2 as ece
+        # import uart_scripts.ece_dummy_ops2 as ece
         # BOT_LIB_FUNCS = "ece_dummy_ops2"
     elif args.comm_mode == 1:
-        import scripts.pi_arduino as ece
+        import uart_scripts.pi_arduino as ece
         BOT_LIB_FUNCS = "pi_arduino"
     elif args.comm_mode == 2:
-        import scripts.pi_arduino2 as ece
+        import uart_scripts.pi_arduino2 as ece
         BOT_LIB_FUNCS = "pi_arduino2"
 
     minibot = Minibot(args.port_number)
