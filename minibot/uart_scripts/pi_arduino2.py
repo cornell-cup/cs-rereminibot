@@ -1,7 +1,7 @@
 from machine import SPI, Pin
 import time
 import _thread
-import scripts.message_utils as msglib
+import uart_scripts.message_utils as msglib
 
 # spi = spidev.SpiDev()
 spi = SPI(0, baudrate=400000)
