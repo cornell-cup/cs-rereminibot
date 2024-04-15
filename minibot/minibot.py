@@ -416,7 +416,7 @@ class Minibot:
             # _thread.start_new_thread(pass_tags, (self, sock, key, value))
             rfid = qwiic_rfid.QwiicRFID(address = 0x7D)
             if rfid.begin():
-                tag = rfid.getTag()
+                tag = rfid.get_tag()
                 print(tag)
                 self.sendKV(sock, key, tag)
             else:
