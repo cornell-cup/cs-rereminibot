@@ -444,12 +444,14 @@ Blockly.Python['create_emotion'] = function (block) {
   var emotion_action_steps = Blockly.Python.statementToCode(block, 'emotion_action_steps');
 
   // TODO: Assemble python into code variable.
-  var processed_eas = emotion_action_steps.substring(2, emotion_action_steps.length - 1).replaceAll("\n  ", "\\n") 
+  var processed_eas = 'def emotion_action_steps():\n';
+  processed_eas += emotion_action_steps;
+  processed_eas += '  \n';
 
   // TODO: Assemble python into code variable.
-  var code = 'self.emotion_repo[' + emotion_name + '] = Emotion(' + emotion_name + ',';
-  code += '\'' + processed_eas + '\'';
-  code += ', self, bot_script)\n';
+  var code = processed_eas;
+  code += 'self.emotion_repo[' + emotion_name + '] = Emotion(' + emotion_name + ',';
+  code += 'emotion_action_steps)\n';
   return code;
 };
 
