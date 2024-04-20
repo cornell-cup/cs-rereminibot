@@ -371,20 +371,28 @@ class Minibot:
         #         self.blockly_python_proc.spawn_script(value)
         elif key == "WHEELS":
             print("key WHEELS")
-            cmds_functions_map = {
-                "forward": (0.5, 0.5),
-                "backward": (-0.5, -0.5),
-                "left": (0, 0.5),
-                "right": (0.5, 0),
-                "stop": (0, 0),
-            }
-            if value in cmds_functions_map:
-                # TODO use the appropriate power arg instead of 50 when
-                # that's implemented
-                arg = cmds_functions_map[value]
-                drivetrain.set_effort(arg[0], arg[1])
-            else:
-                drivetrain.set_effort(0, 0)
+
+            left_power = value.substring(1, value.index(','))
+            right_power = value.substring(value.index(',') + 1, value.index(')'))
+
+            try:
+                left_power = float(left_power)
+                right_power = float(right_power)
+
+                if left_power < -1:
+                    left_power = -1
+                elif left_power > 1:
+                    left_power = 1
+                
+                if right_power < -1:
+                    right_power = -1
+                elif right_power > 1:
+                    right_power = 1
+            except:
+                # return early for invalid power value
+                return
+
+            drivetrain.set_effort(left_power, right_power)
         elif key == "IR":
             return_val = []
             thread = _thread.start_new_thread(ece.read_ir, (return_val))

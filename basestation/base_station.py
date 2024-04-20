@@ -64,12 +64,20 @@ class BaseStation:
         self.reuseport = reuseport
 
         self.blockly_function_map = {
-            "move_forward": "bot_script.sendKV(\"WHEELS\",\"forward\")",
-            "move_backward": "bot_script.sendKV(\"WHEELS\",\"backward\")",
-            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"left\")",
-            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"right\")",
+            "move_forward": "bot_script.sendKV(\"WHEELS\",\"(pow,pow)\")",
+            "move_backward": "bot_script.sendKV(\"WHEELS\",\"(-pow,-pow)\")",
+            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"(pow,0)\")",
+            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"(0,pow)\")",
             "wait": "time.sleep",        
-            "stop": "bot_script.sendKV(\"WHEELS\",\"stop\")"
+            "stop": "bot_script.sendKV(\"WHEELS\",\"(0,0)\")"
+        }
+
+        self.wheel_directions_multiplier_map = {
+            "forward": [1, 1],
+            "backward": [-1, -1],
+            "left": [1, 0],
+            "right": [0, 1],
+            "stop": [0, 0]
         }
 
         self.wheel_directions = ["forward", "backward", "left", "right", "stop"]
@@ -239,7 +247,14 @@ class BaseStation:
         self.stop_bot_script(bot_name)
         bot = self.get_bot(bot_name)
         direction = direction.lower()
-        bot.sendKV("WHEELS", direction)
+        wheel_arg_str = "(0,0)"
+        if direction in self.wheel_directions_multiplier_map.keys():
+            wheel_arg = self.wheel_directions_multiplier_map[direction]
+            power = self.parse_power(power)
+            wheel_arg[0] *= power
+            wheel_arg[1] *= power
+            wheel_arg_str = "(" + str(wheel_arg[0]) + "," + str(wheel_arg[1]) + ")"
+        bot.sendKV("WHEELS", wheel_arg_str)
 
     def send_bot_script(self, bot_name: str, script: str):
         """Sends a python program to the specific bot"""
@@ -318,12 +333,12 @@ class BaseStation:
 
                 if command == "wait":
                     func = func + "(" + argument + ")"
-
-                # TODO: implement custom power  
-                # elif func.startswith("bot_script.sendKV(\"WHEELS\","):
-                #     if argument != '':
-                #         float_power = float(argument) / 100
-                #         func = func.replace("pow",str(float_power))   
+                elif func.startswith("bot_script.sendKV(\"WHEELS\","):
+                    if argument != '':
+                        power = self.parse_power(argument)
+                        func = func.replace("pow", str(power))   
+                    else:
+                        func = func.replace("-pow", "0").replace("pow", "0")
                 
                 whitespace = match.group(1)
                 if not whitespace:
@@ -351,13 +366,20 @@ class BaseStation:
         """
         bot = self.get_bot(bot_name)
         return bot.script_exec_result_var.get_with_lock(False)
-        
-        # request the bot to send the script execution result
-        # bot.sendKV("SCRIPT_EXEC_RESULT", "")
-        # try reading to see if the bot has replied
-        # bot.readKV()
-        # this value might be None if the bot hasn't replied yet
-        # return bot.script_exec_result
+
+    def parse_power(self, power: str) -> float:
+        """ Convert power string (with max of 100) to a float with max of 1.
+        """
+        try:
+            power = int(power)
+            if power < 0:
+                power = 0
+            elif power > 100:
+                power = 100
+        except:
+            power = 0
+        power /= 100
+        return power
 
     # ==================== DATABASE ====================
     def login(self, email: str, password: str) -> Tuple[int, Optional[str]]:
