@@ -443,12 +443,11 @@ Blockly.Python['create_emotion'] = function (block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
   var emotion_action_steps = Blockly.Python.statementToCode(block, 'emotion_action_steps');
 
-  // TODO: Assemble python into code variable.
+  // Defines a function for the emotion's action steps
   var processed_eas = 'def emotion_action_steps():\n';
   processed_eas += emotion_action_steps;
   processed_eas += '  \n';
 
-  // TODO: Assemble python into code variable.
   var code = processed_eas;
   code += 'self.emotion_repo[' + emotion_name + '] = Emotion(' + emotion_name + ',';
   code += 'emotion_action_steps)\n';
@@ -465,7 +464,6 @@ Blockly.Python['add_emotion'] = function (block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
   var emotion_priority = Blockly.Python.valueToCode(block, 'emotion_priority', Blockly.Python.ORDER_NONE);
 
-  // TODO: Assemble python into code variable.
   var code = 'added_emotions[' + emotion_name + '] = ' + emotion_priority + '\n';
   return code;
 };
@@ -480,7 +478,6 @@ Blockly.Python['add_required_device'] = function (block) {
   var dropdown_device_name = block.getFieldValue('device_name');
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
 
-  // TODO: Assemble python into code variable.
   var code = 'self.emotion_repo[' + emotion_name + '].add_required_device(\"' + dropdown_device_name + '\")\n';
   return code;
 };
@@ -495,7 +492,6 @@ Blockly.Python['set_device_emotion_status'] = function (block) {
   var dropdown_device_name = block.getFieldValue('device_name');
   var device_status = Blockly.Python.valueToCode(block, 'device_status', Blockly.Python.ORDER_NONE);
 
-  // TODO: Assemble python into code variable.
   var code = 'devices_emotional_status[\"' + dropdown_device_name + '\"] = ' + device_status + '\n';
   return code;
 };
@@ -509,7 +505,6 @@ Blockly.Blocks['set_emotion_if_possible'] = {
 Blockly.Python['set_emotion_if_possible'] = function (block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
 
-  // TODO: Assemble python into code variable.
   var code = 'if ' + emotion_name + ' in added_emotions:\n';
      code += '    if current_emotion != None: \n';
      code += '        if added_emotions[' + emotion_name + '] > added_emotions[current_emotion]:\n';
@@ -526,7 +521,7 @@ Blockly.Blocks['clear_current_emotion'] = {
 };
 
 Blockly.Python['clear_current_emotion'] = function (block) {
-  // TODO: Assemble python into code variable.
+
   var code = 'current_emotion = None';
   return code;
 };
@@ -538,15 +533,10 @@ Blockly.Blocks['process_current_emotion'] = {
 };
 
 Blockly.Python['process_current_emotion'] = function (block) {
-  // TODO: Assemble python into code variable.
+  
   var code = 'if current_emotion is not None and current_emotion in self.emotion_repo:\n';
      code += '    if self.emotion_repo[current_emotion].check_devices(devices_emotional_status):\n';
-    //  code += '        bot.move_forward(100)\n'
-    //  code += '        bot.wait(0.25)\n'
-    //  code += '        bot.stop()\n'
-    //  code += '        bot.wait(1)\n'
      code += '        self.emotion_repo[current_emotion].process_emotion()\n'; 
-  // var code = "emotion_repo[current_emotion].process_emotion()\n"
   return code;
 };
 
@@ -561,9 +551,9 @@ Blockly.Blocks['set_current_expression'] = {
 Blockly.Python['set_current_expression'] = function (block) {
   var expression_name = Blockly.Python.valueToCode(block, 'expression_name', Blockly.Python.ORDER_NONE);
 
-  // TODO: Assemble python into code variable.
+  // TODO - Find a way to merge these two lines into one line if possible
   var code = 'self.current_expression = ' + expression_name + '\n';
-  code = code.replaceAll("\'", "\"");
+  code += 'bot.set_expression(' + expression_name + ')\n';
   return code;
 };
 
@@ -575,8 +565,9 @@ Blockly.Blocks['clear_current_expression'] = {
 
 Blockly.Python['clear_current_expression'] = function (block) {
 
-  // TODO: Assemble python into code variable.
+  // TODO - Find a way to merge these two lines into one line if possible
   var code = 'self.current_expression = None\n';
+  code += 'bot.clear_expression()\n';
   return code;
 };
 
@@ -589,7 +580,8 @@ Blockly.Blocks['set_current_playback_speed'] = {
 Blockly.Python['set_current_playback_speed'] = function (block) {
   var new_speed = Blockly.Python.valueToCode(block, 'new_speed', Blockly.Python.ORDER_NONE);
 
-  // TODO: Assemble python into code variable.
+  // TODO - Find a way to merge these two lines into one line if possible
   var code = 'self.current_expression_playback_speed = ' + new_speed + '\n';
+  code += 'bot.set_expression_playback_speed(' + new_speed + ')\n';
   return code;
 };

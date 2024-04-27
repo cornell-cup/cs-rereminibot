@@ -73,7 +73,11 @@ class BaseStation:
             "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"left\")",
             "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"right\")",
             "wait": "time.sleep",        
-            "stop": "bot_script.sendKV(\"WHEELS\",\"stop\")"
+            "stop": "bot_script.sendKV(\"WHEELS\",\"stop\")",
+
+            "set_expression": "bot_script.sendKV(\"SPR\",ARG)",
+            "clear_expression": "bot_script.sendKV(\"SPR\",ARG)",
+            "set_expression_playback_speed": "bot_script.sendKV(\"PBS\",ARG)"
         }
         # functions that run continuously, and hence need to be started
         # in a new thread on the Minibot otherwise the Minibot will get
@@ -356,6 +360,17 @@ class BaseStation:
 
                 if command == "wait":
                     func = func + "(" + argument + ")"
+
+                # TODO Improve/rework blockly function map so this doesn't need to happen
+                if command == "set_expression":
+                    func = func.replace("ARG", argument)
+
+                if command == "set_expression_playback_speed":
+                    func = func.replace("ARG", argument)
+
+                if command == "clear_expression":
+                    func = func.replace("ARG", "\"\"")
+
 
                 # TODO: implement custom power  
                 # elif func.startswith("bot_script.sendKV(\"WHEELS\","):
