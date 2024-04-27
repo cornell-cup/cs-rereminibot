@@ -9,8 +9,6 @@ from socket import socket, AF_INET, SOCK_STREAM, SOCK_DGRAM
 from socket import SOL_SOCKET, SO_REUSEADDR
 import network
 
-from .scripts import message_utils
-
 # Micropython imports
 import time
 from builtins import dict, set
@@ -86,6 +84,10 @@ class Minibot:
         self.writable_sock_message_queue_value = []
         self.bs_repr = None
         self.sock_lists = [self.readable_socks, self.writable_socks, self.errorable_socks]
+
+        self.long_script_str = ""
+
+        self.blockly_python_proc = BlocklyPythonProcess(BOT_LIB_FUNCS)
         
     def main(self):
         """ Implements the main activity loop for the Minibot.  This activity 
@@ -193,6 +195,7 @@ class Minibot:
         # except timeout:
         #     print("Timed out", flush=True)
         except OSError as e:
+            print(e)
             print("Try again")
 
         # TODO this security policy is stupid.  We should be doing
@@ -330,15 +333,15 @@ class Minibot:
 
             token_len = len(Minibot.START_CMD_TOKEN)
             key = data_str[start + token_len:comma]
-            # if(key == "SCRIPT_BEG"):
-            #     print("BEG Data:")
-            #     print(data_str)
-            # if(key == "SCRIPT_MID"):
-            #     print("MID Data:")
-            #     print(data_str)
-            # if(key == "SCRIPT_END"):
-            #     print("END Data:")
-            #     print(data_str)
+            if(key == "SCRIPT_BEG"):
+                print("BEG Data:")
+                print(data_str)
+            if(key == "SCRIPT_MID"):
+                print("MID Data:")
+                print(data_str)
+            if(key == "SCRIPT_END"):
+                print("END Data:")
+                print(data_str)
             value = data_str[comma + 1:end]
             # executes command with key,value
             self.execute_command(sock, key, value)
@@ -364,13 +367,10 @@ class Minibot:
             if self.bs_repr is not None:
                 self.bs_repr.update_status_time()
             self.sendKV(sock, key, "ACTIVE")
-        elif key == "SCRIPT_EXEC_RESULT" or key == "SCRIPT":
-            # notify attempts for executing commands no longer in use
-            print("executing commands no longer in use")
-        # elif key == "SCRIPT_EXEC_RESULT":
-        #     # getting result of execution and sending it to basestation
-        #     script_exec_result = self.blockly_python_proc.get_exec_result()
-        #     self.sendKV(sock, key, script_exec_result)
+        elif key == "SCRIPT_EXEC_RESULT":
+            # getting result of execution and sending it to basestation
+            script_exec_result = self.blockly_python_proc.get_exec_result()
+            self.sendKV(sock, key, script_exec_result)
         elif key == "MODE":
             if value == "object_detection":
                 _thread.start_new_thread(ece.object_detection, ())
@@ -378,25 +378,25 @@ class Minibot:
                 _thread.start_new_thread(ece.line_follow, ())
         elif key == "PORTS":
             ece.set_ports(value)
-        # elif key == "SCRIPTS":
-        #     # The script is always named bot_script.py.
-        #     if len(value) > 0:
-        #         self.blockly_python_proc.spawn_script(value)
-        # elif key == "SCRIPT_BEG":
-        #     print("BEG Value:")
-        #     print(value)
-        #     self.script_str = value
-        # elif key == "SCRIPT_MID":
-        #     print("MID Value:")
-        #     print(value)
-        #     self.script_str += value
-        # elif key == "SCRIPT_END":
-        #     print("END Value:")
-        #     print(value)
-        #     self.script_str += value
-        #     if(len(self.script_str) > 0):
-        #         self.blockly_python_proc.spawn_script(self.script_str)
-        #     self.script_str = ""
+        elif key == "SCRIPTS":
+            # The script is always named bot_script.py.
+            if len(value) > 0:
+                self.blockly_python_proc.spawn_script(value)
+        elif key == "SCRIPT_BEG":
+            print("BEG Value:")
+            print(value)
+            self.script_str = value
+        elif key == "SCRIPT_MID":
+            print("MID Value:")
+            print(value)
+            self.script_str += value
+        elif key == "SCRIPT_END":
+            print("END Value:")
+            print(value)
+            self.script_str += value
+            if(len(self.script_str) > 0):
+                self.blockly_python_proc.spawn_script(self.script_str)
+            self.script_str = ""
         elif key == "WHEELS":
             print("key WHEELS")
             cmds_functions_map = {
@@ -404,7 +404,6 @@ class Minibot:
                 "backward": (-1, -1),
                 "left": (0, 1),
                 "right": (1, 0),
-                "stop": (0, 0),
             }
             if value in cmds_functions_map:
                 # TODO use the appropriate power arg instead of 50 when
@@ -412,10 +411,11 @@ class Minibot:
                 arg = cmds_functions_map[value]
                 drivetrain.set_effort(arg[0], arg[1])
             else:
+                # kill any running Python/Blockly scripts
+                print("killing thread")
+                if self.blockly_python_proc.is_running():
+                    self.blockly_python_proc.kill_thread()
                 drivetrain.set_effort(0, 0)
-        elif key == "SPR" or key == "PBS":
-            message = message_utils.make_crc_message(key + "," + value)
-            message_utils.send_message(message)
         elif key == "IR":
             return_val = []
             thread = _thread.start_new_thread(ece.read_ir, (return_val))
@@ -441,10 +441,9 @@ class Minibot:
         elif key == "RFID":
             def pass_tags(self, sock: socket, key: str, value: str):
                 returned_tags = [0, 0, 0, 0]
-                # replace with direct call to the rfid sensor here
-                # ece.rfid(value, returned_tags)
+                ece.rfid(value, returned_tags)
                 self.sendKV(sock, key, ' '.join(str(e) for e in returned_tags))
-    
+                
             _thread.start_new_thread(pass_tags, (self, sock, key, value))
         elif key == "TESTRFID":
             def test_rfid(self, sock: socket, key: str, value: str):
@@ -517,6 +516,7 @@ if __name__ == "__main__":
     if args.is_simulation: # and args.comm_mode == 1:
         import scripts.ece_dummy_ops as ece
         BOT_LIB_FUNCS = "ece_dummy_ops"
+        print("Using Port", args.port_number)
     #elif args.is_simulation and args.comm_mode == 2:
         # import scripts.ece_dummy_ops2 as ece
         # BOT_LIB_FUNCS = "ece_dummy_ops2"
