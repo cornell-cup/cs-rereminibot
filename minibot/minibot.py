@@ -414,8 +414,9 @@ class Minibot:
             else:
                 drivetrain.set_effort(0, 0)
         elif key == "SPR" or key == "PBS":
-            message = message_utils.make_crc_message(key + "," + value)
-            message_utils.send_message(message)
+            print("Received Command:", key + "," + value)
+            # ece.send_pi_command(key + "," + value)
+            # message_utils.send_message(message)
         elif key == "IR":
             return_val = []
             thread = _thread.start_new_thread(ece.read_ir, (return_val))

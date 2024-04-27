@@ -177,7 +177,18 @@ def transmit_once(cmd):
     for char in cmd:
         print(char)
         uart.write([ord(char)])
-        
+
+def send_avatar_command(cmd):
+    """
+    Sends a full command string to the Raspberry Pi
+
+    Arguments:
+        cmd: (str) The command to be sent to the Arduino
+    """
+    acquire_lock()
+    
+    release_lock()
+
 def set_ports(ports):
     """ Tell minibot which motors and sensor correspond to
     which ports.
