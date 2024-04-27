@@ -356,8 +356,10 @@ function Chatbot2({
               "Click the microphone to send a command" : "Please connect to a Minibot!"}
             onKeyPress={(e) => {
               if (contextMode) {
-                if (e.key === 'Enter') { sendContext(e); }
-                if (e.key === '`') { sendQuestion(e); }
+                console.log(e.key);
+                if (e.key === 'Enter' || e.key === '`') { sendQuestion(e); }
+                //if (e.key === 'Enter') { sendContext(e); }
+                //if (e.key === '`') { sendQuestion(e); } 
               }
             }}>
           </textarea>
