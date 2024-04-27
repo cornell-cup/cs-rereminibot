@@ -1,12 +1,12 @@
-# import spidev
-from machine import SPI, Pin
+from machine import UART, Pin
 import time
 import _thread
-# import threading
 import scripts.message_utils as msglib
 
-# spi = spidev.SpiDev()
-spi = SPI(pi_bus, baudrate=400000)
+# Methods in this file are called when needing to send information to or 
+# get information from the Raspberry Pi, connected to the Pico W (onboard the XRP) using UART
+
+uart = None
 
 class TransmitLock():
     # TODO: implement this class with condition variables
@@ -78,70 +78,59 @@ class TransmitLock():
 tlock = TransmitLock()
 
 
-def setSlave(device):
-    """
-    set which arduino to talk to. slave(0) for arduino 1 and slave(1) for arduino 2
-    """
-    pi_bus = 0
-    spi = SPI(pi_bus, baudrate=400000)
-
-    # Switching to device
-    cs = Pin(4, mode=Pin.OUT, value=0)
-    cs(device)
-
-
 def acquire_lock():
-    """ Acquires the lock to start sending data over SPI to
-    the Arduino.
+    """ Acquires the lock to start sending data over UART to
+    the Raspberry Pi 0.
     """
+    uart = UART(baudrate=115200)
+    uart.init(baudrate=115200)
     priority = time.time()
     while not tlock.start_transmit(priority):
         time.sleep(0.01)
-    setSlave(0)
 
 
 def release_lock():
-    """ Releases the lock that was used to send data over SPI to
-    the Arduino.
+    """ Releases the lock that was used to send data over UART to
+    the Raspberry Pi.
     """
-    spi.deinit()
+    uart.deinit()
     tlock.end_transmit()
 
 
 def motor(id, dir, power, time):
     """
-    Ask the Arduino to move the motor identified with [id] in direction [dir] at
+    Ask the Raspberry Pi to move the motor identified with [id] in direction [dir] at
     [power]% power for [time] seconds.
     """
     acquire_lock()
     data = [ord('M'), id, ord('D'), dir, ord('P'), power, ord('T'), time]
     msg = msglib.make_crc_message(data)
-    msglib.send_message(spi, msg)
+    msglib.send_message(uart, msg)
     release_lock()
 
 
 def servo(id, angle):
     """
-    Ask the Arduino to move the servo identified with [id] to the angle
+    Ask the Raspberry Pi to move the servo identified with [id] to the angle
     [angle] (in degrees)
     """
     acquire_lock()
     # Angle is 0 to 180 so no need for 2 bytes
     data = [ord('S'), ord('R'), ord('V'), ord('O'), id, ord('A'), angle]
     msg = msglib.make_crc_message(data)
-    msglib.send_message(spi, msg)
+    msglib.send_message(uart, msg)
     release_lock()
 
 
 def rfid(id, returned_tags):
     """
-    Ask the Arduino to provide each of the RFID Tag bytes(id1, id2, id3, id4)
+    Ask the Raspberry Pi to provide each of the RFID Tag bytes(id1, id2, id3, id4)
     """
     acquire_lock()
     load_req = [ord('R'), ord('F'), ord('I'), ord('D')]
     load_msg = msglib.make_crc_message(load_req)
     data, numTries = msglib.read_data(
-        spi, load_msg, 22, msglib.validate_crc_message)
+        uart, load_msg, 22, msglib.validate_crc_message)
     data = msglib.unpack_crc_message(data)
     if len(data) != 0:
         returned_tags[0] = data[0]
@@ -154,64 +143,31 @@ def rfid(id, returned_tags):
 
 def stop():
     """
-    Ask the Arduino to stop moving all motors.
+    Ask the Raspberry Pi to stop moving all motors.
     To stop an individual motor, set its power to 0 with motor()
     """
     acquire_lock()
     data = [ord('S'), ord('T'), ord('O'), ord('P')]
     msg = msglib.make_crc_message(data)
-    msglib.send_message(spi, msg)
+    msglib.send_message(uart, msg)
     release_lock()
 
 
 def sensor(id):
     """
-    Ask the Arduino to read a value from the sensor identified by [id].
+    Ask the Raspberry Pi to read a value from the sensor identified by [id].
     """
     acquire_lock()
     load_req = [ord('L'), ord('O'), ord('A'), ord('D'), id]
     load_msg = msglib.make_crc_message(load_req)
     data, numTries = msglib.read_data(
-        spi, load_msg, 22, msglib.validate_crc_message)
+        uart, load_msg, 22, msglib.validate_crc_message)
     data = msglib.unpack_crc_message(data)
     release_lock()
     return data
 
-
-def line_follow():
-    """ Tell minibot to follow a line """
-    acquire_lock()
-    data = "LINE"
-    msg = msglib.make_crc_message(data)
-    msglib.send_message(spi, msg)
-    release_lock()
-
-
-# def object_detection():
- # TODO: support objection detection - maybe add index to buffer?
- # """ Tell minibot to detect objects using RFID """
- # acquire_lock()
- # transmit_continuously('O')
- # release_lock()
-
- 
-def test(returned):
-    acquire_lock()
-    load_req = [ord('T'), ord('E'), ord('S'), ord('T')]
-    load_msg = msglib.make_crc_message(load_req)
-    data, numTries = msglib.read_data(
-        spi, load_msg, 22, msglib.validate_crc_message)
-    data = msglib.unpack_crc_message(data)
-
-    returned[0] = data[0]
-    returned[1] = data[1]
-    returned[2] = data[2]
-    returned[3] = data[3]
-
-    release_lock()
-
 def transmit_once(cmd):
-    """ Sends each character in the cmd to the Arduino
+    """ Sends each character in the cmd to the Raspberry Pi
 
     Arguments:
         cmd: (str) The command to be sent to the Arduino
@@ -220,7 +176,7 @@ def transmit_once(cmd):
     """
     for char in cmd:
         print(char)
-        spi.write([ord(char)])
+        uart.write([ord(char)])
         
 def set_ports(ports):
     """ Tell minibot which motors and sensor correspond to
