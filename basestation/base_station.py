@@ -13,6 +13,8 @@ import json
 import queue
 from time import sleep
 
+import random
+
 from basestation.bot import Bot
 from basestation import config
 
@@ -464,6 +466,12 @@ class BaseStation:
         return val
 
     def get_rfid(self, bot_name: str):
+        # testing with random tags
+        # tags = ['110631159936', '1107911474124', '1107815185135', '1107696200239', '110641412160', '000000000000', '111111111111', '222222222222']
+        # random_tag = tags[random.randint(0, len(tags) - 1)]
+        # print(random_tag)
+        # return random_tag
+
         bot = self.get_bot(bot_name)
         bot.sendKV("RFID", 4)
         bot.readKV()
@@ -471,18 +479,16 @@ class BaseStation:
         return bot.rfid_tags
 
     @make_thread_safe
-    def set_bot_mode(self, bot_name: str, mode: str, pb_map: json):
+    def set_bot_mode(self, bot_name: str, mode: str, pb_map: json, power: str):
         """ Set the bot to either line follow or object detection mode """
         bot = self.get_bot(bot_name)
         pb_map = str(pb_map)
         if mode == "physical-blockly" or mode == "physical-blockly-2":
             self.pb_stopped = False
             if mode == 'physical-blockly':
-                #print("starting physical blockly thread")
-                self.physical_blockly(bot_name, 0, pb_map)
+                self.physical_blockly(bot_name, 0, pb_map, power)
             else:
-                #print("starting physical blockly 2 thread")
-                self.physical_blockly(bot_name, 1, pb_map)
+                self.physical_blockly(bot_name, 1, pb_map, power)
         # elif mode == "object_detection":
         #     self.bot_vision_server = subprocess.Popen(
         #         ['python', './basestation/piVision/server.py', '-p MobileNetSSD_deploy.prototxt',
@@ -496,7 +502,7 @@ class BaseStation:
         #         self.bot_vision_server.kill()
         bot.sendKV("MODE", mode)
     
-    def physical_blockly(self, bot_name: str, mode: int, pb_map: json):
+    def physical_blockly(self, bot_name: str, mode: int, pb_map: json, power: str):
         rfid_tags = queue.Queue()
         pb_map = json.loads(pb_map)
         
@@ -518,7 +524,7 @@ class BaseStation:
                         if mode == 1:
                             print(py_code)
                             if py_code[0:3] == "bot" and task[1] in self.wheel_directions:
-                                self.move_bot_wheels(bot_name, task[1], "100")
+                                self.move_bot_wheels(bot_name, task[1], power)
                         self.py_commands.put("pb:" + py_code)
                 except:
                     pass

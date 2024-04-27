@@ -127,7 +127,7 @@ export default class CustomBlockModal extends React.Component {
                 </div>
                 {this.props.customCount > 0 && this.props.customBlocks.length > 0 ? 
                   <div class="row">
-                    <h4 class="modalText">Saved Custom Blocks</h4>
+                    <h4 class="modalText" id="savedBlockTitle">Saved Custom Blocks</h4>
                     <div class="container">
                       {this.props.customBlocks.map((c, i) => <div class="customBlockObject">
                         <button class="btn btn-primary customCollapseButton" type="button" data-toggle="collapse" data-target={"#" + "customCollapse" + i} aria-expanded="false" aria-controls={"customCollapse" + i}>
@@ -135,7 +135,7 @@ export default class CustomBlockModal extends React.Component {
                         </button>
                         <div class="collapse" id={"customCollapse" + i}>
                           <div class="card card-body customBlockContent">
-                            {c[1]}
+                            <code>{c[1]}</code>
                           </div>
                         </div>
                       </div>)}
@@ -144,7 +144,7 @@ export default class CustomBlockModal extends React.Component {
               </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-primary" onClick={(event) => this.handleSaveSelection(event)}>Save</button>
+                <button class="btn btn-primary pb-btn" onClick={(event) => this.handleSaveSelection(event)}>Save</button>
             </div>
           </div>
         </div>
