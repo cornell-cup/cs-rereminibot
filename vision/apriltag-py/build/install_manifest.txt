@@ -1,3 +1,0 @@
-/usr/local/bin/apriltag_demo
-/usr/local/bin/maketags
-/usr/local/lib/libapriltag.dylib
