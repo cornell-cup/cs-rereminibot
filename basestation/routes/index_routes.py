@@ -93,10 +93,9 @@ def script():
 def compile_virtual_program():
     """ Compile a Python script so that it can be use to run virtual minibots """
     data = request.get_json()
-    print(data)
-    # data_to_send = base_station.get_virtual_program_execution_data(data)
-    # return json.dumps(data_to_send), status.HTTP_200_OK
-    return json.dumps({}), status.HTTP_200_OK
+    # print(data)
+    data_to_send = base_station.get_virtual_program_execution_data(data)
+    return json.dumps(data_to_send), status.HTTP_200_OK
 
 
 @index_bp.route('/ports', methods=['POST'])

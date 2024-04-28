@@ -16,3 +16,7 @@ opencv-python==4.5.5.62
 numpy
 opencv-contrib-python
 scikit-learn
+control
+pathfinding
+collision
+pint

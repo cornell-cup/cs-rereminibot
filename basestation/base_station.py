@@ -10,6 +10,7 @@ import threading
 import math
 
 from basestation.bot import Bot
+from basestation.controller.minibot_sim_gui_adapter import run_program_string_for_gui_data
 from basestation import config
 
 # database imports
@@ -18,6 +19,11 @@ from basestation.databases.user_database import db
 
 # imports from basestation util
 from basestation.util.stoppable_thread import StoppableThread, ThreadSafeVariable
+from basestation.util.path_planning import PathPlanner
+from basestation.util.stoppable_thread import StoppableThread, ThreadSafeVariable
+from basestation.util.helper_functions import distance
+from basestation.util.units import AngleUnits, LengthUnits, convert_angle, convert_length
+from basestation.util.world_builder import WorldBuilder
 
 from random import choice, randint
 from string import digits, ascii_lowercase, ascii_uppercase
@@ -275,19 +281,19 @@ class BaseStation:
         # Now actually send to the bot
         bot.sendKV("SCRIPTS", parsed_program_string)
 
-    # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
-    #     script = query_params['script_code']
-    #     virtual_room_id = query_params['virtual_room_id']
-    #     minibot_id = query_params['minibot_id']  
-    #     world_width = query_params['world_width']
-    #     world_height = query_params['world_height']
-    #     cell_size = query_params['cell_size']
-    #     query_params['id'] = query_params['minibot_id']  
-    #     parsed_program_string = self.parse_program(script)
-    #     worlds = self.get_worlds(virtual_room_id, world_width, world_height, cell_size, [minibot_id])
-    #     minibot_location = self.get_vision_data_by_id(query_params)
-    #     start = (minibot_location['x'],minibot_location['y'])
-    #     return run_program_string_for_gui_data(parsed_program_string, start, worlds)
+    def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
+        script = query_params['script_code']
+        virtual_room_id = query_params['virtual_room_id']
+        minibot_id = query_params['minibot_id']  
+        world_width = query_params['world_width']
+        world_height = query_params['world_height']
+        cell_size = query_params['cell_size']
+        query_params['id'] = query_params['minibot_id']  
+        parsed_program_string = self.parse_program(script)
+        worlds = self.get_worlds(virtual_room_id, world_width, world_height, cell_size, [minibot_id])
+        minibot_location = self.get_vision_data_by_id(query_params)
+        start = (minibot_location['x'],minibot_location['y'])
+        return run_program_string_for_gui_data(parsed_program_string, start, worlds)
 
     def parse_program(self, script: str) -> str:
         # Regex is for bot-specific functions (move forward, stop, etc)
@@ -509,9 +515,89 @@ class BaseStation:
 
     # ==================== Vision =================================
 
+    def delete_virtual_room(self, virtual_room_id):
+        """ Removes a virtual room given its virtual room id """
+        self.virtual_objects.pop(virtual_room_id,None)
+        self.vision_object_map.pop(virtual_room_id,None)
+
+    def update_virtual_objects(self, update):
+        """ Updates vision virtual objects list. """
+        if "virtual_objects" in update and "add" in update and type(update["virtual_objects"]) is list and len(update["virtual_objects"]) > 0:
+            if update["add"]:
+                self.add_multiple_to_virtual_objects(update["virtual_objects"])
+            else:
+                self.remove_multiple_from_virtual_objects(update["virtual_objects"])
+        elif "virtual_object" in update and "add" in update:
+            if update["add"]:
+                self.add_to_virtual_objects(update["virtual_object"])
+            else:
+                self.remove_from_virtual_objects(update["virtual_object"])
+        else:
+            print("The vision virtual object list was not given a valid update in update_virtual_objects")
+
+
+    def add_to_virtual_objects(self, virtual_object):
+        """ Adds single virtual object to virtual objects list """
+        if "id" in virtual_object and "name" in virtual_object and "type" in virtual_object and "x" in virtual_object and "y" in virtual_object and "orientation" in virtual_object and "virtual_room_id" in virtual_object:
+            if not (virtual_object["virtual_room_id"] in self.virtual_objects):
+                self.virtual_objects[virtual_object["virtual_room_id"]] = {}
+            self.virtual_objects[virtual_object["virtual_room_id"]][virtual_object["id"]] = {
+                "name": virtual_object["name"], 
+                "type": virtual_object["type"],   
+                "is_physical": False,
+                "x": virtual_object["x"],  
+                "y": virtual_object["y"],  
+                "orientation": virtual_object["orientation"],                        
+                "length": virtual_object["length"] if "length" in virtual_object else None, 
+                "width": virtual_object["width"] if "width" in virtual_object else None, 
+                "radius": virtual_object["radius"] if "radius" in virtual_object else None, 
+                "height": virtual_object["height"] if "height" in virtual_object else None, 
+                "shape": virtual_object["shape"] if "shape" in virtual_object else None, 
+                "color": virtual_object["color"] if "color" in virtual_object else None,
+                "deltas_to_vertices": virtual_object["deltas_to_vertices"] if "deltas_to_vertices" in virtual_object else None, 
+                "radiusY": virtual_object["radiusY"] if "radiusY" in virtual_object else None,  
+            }
+        else:
+            print("The vision virtual object list was not given a valid update in add_to_virtual_objects")
+
+    # to be used for simulation
+    def add_minibot_to_virtual_objects(self, id, x, y, orientation):
+        """ Adds a minibot to the list of virtual objects given an id, x coordinate, y coordinate, and orientation
+            NOTE: This method is also used to update the position of the virtual minibot with the given id using 
+            with the given x coordinate, y coordinate, and orientation.
+        """
+        minibot_virtual_object = {
+            "id": id,
+            "name": "minibot"+str(id), 
+            "type": "minibot",   
+            "x": x,  
+            "y": y,  
+            "orientation": orientation
+        }
+        self.add_to_virtual_objects(minibot_virtual_object)
+
+    def add_multiple_to_virtual_objects(self, virtual_objects):
+        """ Adds multiple virtual objects to virtual objects list """
+        for value in virtual_objects:
+            self.add_to_virtual_objects(value)
+    
+    def remove_from_virtual_objects(self, virtual_object):
+        """ Removes single virtual object from virtual objects list """
+        if "virtual_room_id" in virtual_object and virtual_object["virtual_room_id"] in self.virtual_objects and "id" in virtual_object:
+            self.virtual_objects[virtual_object["virtual_room_id"]].pop(virtual_object["id"], None)
+        else:
+            print("The vision virtual object list was not given a valid removal update")
+
+    def remove_multiple_from_virtual_objects(self, virtual_objects):
+        """ Removes multiple virtual objects from virtual objects list """
+        for value in virtual_objects:
+            self.remove_from_virtual_objects(value)
+
+
     def update_vision_snapshot(self, value):
         """ Adds value to vision snapshot based on device id"""
         self.vision_snapshot[value["DEVICE_ID"]] = {"DEVICE_CENTER_X": value["DEVICE_CENTER_X"], "DEVICE_CENTER_Y": value["DEVICE_CENTER_Y"], "TIMESTAMP": value["TIMESTAMP"], "position_data" : value["position_data"]}
+
 
     def update_vision_object_map(self, update):
         """ Updates vision object mapping. """
@@ -589,6 +675,8 @@ class BaseStation:
             if "id" in query_params:
                 matches &= data_entry["id"] == query_params["id"]
         return matches
+
+            
 
     # to be used for simulation
     def get_vision_data_by_id(self, query_params):

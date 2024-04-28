@@ -6,7 +6,7 @@ C_DEFINES = -Dapriltag_EXPORTS
 
 C_INCLUDES = -I/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common -I/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/contrib -I/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/.
 
-C_FLAGSarm64 =  -Wall -Wsign-compare -g  -std=gnu99 -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -fPIC
+C_FLAGSarm64 =  -Wall -Wsign-compare -g  -std=gnu99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -fPIC
 
-C_FLAGS =  -Wall -Wsign-compare -g  -std=gnu99 -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -fPIC
+C_FLAGS =  -Wall -Wsign-compare -g  -std=gnu99 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -fPIC
 

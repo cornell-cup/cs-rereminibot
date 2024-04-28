@@ -6,7 +6,7 @@ CXX_DEFINES =
 
 CXX_INCLUDES = -I/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/common -I/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/contrib -I/Users/matthewmcauley/cornell/cup-robotics/cs-rereminibot/vision/apriltag-py/core/.
 
-CXX_FLAGSarm64 =  -Wall -Wsign-compare -g  -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
+CXX_FLAGSarm64 =  -Wall -Wsign-compare -g  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
 
-CXX_FLAGS =  -Wall -Wsign-compare -g  -O3 -DNDEBUG -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
+CXX_FLAGS =  -Wall -Wsign-compare -g  -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
 
