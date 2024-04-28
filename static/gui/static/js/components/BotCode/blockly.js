@@ -196,6 +196,7 @@ class PythonEditor extends React.Component {
                             value={this.props.pythonCode}
                             onChange={(code) => this.updateCode(code)}
                             options={options}
+                            style={{ overflow: "scroll", height: "488px", backgroundColor: "white" }}
                         />
                     </div>
                 </div>

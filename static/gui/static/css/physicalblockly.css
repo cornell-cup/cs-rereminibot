@@ -46,6 +46,7 @@
     font-size: 1.25em;
     font-weight: 300;
     padding-bottom: 10px;
+    color: white;
 }
 #customModal li, #loopIterationSection div {
     margin-top: 10px;
@@ -141,4 +142,8 @@
 }
 .pb-btn:hover {
     background-image: linear-gradient(to right, rgb(235, 0, 0), rgb(245, 145, 0));
+}
+.customBlockDisplaySection {
+    margin-top: 20px;
+    margin-bottom: 20px;
 }

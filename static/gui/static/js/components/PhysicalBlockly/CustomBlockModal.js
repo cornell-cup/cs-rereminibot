@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 export default class CustomBlockModal extends React.Component {
   constructor(props) {
@@ -60,8 +60,8 @@ export default class CustomBlockModal extends React.Component {
     for(var i = 0; i < this.props.loopCount; i ++) {
       let inputID = "n" + i;
       let label = <label>n{i}</label>;
-      let input = <input class="loopNumberInput" type="number" placeholder={this.props.defaultLoopIteration} id={inputID} />;
-      loopElements.push(<div class="loopSelector">{label}{input}</div>);
+      let input = <input className="loopNumberInput" type="number" placeholder={this.props.defaultLoopIteration} id={inputID} />;
+      loopElements.push(<div className="loopSelector" key={i}>{label}{input}</div>);
     }
 
     return loopElements;
@@ -93,17 +93,17 @@ export default class CustomBlockModal extends React.Component {
 
   render(props) {
     return(
-      <div class="modal" id="customModal" tabindex="-1" role="dialog" aria-labelledby="customModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
+      <div className="modal" id="customModal" tabIndex="-1" role="dialog" aria-labelledby="customModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
                 <h3 id="customModalHeader">Physical Blockly Custom Selections</h3>
             </div>
-            <div class="modal-body">
-              <div class="container">
-                <div class="row">   
+            <div className="modal-body">
+              <div className="container">
+                <div className="row">   
                   {this.props.loopCount > 0 ? 
-                    <div class="col">
+                    <div className="col">
                       <div id="loopIterationSection">
                         <h4 id="loopModalBody">
                           Enter number of iterations for each loop.
@@ -114,7 +114,7 @@ export default class CustomBlockModal extends React.Component {
                       </div>
                     </div> : <span></span>}
                   {this.props.customCount > 0 && this.props.customBlocks.length > 0 ?
-                    <div class="col">
+                    <div className="col">
                       <div id="customBlockSection">
                         <h4 id="customModalBody">
                           Select a custom block function for each placeholder.
@@ -126,15 +126,15 @@ export default class CustomBlockModal extends React.Component {
                     </div> : <div></div>}
                 </div>
                 {this.props.customCount > 0 && this.props.customBlocks.length > 0 ? 
-                  <div class="row">
-                    <h4 class="modalText" id="savedBlockTitle">Saved Custom Blocks</h4>
-                    <div class="container">
-                      {this.props.customBlocks.map((c, i) => <div class="customBlockObject">
-                        <button class="btn btn-primary customCollapseButton" type="button" data-toggle="collapse" data-target={"#" + "customCollapse" + i} aria-expanded="false" aria-controls={"customCollapse" + i}>
+                  <div className="row">
+                    <h4 className="modalText" id="savedBlockTitle">Saved Custom Blocks</h4>
+                    <div className="container">
+                      {this.props.customBlocks.map((c, i) => <div className="customBlockObject" key={i}>
+                        <button className="btn btn-primary customCollapseButton" type="button" data-toggle="collapse" data-target={"#" + "customCollapse" + i} aria-expanded="false" aria-controls={"customCollapse" + i}>
                           {c[0]}
                         </button>
-                        <div class="collapse" id={"customCollapse" + i}>
-                          <div class="card card-body customBlockContent">
+                        <div className="collapse" id={"customCollapse" + i}>
+                          <div className="card card-body customBlockContent">
                             <code>{c[1]}</code>
                           </div>
                         </div>
@@ -143,8 +143,8 @@ export default class CustomBlockModal extends React.Component {
                   </div> : <span></span>}
               </div>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary pb-btn" onClick={(event) => this.handleSaveSelection(event)}>Save</button>
+            <div className="modal-footer">
+                <button className="btn btn-primary pb-btn" onClick={(event) => this.handleSaveSelection(event)}>Save</button>
             </div>
           </div>
         </div>
