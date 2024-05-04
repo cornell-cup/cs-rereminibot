@@ -121,4 +121,4 @@ static/gui/package-lock.json
 # User entered Python program
 minibot/scripts/bot_script.py
 
-basestation/vision/apriltag-py/build
+build/
