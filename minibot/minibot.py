@@ -1,19 +1,13 @@
 from XRPLib.defaults import *
 import qwiic_rfid
 
-from blockly_python_process import BlocklyPythonProcess
 from bs_repr import BS_Repr
 
-from collections import deque
 from select import select
-
 from socket import socket, AF_INET, SOCK_STREAM, SOCK_DGRAM
 from socket import SOL_SOCKET, SO_REUSEADDR
 import network
-
-# Micropython imports
 import time
-from builtins import dict, set
 import _thread
 import sys
 import argparse
@@ -66,7 +60,7 @@ class Minibot:
         self.listener_sock = None
         self.port_number = port_number
 
-        # Note:  The same socket can be in the readable_socks, writeable_socks
+        # NOTE: The same socket can be in the readable_socks, writeable_socks
         # and errorable_socks i.e. the intersection of these lists does not need
         # to be (and will almost never be) the empty set
 
@@ -93,7 +87,7 @@ class Minibot:
         connects/reconnects to the basestation if there is no connection.
         """
 
-        # Couldn't find an equivalent for sock.fileno()
+        # NOTE: Could not find an equivalent for sock.fileno()
         # select would not cause an error if there is an inactive socket
         # so there is no need to remove closed socket through this operation
         # def remove_closed_sockets(SOCKET_LIST):
@@ -113,6 +107,7 @@ class Minibot:
             # because we won't be writing to this socket, only listening.
             self.readable_socks.append(self.listener_sock)
             self.errorable_socks.append(self.listener_sock)
+
             while True:
                 # if the listener socket is the only socket alive, we need to
                 # broadcast a message to the basestation to set up a new connection
@@ -120,7 +115,7 @@ class Minibot:
                 if len(self.readable_socks) == 1:
                     self.broadcast_to_base_station()
                     
-                # Remove all closed sockets to prevent select errors. Note: not sure
+                # Remove all closed sockets to prevent select errors. NOTE: not sure
                 # whether to perform this before or after checking whether reconnection
                 # is necessary.
                 # remove_closed_sockets(self.readable_socks)
@@ -140,6 +135,7 @@ class Minibot:
                     self.errorable_socks,
                     1,  # timeout time
                 )
+
                 # WARNING!! Be careful about closing sockets in any of these functions
                 # because the local lists read_ready_socks, write_ready_socks
                 # and errored_out_socks will still contain the closed socket.
@@ -148,6 +144,7 @@ class Minibot:
                 self.handle_errorable_socks(errored_out_socks)
                 self.handle_writable_socks(write_ready_socks)
                 self.handle_readable_socks(read_ready_socks)
+
                 # if basestation exists but is disconnected, stop minibot
                 if self.bs_repr and not self.bs_repr.is_connected():
                     self.basestation_disconnected(self.bs_repr.conn_sock)
@@ -186,13 +183,10 @@ class Minibot:
             # use sendto() instead of send() for UDP
             self.broadcast_sock.sendto(msg_byte_str, Minibot.BROADCAST_ADDRESS)
             data = self.broadcast_sock.recv(4096)
-        # TODO: timeout error removed from basestation
-        # except timeout:
-        #     print("Timed out", flush=True)
         except OSError:
             print("Try again")
 
-        # TODO this security policy is stupid.  We should be doing
+        # TODO: this security policy is stupid.  We should be doing
         # authentication after we create the TCP connection and also we should
         # be using some service like WebAuth to obtain a shared key to encrypt
         # messages.  Might be a fun project to work on at some point but not
@@ -299,7 +293,6 @@ class Minibot:
            basestation  
         """
         print("Basestation Disconnected")
-        # _thread.start_new_thread(ece.stop, ())
         drivetrain.set_effort(0, 0)
         self.close_sock(basestation_sock)
         self.bs_repr = None
@@ -351,13 +344,6 @@ class Minibot:
             # update status time of the basestation
             self.bs_repr.update_status_time()
             self.sendKV(sock, key, "ACTIVE")
-        elif key == "SCRIPT_EXEC_RESULT" or key == "SCRIPT":
-            # notify attempts for executing commands no longer in use
-            print("executing commands no longer in use")
-        # elif key == "SCRIPT_EXEC_RESULT":
-        #     # getting result of execution and sending it to basestation
-        #     script_exec_result = self.blockly_python_proc.get_exec_result()
-        #     self.sendKV(sock, key, script_exec_result)
         elif key == "MODE":
             if value == "object_detection":
                 _thread.start_new_thread(ece.object_detection, ())
@@ -365,10 +351,6 @@ class Minibot:
                 _thread.start_new_thread(ece.line_follow, ())
         elif key == "PORTS":
             ece.set_ports(value)
-        # elif key == "SCRIPTS":
-        #     # The script is always named bot_script.py.
-        #     if len(value) > 0:
-        #         self.blockly_python_proc.spawn_script(value)
         elif key == "WHEELS":
             print("key WHEELS")
 
@@ -416,12 +398,6 @@ class Minibot:
             else:
                 self.sendKV(sock, key, "")
         elif key == "RFID":
-            # def pass_tags(self, sock: socket, key: str, value: str):
-            #     returned_tags = [0, 0, 0, 0]
-            #     ece.rfid(value, returned_tags)
-            #     self.sendKV(sock, key, ' '.join(str(e) for e in returned_tags))
-                
-            # _thread.start_new_thread(pass_tags, (self, sock, key, value))
             rfid = qwiic_rfid.QwiicRFID(address = 0x7D)
             if rfid.begin():
                 tag = rfid.get_tag()
@@ -455,12 +431,6 @@ class Minibot:
         # it to the writable socks
         self.writable_socks.append(sock)
         message = f"<<<<{key},{value}>>>>"
-        # if sock in self.writable_sock_message_queue_map:
-        #     self.writable_sock_message_queue_map[sock].append(message)
-        # else:
-        #     self.writable_sock_message_queue_map[sock] = deque((), 20, 1)
-        #     self.writable_sock_message_queue_map[sock].append(message)
-
         socket_index = self.socket_key_index(self.writable_sock_message_queue_key, sock)
         if socket_index != -1:
             self.writable_sock_message_queue_value[socket_index].append(message)
