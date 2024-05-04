@@ -1,4 +1,3 @@
-# from collections import deque
 from socket import socket
 import time
 

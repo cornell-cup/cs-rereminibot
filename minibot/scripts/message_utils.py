@@ -1,16 +1,6 @@
-# import binascii
-# import spidev
 from machine import SPI, Pin
 import time
 from scripts.crc import crc16
-
-# Example setup code
-# spi = spidev.SpiDev()
-# bus = 0
-# device = 0
-# spi.open(bus,device)
-# spi.mode = 0
-# spi.max_speed_hz = 115200
 
 ENQ = 5  # ENQ
 ACK = 6
