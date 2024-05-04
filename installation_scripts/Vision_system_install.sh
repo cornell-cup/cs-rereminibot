@@ -10,6 +10,7 @@ echo Activated;
 pip install https://github.com/ai4ce/pyAprilTag/releases/download/0.0.6/pyAprilTag-0.0.6-cp37-cp37m-win_amd64.whl;
 echo Installed; 
 echo "Attempting to install Vision dependencies."
+pip install --upgrade pip setuptools wheel
 pip install -r requirements.txt
 echo "Attempting to install Vision dependencies individually."
 pip install numpy
