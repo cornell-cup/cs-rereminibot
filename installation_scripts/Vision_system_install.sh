@@ -1,3 +1,5 @@
+parent_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+cd "$parent_path"
 cd ../vision/apriltag-py/python
 conda env remove -n opencv_py37 -y;
 echo Removed; 
