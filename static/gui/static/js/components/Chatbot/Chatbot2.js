@@ -354,14 +354,18 @@ function Chatbot2({
             onChange={changeInputText} value={inputText}
             placeholder={contextMode ? "Enter a context/question" : selectedBotName != "" ?
               "Click the microphone to send a command" : "Please connect to a Minibot!"}
-            onKeyPress={(e) => {
-              if (contextMode) {
-                console.log(e.key);
-                if (e.key === 'Enter' || e.key === '`') { sendQuestion(e); }
-                //if (e.key === 'Enter') { sendContext(e); }
-                //if (e.key === '`') { sendQuestion(e); } 
-              }
-            }}>
+            onKeyDown={(e) => {
+                if(contextMode && e.key === "Enter"){
+                  var message = e.target.value.trim();
+                  var lastChar = message.slice(-1);
+                  if(lastChar === "?"){
+                    sendQuestion(e);
+                  }else{
+                    sendContext(e);
+                  }
+                }
+            }
+            }>
           </textarea>
           {/* mic backend objects built using SpeechRecognitionComp */}
           {contextMode ?
