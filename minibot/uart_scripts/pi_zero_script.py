@@ -48,7 +48,7 @@ def run_pi_zero(demo_expression : str = "excited"):
     print("Playback speed is currently at " + str(pi_ava._current_playback_speed))
     print("")
 
-    pi_ava.set_current_expression(demo_expression)
+    # pi_ava.set_current_expression(demo_expression)
 
     # timeout=None means there is no timeout between messages
     # xonoff is software control for 
@@ -95,7 +95,11 @@ def run_pi_zero(demo_expression : str = "excited"):
             
 
             # Update Pygame Screen
-            frame_np = np.array(frame)
+            if frame is None:
+                frame_np = np.zeros((320,480))
+            else:
+                frame_np = np.array(frame)
+
             if len(frame_np.shape) == 2:  # Grayscale to RGB
                 frame_np = np.stack([frame_np]*3, axis=-1)
             elif frame_np.shape[2] == 4:  # RGBA to RGB
