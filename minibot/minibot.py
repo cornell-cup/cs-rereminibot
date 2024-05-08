@@ -7,10 +7,6 @@ from select import select
 from socket import socket, AF_INET, SOCK_STREAM, SOCK_DGRAM
 from socket import SOL_SOCKET, SO_REUSEADDR
 import network
-
-from .scripts import message_utils
-
-# Micropython imports
 import time
 import _thread
 import sys
@@ -155,8 +151,6 @@ class Minibot:
         except KeyboardInterrupt:
             print("Ctrl-C interrupt!")
             self.sigint_handler()
-        except Exception as e: #TODO: Possibly remove for final version
-             print(e)
     
 
     def create_listener_sock(self):
@@ -326,15 +320,6 @@ class Minibot:
 
             token_len = len(Minibot.START_CMD_TOKEN)
             key = data_str[start + token_len:comma]
-            # if(key == "SCRIPT_BEG"):
-            #     print("BEG Data:")
-            #     print(data_str)
-            # if(key == "SCRIPT_MID"):
-            #     print("MID Data:")
-            #     print(data_str)
-            # if(key == "SCRIPT_END"):
-            #     print("END Data:")
-            #     print(data_str)
             value = data_str[comma + 1:end]
             # executes command with key,value
             self.execute_command(sock, key, value)
@@ -391,12 +376,6 @@ class Minibot:
                 return
 
             drivetrain.set_effort(left_power, right_power)
-
-        elif key == "SPR" or key == "PBS":
-            print("Received Command:", key + "," + value)
-            # ece.send_pi_command(key + "," + value)
-            # message_utils.send_message(message)
-            
         elif key == "IR":
             return_val = []
             thread = _thread.start_new_thread(ece.read_ir, (return_val))
@@ -437,6 +416,8 @@ class Minibot:
                 self.sendKV(sock, key, return_str)
             
             _thread.start_new_thread(test_rfid, (self, sock, key, value))
+        elif key == "SPR" or key == "PBS":
+            print(key + "," + value)
         elif key == "TEST":
             start_time = time.time()
             returned_msg = [0, 0, 0, 0]

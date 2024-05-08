@@ -5,7 +5,7 @@ import pygame
 import numpy as np
 
 import serial
-from .message_utils import *
+import os
 
 import traceback
 
@@ -50,7 +50,12 @@ def run_pi_zero(demo_expression : str = "excited"):
 
     # timeout=None means there is no timeout between messages
     # xonoff is software control for 
-    ser = serial.Serial('/dev/ttyAMA0', baudrate=115200, timeout=0, stopbits=serial.STOPBITS_ONE)
+    serial_connected = 0
+    print(os.path.exists('/dev/ttyACM0'))
+    if os.path.exists('/dev/ttyACM0'):
+        ser = serial.Serial('/dev/ttyACM0', 115200)
+        serial_connected = 1
+        time.sleep(1)
 
     running = True
     while running:
@@ -58,22 +63,20 @@ def run_pi_zero(demo_expression : str = "excited"):
             # Handle UART Signals
             
             # Run UART receive, nonblocking 
-            request = ser.readline().decode() # Decoding gets rid of newline character at the end 
+            if ser.inWaiting() > 0:
+                message = ser.readline().decode()
 
-            # un-format request
-            if request == 'Write.':
-                pass
-            elif validate_crc_message(request):
-                request = unpack_crc_message(request)
-
-                if request.startswith("SPR"): # some key that represents an animation LCD[emotion]
+                if message.startswith("SPR"): # some key that represents an animation LCD[emotion]
                     # Run LCD methods
-                    expression_name = request.split(",")[1]
+                    expression_name = message.split(",")[1]
+                
+                    if expression_name == "":
+                        pi_ava.clear_current_expression()
+                    else:
+                        pi_ava.set_current_expression(expression_name)
 
-                    pi_ava.set_current_expression(expression_name)
-
-                elif request.startswith("PBS"):
-                    playback_speed = request.split(",")[1]
+                elif message.startswith("PBS"):
+                    playback_speed = message.split(",")[1]
 
                     pi_ava.set_playback_speed(float(playback_speed))
 
