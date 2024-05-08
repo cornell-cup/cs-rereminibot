@@ -22,7 +22,6 @@ export default class AddBot extends React.Component {
             botName: "",
             availableBots: [], // bots connected to Base Station but not GUI
             botList: [],
-            power: 50,
             showPorts: false,
         };
 
@@ -102,11 +101,6 @@ export default class AddBot extends React.Component {
         return "";
     }
 
-    /*update power value when bot moves*/
-    updatePowerValue(event) {
-        this.state.power = event.target.value;
-    }
-
     /*adds bot name to list*/
     addBotListener(event) {
         let li = this.state.availableBots;
@@ -137,7 +131,7 @@ export default class AddBot extends React.Component {
             data: JSON.stringify({
                 bot_name: _this.props.selectedBotName,
                 direction: value,
-                power: _this.state.power,
+                power: _this.props.power,
             })
         }).catch(function (error) {
             if (error.response.data.error_msg.length > 0)
@@ -149,6 +143,7 @@ export default class AddBot extends React.Component {
 
     /** Handles keyboard input to control the movement buttons */
     handleArrowKeyDown(event) {
+        const _this = this;
         const directionArray = ["left", "forward", "right", "backward"]
         const spaceBar = 32;
         const leftArrow = 37;
@@ -158,12 +153,12 @@ export default class AddBot extends React.Component {
         if (event.keyCode === spaceBar) {
             // prevent spacebar from jumping to the end of the page
             event.preventDefault()
-            this.buttonMapListener("stop");
+            _this.buttonMapListener("stop");
             // If user presses an arrow key, make the Minibot move in that direction
         } else if (event.keyCode >= leftArrow && event.keyCode <= downArrow) {
             // prevent arrow key from causing the page to scroll
             event.preventDefault()
-            this.buttonMapListener(directionArray[event.keyCode - leftArrow])
+            _this.buttonMapListener(directionArray[event.keyCode - leftArrow])
         }
     }
 
