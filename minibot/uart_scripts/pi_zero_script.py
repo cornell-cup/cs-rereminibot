@@ -27,6 +27,7 @@ def run_pi_zero(demo_expression : str = "excited"):
     pygame.init()
     time.sleep(1)
     infoObject = pygame.display.Info()
+    # screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
     screen = pygame.display.set_mode((50, 50), pygame.RESIZABLE)
     pygame.display.set_caption('Avatar Demo')
     pygame.mouse.set_visible(0)
@@ -98,7 +99,8 @@ def run_pi_zero(demo_expression : str = "excited"):
             elif frame_np.shape[2] == 4:  # RGBA to RGB
                 frame_np = frame_np[:, :, :3]
             frame_surface = pygame.surfarray.make_surface(frame_np.swapaxes(0,1))
-            frame_surface = pygame.transform.scale(frame_surface, (infoObject.current_w, infoObject.current_h))
+            # frame_surface = pygame.transform.scale(frame_surface, (infoObject.current_w, infoObject.current_h))
+            frame_surface = pygame.transform.scale(frame_surface, (50, 50))
             screen.blit(frame_surface, (0, 0))
             pygame.display.update()
             
