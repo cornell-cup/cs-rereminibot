@@ -98,3 +98,27 @@ class Chatbot(db.Model):
             'id': self.user_id,
             'context': self.context
         }
+
+
+class Chatbot_Uploads(db.Model):
+
+    """ Class to store python scripts uploaded as zip folders by a certain user.
+    """
+    __tablename__ = 'chatbot_uploads'
+    id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String, nullable=False)
+    filename = db.Column(db.String, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __init__(self, code, filename, user_id):
+        self.code = code
+        self.filename = filename
+        self.user_id = user_id
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'code': self.code,
+            'filename': self.filename,
+            'user_id': self.user_id
+        }

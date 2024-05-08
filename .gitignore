@@ -1,3 +1,4 @@
-static/gui/node_modules
-venv/
-/.vscode
+venv\
+\.vscode
+
+static\gui\node_modules
