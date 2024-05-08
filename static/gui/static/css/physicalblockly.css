@@ -1,0 +1,125 @@
+.customBlockDisplay {
+    border: 2px solid rgb(177, 199, 255);
+    border-radius: 15px;
+    margin: 25px;
+    max-width: 70%;
+}
+.customBlockDisplay ul {
+    padding-left: 0;
+}
+.customBlockDisplay li.list-group-item {
+    color: white;
+    background-color: rgba(0, 0, 0, 0);
+    padding-bottom: 3px;
+}
+#selectionCollapseBtn, #displayCollapseBtn {
+    background-color: rgb(177, 199, 255);
+    box-shadow: none;
+}
+#customModal .modal {
+    color: white;
+}
+#customModal .modal-content {
+    background-color: black;
+    padding: 10px;
+    border: 2px #ff8484 solid;
+}
+#customModal .modal-header {
+    padding-top: 10px;
+    border: none;
+}
+#customModal .modal-footer {
+    border: none;
+}
+#customModalHeader {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    color: #ff8484;
+    font-family: "Audiowide", cursive;
+    margin-top: 15px;
+}
+#customModalBody, #loopModalBody, .modalText {
+    font-size: 1.25em;
+    font-weight: 300;
+    color: rgb(177, 199, 255);
+    padding-bottom: 10px;
+}
+#customModal li, #loopIterationSection div {
+    margin-top: 10px;
+    color: rgb(177, 199, 255);
+}
+#customModal li select, #loopIterationSection ol div input {
+    padding: 5px;
+    border-radius: 0;
+    margin-left: 10px;
+    background-color: black;
+    border: 2px rgb(40, 101, 255) solid;
+    color: rgb(177, 199, 255);
+}
+#customModal button.btn.btn-primary {
+    border: none;
+    color: white;
+}
+#selectionBoxCollapse {
+    color: rgb(177, 199, 255);
+    font-family: "Ubuntu";
+    font-size: 18px;
+}
+.selectionBox label {
+    text-align: right;
+}
+.customTitle {
+    font-family: "Ubuntu";
+    font-size: 22px;
+    padding-bottom: 0px;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    margin-left: 3px;
+    color: rgb(177, 199, 255);
+}
+#pbInfoModal {
+    color: black;
+    font-size: 16px;
+    font-family: arial;   
+}
+#wheel-power {
+    max-width: 80%;
+}
+.customLabel {
+    display: block;
+}
+#saveModal .modal {
+    color: white;
+}
+#saveModal .modal-content {
+    background-color: black;
+    padding: 10px;
+    border: 2px #ff8484 solid;
+}
+#saveModal .modal-header {
+    padding-top: 10px;
+    border: none;
+}
+#saveModal .modal-footer {
+    border: none;
+}
+.loopNumberInput {
+    width: 80%;
+}
+.customBlockObject {
+    display: block;
+}
+#customModal .customCollapseButton {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    background-color: #ff8484;
+}
+#customModal .customBlockContent {
+    background-color: black;
+    border: 2px solid white;
+    white-space: pre-line;
+    color: white;
+}
