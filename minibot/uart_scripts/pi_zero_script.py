@@ -73,6 +73,8 @@ def run_pi_zero(demo_expression : str = "excited"):
                     # Run LCD methods
                     expression_name = message.split(",")[1]
                 
+                    print("Expression Name: \'" + expression_name + "\'")
+
                     if expression_name == "":
                         pi_ava.clear_current_expression()
                     else:
