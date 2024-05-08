@@ -186,6 +186,9 @@ class Avatar:
         time change since the previous update.
         """ 
 
+        if self._current_expression is None:
+            return
+
         # Get current time
         current_time = time.time()
 
@@ -222,6 +225,9 @@ class Avatar:
         The active animation frame of the current expression's spritesheet. 
         See Spritesheet.get_frame() for the return type.
         """
+        if self._current_expression == None:
+            return None
+
         return self._expressions[self._current_expression].get_frame(self._current_frame)   
 
     def get_current_frame_count(self):
