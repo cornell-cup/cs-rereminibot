@@ -19,4 +19,4 @@ while True:
 
             # Send OK message back
             # ser.write(b'OK')
-
+            pass

@@ -307,7 +307,7 @@ class BaseStation:
             bot.script_exec_result_var.set_with_lock(True, "Stop current program in execution", timeout=1)
             res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(self.script_thread.ident), ctypes.py_object(SystemExit))
             print("interrupting the thread executing the script, result: " + str(res))
-            bot.sendKV("WHEELS", "STOP")
+            bot.sendKV("WHEELS", "stop")
 
     # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
     #     script = query_params['script_code']
