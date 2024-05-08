@@ -4,14 +4,15 @@ Base Station for the MiniBot.
 import os
 import re
 import socket
-import sys
 import time
 import threading
-import math
 import ctypes
 import json
 import queue
+import random
+import copy
 from time import sleep
+from typing import Tuple, Optional
 
 from basestation.bot import Bot
 from basestation import config
@@ -24,7 +25,7 @@ from basestation.databases.user_database import db
 from basestation.util.stoppable_thread import StoppableThread, ThreadSafeVariable
 import basestation.piVision.pb_utils as pb_utils
 
-from basestation.emotion_bs import *
+from emotion_bs import *
 
 from random import choice, randint
 from string import digits, ascii_lowercase, ascii_uppercase
@@ -32,7 +33,6 @@ from typing import Any, Dict, List, Tuple, Optional
 from copy import deepcopy
 import subprocess
 from basestation import ChatbotWrapper
- 
 
 MAX_VISION_LOG_LENGTH = 1000
 VISION_UPDATE_FREQUENCY = 30
@@ -75,16 +75,12 @@ class BaseStation:
         self.chatbot = ChatbotWrapper.ChatbotWrapper()
 
         self.blockly_function_map = {
-            "move_forward": "bot_script.sendKV(\"WHEELS\",\"forward\")",
-            "move_backward": "bot_script.sendKV(\"WHEELS\",\"backward\")",
-            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"left\")",
-            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"right\")",
+            "move_forward": "bot_script.sendKV(\"WHEELS\",\"(pow,pow)\")",
+            "move_backward": "bot_script.sendKV(\"WHEELS\",\"(-pow,-pow)\")",
+            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"(pow,0)\")",
+            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"(0,pow)\")",
             "wait": "time.sleep",        
-            "stop": "bot_script.sendKV(\"WHEELS\",\"stop\")",
-
-            "set_expression": "bot_script.sendKV(\"SPR\",ARG)",
-            "clear_expression": "bot_script.sendKV(\"SPR\",ARG)",
-            "set_expression_playback_speed": "bot_script.sendKV(\"PBS\",ARG)"
+            "stop": "bot_script.sendKV(\"WHEELS\",\"stop\")"
         }
 
         self.wheel_directions = ["forward", "backward", "left", "right", "stop"]
@@ -92,19 +88,11 @@ class BaseStation:
         self.py_commands = queue.Queue()
         self.pb_map = {}
         self.pb_stopped = True
-        # functions that run continuously, and hence need to be started
-        # in a new thread on the Minibot otherwise the Minibot will get
-        # stuck in an infinite loop and will be unable to receive
-        # other commands
-        # self.blockly_threaded_functions = [
-        #     "fwd", "back", "right", "left", "stop", "ECE_wheel_pwr"
-        # ]
 
         # This socket is used to listen for new incoming Minibot broadcasts
         # The Minibot broadcast will allow us to learn the Minibot's ipaddress
         # so that we can connect to the Minibot
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
 
         if self.reuseport:
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
@@ -123,7 +111,6 @@ class BaseStation:
         # checks if vision can see april tag by checking lenth of vision_log
         # self.connections = BaseConnection()
 
-        
         # only bind in debug mode if you are the debug server, if you are the
         # monitoring program which restarts the debug server, do not bind,
         # otherwise the debug server won't be able to bind
@@ -259,7 +246,14 @@ class BaseStation:
         self.stop_bot_script(bot_name)
         bot = self.get_bot(bot_name)
         direction = direction.lower()
-        bot.sendKV("WHEELS", direction)
+        wheel_arg_str = "(0,0)"
+        if direction in self.wheel_directions_multiplier_map.keys():
+            wheel_arg = copy.deepcopy(self.wheel_directions_multiplier_map[direction])
+            power = self.parse_power(power)
+            wheel_arg[0] *= power
+            wheel_arg[1] *= power
+            wheel_arg_str = "(" + str(wheel_arg[0]) + "," + str(wheel_arg[1]) + ")"
+        bot.sendKV("WHEELS", wheel_arg_str)
 
     def send_bot_script(self, bot_name: str, script: str):
         """Sends a python program to the specific bot"""
@@ -276,6 +270,7 @@ class BaseStation:
         self.script_thread.start()
 
     def run_bot_script(self, bot_name: str, program_string: str):
+        """ Executes a python program on the specific bot """
         bot_script = self.get_bot(bot_name)
         bot_script.script_alive_var.set_with_lock(True, True, timeout=-1)
         try:
@@ -296,11 +291,15 @@ class BaseStation:
             bot_script.script_exec_result_var.set_with_lock(True, str_exception, timeout=5)
             print("exception encountered in running the program")
             print(str_exception)
-            
         bot_script.script_alive_var.set_with_lock(True, False, timeout=-1)
 
     def stop_bot_script(self, bot_name: str):
+        """ Stops any currently executing python program on the specific bot """
         bot = self.get_bot(bot_name)
+        if bot == None:
+            print("no bot available for stoppping bot script")
+            return
+        
         script_alive = bot.script_alive_var.get_with_lock(True, timeout=-1)
         if script_alive and self.script_thread != None:
             # stop current running script and send stop command to the bot
@@ -309,21 +308,8 @@ class BaseStation:
             print("interrupting the thread executing the script, result: " + str(res))
             bot.sendKV("WHEELS", "stop")
 
-    # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
-    #     script = query_params['script_code']
-    #     virtual_room_id = query_params['virtual_room_id']
-    #     minibot_id = query_params['minibot_id']  
-    #     world_width = query_params['world_width']
-    #     world_height = query_params['world_height']
-    #     cell_size = query_params['cell_size']
-    #     query_params['id'] = query_params['minibot_id']  
-    #     parsed_program_string = self.parse_program(script)
-    #     worlds = self.get_worlds(virtual_room_id, world_width, world_height, cell_size, [minibot_id])
-    #     minibot_location = self.get_vision_data_by_id(query_params)
-    #     start = (minibot_location['x'],minibot_location['y'])
-    #     return run_program_string_for_gui_data(parsed_program_string, start, worlds)
-
     def parse_program(self, script: str) -> str:
+        """ Parses python program into commands that can be sent to the bot """
         # Regex is for bot-specific functions (move forward, stop, etc)
         # 1st group is the whitespace (useful for def, for, etc),
         # 2nd group is for func name, 3rd group is for args,
@@ -353,17 +339,6 @@ class BaseStation:
 
                 if command == "wait":
                     func = func + "(" + argument + ")"
-
-                # TODO Improve/rework blockly function map so this doesn't need to happen
-                if command == "set_expression":
-                    func = func.replace("ARG", argument)
-
-                if command == "set_expression_playback_speed":
-                    func = func.replace("ARG", argument)
-
-                if command == "clear_expression":
-                    func = func.replace("ARG", "\"\"")
-
 
                 # TODO: implement custom power  
                 # elif func.startswith("bot_script.sendKV(\"WHEELS\","):
@@ -399,13 +374,20 @@ class BaseStation:
         """
         bot = self.get_bot(bot_name)
         return bot.script_exec_result_var.get_with_lock(False)
-        
-        # request the bot to send the script execution result
-        # bot.sendKV("SCRIPT_EXEC_RESULT", "")
-        # try reading to see if the bot has replied
-        # bot.readKV()
-        # this value might be None if the bot hasn't replied yet
-        # return bot.script_exec_result
+
+    def parse_power(self, power: str) -> float:
+        """ Convert power string (with max of 100) to a float with max of 1.
+        """
+        try:
+            power = int(power)
+            if power < 0:
+                power = 0
+            elif power > 100:
+                power = 100
+        except:
+            power = 0
+        power /= 100
+        return power
 
     def get_current_expression(self):
         return self.current_expression
@@ -490,12 +472,14 @@ class BaseStation:
     
     # ==================== PHYSICAL BLOCKLY ==================================
     def get_next_py_command(self):
-        if(self.py_commands.qsize() == 0):
+        """ Gets the next python command for the physical blockly process """
+        if self.py_commands.qsize() == 0:
             return ""
         val = self.py_commands.get(False)
         return val
 
     def get_rfid(self, bot_name: str):
+        """ Gets the RFID tag from the specific bot """
         bot = self.get_bot(bot_name)
         bot.sendKV("RFID", 4)
         bot.readKV()
@@ -503,18 +487,16 @@ class BaseStation:
         return bot.rfid_tags
 
     @make_thread_safe
-    def set_bot_mode(self, bot_name: str, mode: str, pb_map: json):
-        """ Set the bot to either line follow or object detection mode """
+    def set_bot_mode(self, bot_name: str, mode: str, pb_map: json, power: str):
+        """ Set the bot to different physical blockly modes """
         bot = self.get_bot(bot_name)
         pb_map = str(pb_map)
         if mode == "physical-blockly" or mode == "physical-blockly-2":
             self.pb_stopped = False
             if mode == 'physical-blockly':
-                #print("starting physical blockly thread")
-                self.physical_blockly(bot_name, 0, pb_map)
+                self.physical_blockly(bot_name, 0, pb_map, power)
             else:
-                #print("starting physical blockly 2 thread")
-                self.physical_blockly(bot_name, 1, pb_map)
+                self.physical_blockly(bot_name, 1, pb_map, power)
         # elif mode == "object_detection":
         #     self.bot_vision_server = subprocess.Popen(
         #         ['python', './basestation/piVision/server.py', '-p MobileNetSSD_deploy.prototxt',
@@ -528,7 +510,9 @@ class BaseStation:
         #         self.bot_vision_server.kill()
         bot.sendKV("MODE", mode)
     
-    def physical_blockly(self, bot_name: str, mode: int, pb_map: json):
+    def physical_blockly(self, bot_name: str, mode: int, pb_map: json, power: str):
+        """ Runs the physical blockly process on the specific bot, with
+        custom mapping of blocks and custom power option """
         rfid_tags = queue.Queue()
         pb_map = json.loads(pb_map)
         
@@ -540,17 +524,16 @@ class BaseStation:
             
         def tag_consumer():
             while not self.pb_stopped:
-                #print("queue size: " + str(rfid_tags.qsize()), flush=True)
                 try:
                     tag = rfid_tags.get(block=False).strip()
                     if tag in pb_map.keys():
                         tag = pb_map[tag]
                         task = pb_utils.classify(tag, pb_utils.commands)
                         py_code = pb_utils.pythonCode[task[1]]
+
                         if mode == 1:
-                            print(py_code)
                             if py_code[0:3] == "bot" and task[1] in self.wheel_directions:
-                                self.move_bot_wheels(bot_name, task[1], "100")
+                                self.move_bot_wheels(bot_name, task[1], power)
                         self.py_commands.put("pb:" + py_code)
                 except:
                     pass
@@ -560,6 +543,7 @@ class BaseStation:
         threading.Thread(target=tag_producer).start()
     
     def end_physical_blockly(self, bot_name: str):
+        """ Ends the physical blockly process """
         self.pb_stopped = True
         self.py_commands = queue.Queue()
         self.move_bot_wheels(bot_name, "STOP", "100")
