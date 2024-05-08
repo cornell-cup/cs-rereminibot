@@ -1,3 +1,7 @@
+# NOTE: this file is for running a complete script sent from Minibot in the form
+# of a script, and is no longer in use, as script is parsed on the Basestation side
+# in a line by line format, causing individual commands to be sent to the Minibot.
+
 import _thread
 from emotion_mb import *
 

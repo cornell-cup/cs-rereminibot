@@ -95,7 +95,7 @@ const Navbar = (props) => {
           <Link id="analytics-link" to="/user-analytics" className={`nav-link ${activeIndex === ANALYTICS ? "active" : ""}`} onClick={(e) => { setActiveIndex(ANALYTICS) }}><FontAwesomeIcon icon={Icons.faChartBar} /> Analytics</Link>
         }
         {
-          <Link id="physical-blockly-link" to="/physical-blockly" className={`nav-link ${activeIndex === PHYSICALBLOCKLY ? "active" : ""}`} onClick={(e) => { setActiveIndex(PHYSICALBLOCKLY) }}><FontAwesomeIcon icon={Icons.faChartBar} /> Physical Blockly</Link>
+          <Link id="physical-blockly-link" to="/physical-blockly" className={`nav-link ${activeIndex === PHYSICALBLOCKLY ? "active" : ""}`} onClick={(e) => { setActiveIndex(PHYSICALBLOCKLY) }}><FontAwesomeIcon icon={Icons.faCubes} /> Physical Blockly</Link>
         }
         {isLoggedIn &&
           <Link id="history-link" to="/history" className={`nav-link ${activeIndex === HIST ? "active" : ""}`} onClick={(e) => { setActiveIndex(HIST) }}><FontAwesomeIcon icon={Icons.faChartBar} /> History</Link>

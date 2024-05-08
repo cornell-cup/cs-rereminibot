@@ -19,7 +19,14 @@ function BotControl({
   activeMicComponent,
   setActiveMicComponent,
   botVoiceControlMic,
+<<<<<<< HEAD
   setBotVoiceControlMic}) {
+=======
+  setBotVoiceControlMic }) {
+
+  const [power, setPower] = useState(50);
+
+>>>>>>> physical_blockly_2
   return (
     <div className="row">
       <div className="col-md">
@@ -28,6 +35,8 @@ function BotControl({
           setSelectedBotName={setSelectedBotName}
           selectedBotStyle={selectedBotStyle}
           setSelectedBotStyle={setSelectedBotStyle}
+          power={power}
+          setPower={setPower}
         />
         <div className="control-option">
             {/* <div id="component_view" className="box"> */}
@@ -70,6 +79,8 @@ function BotControl({
             activeMicComponent={activeMicComponent}
             botVoiceControlMic={botVoiceControlMic}
             setBotVoiceControlMic={setBotVoiceControlMic}
+            power={power}
+            setPower={setPower}
           />
         </div>
         <br />

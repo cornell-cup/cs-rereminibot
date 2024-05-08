@@ -5,9 +5,7 @@ Main file from which BaseStation Websocket interface begins.
 from flask import Flask
 from flask import Blueprint, request, render_template, jsonify, session, redirect
 from flask_api import status
-import os.path
 import json
-import sys
 import time
 import datetime
 
@@ -49,6 +47,7 @@ def discover_bots():
 
 @index_bp.route('/get-py-command', methods=['GET'])
 def get_py_command(): 
+    """ Get the next python command for the physical blockly process """
     v = base_station.get_next_py_command()
     return json.dumps(v)
 
@@ -129,7 +128,7 @@ def ports():
 
 @index_bp.route('/mode', methods=['POST'])
 def mode():
-    """ Makes the minibot run in either line follow or object detection mode """
+    """ Makes the minibot run in different physical blockly modes """
     data = request.get_json()
     bot_name = data['bot_name']
     if not bot_name:
@@ -137,11 +136,13 @@ def mode():
         return json.dumps(error_json), status.HTTP_400_BAD_REQUEST
     mode = data['mode']
     pb_map = data['pb_map']
-    base_station.set_bot_mode(bot_name, mode, pb_map)
+    power = data['power']
+    base_station.set_bot_mode(bot_name, mode, pb_map, power)
     return json.dumps(True), status.HTTP_200_OK
 
 @index_bp.route('/start_physical_blockly', methods=['POST'])
 def start_physical_blockly():
+    """ Starts the physical blockly process """
     data = request.get_json()
     bot_name = data['bot_name']
     rfid = base_station.get_rfid(bot_name)
@@ -149,6 +150,7 @@ def start_physical_blockly():
 
 @index_bp.route('/end_physical_blockly', methods=['POST'])
 def end_physical_blockly():
+    """ Ends the physical blockly process """
     data = request.get_json()
     bot_name = data['bot_name']
     base_station.end_physical_blockly(bot_name)
@@ -321,7 +323,7 @@ def update_custom_function():
 def get_custom_function():
     """Gets the logged in user's custom functions"""
     result = base_station.get_custom_function()
-    
+
     if result[0]:
         return json.dumps(result[1]), status.HTTP_200_OK
     else:
