@@ -66,7 +66,7 @@ def run_pi_zero(demo_expression : str = "excited"):
             # Run UART receive, nonblocking 
             if ser.inWaiting() > 0:
                 message = ser.readline().decode()
-                if len(message > 0):
+                if len(message) > 0:
                     print(message)
                 if message.startswith("SPR"): # some key that represents an animation LCD[emotion]
                     # Run LCD methods
