@@ -25,6 +25,7 @@ def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_coun
 
 def run_pi_zero(demo_expression : str = "excited"):
     pygame.init()
+    time.sleep(1)
     infoObject = pygame.display.Info()
     screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
     pygame.display.set_caption('Avatar Demo')
