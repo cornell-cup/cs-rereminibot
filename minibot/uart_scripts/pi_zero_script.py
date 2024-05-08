@@ -27,7 +27,7 @@ def run_pi_zero(demo_expression : str = "excited"):
     pygame.init()
     time.sleep(1)
     infoObject = pygame.display.Info()
-    screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((50, 50), pygame.RESIZABLE)
     pygame.display.set_caption('Avatar Demo')
     pygame.mouse.set_visible(0)
 
@@ -66,7 +66,8 @@ def run_pi_zero(demo_expression : str = "excited"):
             # Run UART receive, nonblocking 
             if ser.inWaiting() > 0:
                 message = ser.readline().decode()
-
+                if len(message > 0):
+                    print(message)
                 if message.startswith("SPR"): # some key that represents an animation LCD[emotion]
                     # Run LCD methods
                     expression_name = message.split(",")[1]
@@ -101,6 +102,16 @@ def run_pi_zero(demo_expression : str = "excited"):
             screen.blit(frame_surface, (0, 0))
             pygame.display.update()
             
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    running = False
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        print("escape pressed")
+                        pygame.quit()
+                        running = False
             
             time.sleep(0.005)  # Adjust as needed for framerate
         except KeyboardInterrupt as ki:
