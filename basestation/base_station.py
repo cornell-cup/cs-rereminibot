@@ -22,7 +22,6 @@ from basestation.databases.user_database import User, Chatbot as ChatbotTable, S
 from basestation.databases.user_database import db
 
 # imports from basestation util
-from basestation.util.stoppable_thread import StoppableThread, ThreadSafeVariable
 import basestation.piVision.pb_utils as pb_utils
 
 from basestation.emotion_bs import *
@@ -33,6 +32,7 @@ from typing import Any, Dict, List, Tuple, Optional
 from copy import deepcopy
 import subprocess
 from basestation import ChatbotWrapper
+ 
 
 MAX_VISION_LOG_LENGTH = 1000
 VISION_UPDATE_FREQUENCY = 30
@@ -80,7 +80,19 @@ class BaseStation:
             "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"(pow,0)\")",
             "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"(0,pow)\")",
             "wait": "time.sleep",        
-            "stop": "bot_script.sendKV(\"WHEELS\",\"stop\")"
+            "stop": "bot_script.sendKV(\"WHEELS\",\"(0,0)\")",
+
+            "set_expression": "bot_script.sendKV(\"SPR\",ARG)",
+            "clear_expression": "bot_script.sendKV(\"SPR\",ARG)",
+            "set_expression_playback_speed": "bot_script.sendKV(\"PBS\",ARG)"
+        }
+
+        self.wheel_directions_multiplier_map = {
+            "forward": [1, 1],
+            "backward": [-1, -1],
+            "left": [1, 0],
+            "right": [0, 1],
+            "stop": [0, 0]
         }
 
         self.wheel_directions = ["forward", "backward", "left", "right", "stop"]
@@ -308,6 +320,20 @@ class BaseStation:
             print("interrupting the thread executing the script, result: " + str(res))
             bot.sendKV("WHEELS", "stop")
 
+    # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
+    #     script = query_params['script_code']
+    #     virtual_room_id = query_params['virtual_room_id']
+    #     minibot_id = query_params['minibot_id']  
+    #     world_width = query_params['world_width']
+    #     world_height = query_params['world_height']
+    #     cell_size = query_params['cell_size']
+    #     query_params['id'] = query_params['minibot_id']  
+    #     parsed_program_string = self.parse_program(script)
+    #     worlds = self.get_worlds(virtual_room_id, world_width, world_height, cell_size, [minibot_id])
+    #     minibot_location = self.get_vision_data_by_id(query_params)
+    #     start = (minibot_location['x'],minibot_location['y'])
+    #     return run_program_string_for_gui_data(parsed_program_string, start, worlds)
+
     def parse_program(self, script: str) -> str:
         """ Parses python program into commands that can be sent to the bot """
         # Regex is for bot-specific functions (move forward, stop, etc)
@@ -340,12 +366,30 @@ class BaseStation:
                 if command == "wait":
                     func = func + "(" + argument + ")"
 
+                # TODO Improve/rework blockly function map so this doesn't need to happen
+                if command == "set_expression":
+                    func = func.replace("ARG", argument)
+
+                if command == "set_expression_playback_speed":
+                    func = func.replace("ARG", argument)
+
+                if command == "clear_expression":
+                    func = func.replace("ARG", "\"\"")
+
+
                 # TODO: implement custom power  
                 # elif func.startswith("bot_script.sendKV(\"WHEELS\","):
                 #     if argument != '':
                 #         float_power = float(argument) / 100
                 #         func = func.replace("pow",str(float_power))   
+                if func.startswith("bot_script.sendKV(\"WHEELS\","):
+                    if argument != '':
+                        power = self.parse_power(argument)
+                        func = func.replace("pow", str(power))   
+                    else:
+                        func = func.replace("-pow", "0").replace("pow", "0")
                 
+
                 whitespace = match.group(1)
                 if not whitespace:
                     whitespace = ""
