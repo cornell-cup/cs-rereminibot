@@ -71,7 +71,7 @@ def run_pi_zero(demo_expression : str = "excited"):
                     print(message)
                 if message.startswith("SPR"): # some key that represents an animation LCD[emotion]
                     # Run LCD methods
-                    expression_name = message.split(",")[1]
+                    expression_name = message.split(",")[1].replace("\n", "").strip()
                 
                     print("Expression Name: \'" + expression_name + "\'")
 
