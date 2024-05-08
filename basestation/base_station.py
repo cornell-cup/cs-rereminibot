@@ -25,7 +25,7 @@ from basestation.databases.user_database import db
 from basestation.util.stoppable_thread import StoppableThread, ThreadSafeVariable
 import basestation.piVision.pb_utils as pb_utils
 
-from emotion_bs import *
+from basestation.emotion_bs import *
 
 from random import choice, randint
 from string import digits, ascii_lowercase, ascii_uppercase
