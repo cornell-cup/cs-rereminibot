@@ -10,6 +10,7 @@ import ctypes
 import json
 import queue
 import random
+import copy
 from time import sleep
 from typing import Tuple, Optional
 
@@ -233,7 +234,7 @@ class BaseStation:
         direction = direction.lower()
         wheel_arg_str = "(0,0)"
         if direction in self.wheel_directions_multiplier_map.keys():
-            wheel_arg = self.wheel_directions_multiplier_map[direction]
+            wheel_arg = copy.deepcopy(self.wheel_directions_multiplier_map[direction])
             power = self.parse_power(power)
             wheel_arg[0] *= power
             wheel_arg[1] *= power

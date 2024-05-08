@@ -18,6 +18,9 @@ function BotControl({
   setActiveMicComponent,
   botVoiceControlMic,
   setBotVoiceControlMic }) {
+
+  const [power, setPower] = useState(50);
+
   return (
     <div className="row">
       <div className="col-md">
@@ -26,6 +29,8 @@ function BotControl({
           setSelectedBotName={setSelectedBotName}
           selectedBotStyle={selectedBotStyle}
           setSelectedBotStyle={setSelectedBotStyle}
+          power={power}
+          setPower={setPower}
         />
       </div>
 
@@ -41,6 +46,8 @@ function BotControl({
             activeMicComponent={activeMicComponent}
             botVoiceControlMic={botVoiceControlMic}
             setBotVoiceControlMic={setBotVoiceControlMic}
+            power={power}
+            setPower={setPower}
           />
         </div>
         <br />

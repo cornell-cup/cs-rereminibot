@@ -353,10 +353,10 @@ class Minibot:
             ece.set_ports(value)
         elif key == "WHEELS":
             print("key WHEELS")
-
-            left_power = value.substring(1, value.index(','))
-            right_power = value.substring(value.index(',') + 1, value.index(')'))
-
+    
+            left_power = value.split(',')[0][1:]
+            right_power = value.split(',')[1][:-1]
+            
             try:
                 left_power = float(left_power)
                 right_power = float(right_power)
