@@ -19,14 +19,10 @@ function BotControl({
   activeMicComponent,
   setActiveMicComponent,
   botVoiceControlMic,
-<<<<<<< HEAD
-  setBotVoiceControlMic}) {
-=======
   setBotVoiceControlMic }) {
 
   const [power, setPower] = useState(50);
 
->>>>>>> physical_blockly_2
   return (
     <div className="row">
       <div className="col-md">
