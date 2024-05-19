@@ -41,8 +41,8 @@ class InputWindow(Screen):
 					part1_win = ["python", "part1_checkerboard.py", "-r", str(row),"-c", str(col),"-o",calibFile]
 					part2 = ["python3", "part2_tag_calib.py", "-cf", calibFile, "-pf", posFile, "-b", "4"]
 					part2_win = ["python", "part2_tag_calib.py", "-cf", calibFile, "-pf", posFile, "-b", "4"]
-					part3 = ["python3", "part3_tag_locate.py", "-f", calibFile, "-s", "4", "-u", "http://localhost:8080/vision"]
-					part3_win = ["python", "part3_tag_locate.py", "-f", calibFile, "-s", "4", "-u", "http://localhost:8080/vision"]
+					part3 = ["python3", "part3_tag_locate.py", "-f", calibFile, "-s", "4", "-u", "https://webhook.site/bc0e238a-b4ec-4f7b-95b7-bf6e94221f56"]
+					part3_win = ["python", "part3_tag_locate.py", "-f", calibFile, "-s", "4", "-u", "https://webhook.site/bc0e238a-b4ec-4f7b-95b7-bf6e94221f56"]
 
 					try:
 						call(part1_win)
