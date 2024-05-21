@@ -1,9 +1,7 @@
-# MiniBot Platform
-
-Minibot is a modular robotics kit designed for students from age 6 - 18
-developed in partnership with DaVinci Robotics. This repository contains 
-a web app for controlling the Minibot and sample
-scripts that allow users to run simple algorithms on their Minibot.
+XRP is a modular robotics kit designed for students 
+developed in partnership with Sparkfun. This repository contains 
+a web app for controlling the XRP and sample
+scripts that allow users to run simple algorithms on their XRP.
 
 This repository is currently in development.
 
