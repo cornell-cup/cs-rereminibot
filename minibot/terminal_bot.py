@@ -3,6 +3,7 @@ from bs_repr import BS_Repr
 
 from collections import deque
 from select import select
+import random
 
 from socket import socket, AF_INET, SOCK_STREAM, SOCK_DGRAM
 from socket import SOL_SOCKET, SO_REUSEADDR, SO_BROADCAST
@@ -431,13 +432,18 @@ class Minibot:
             else:
                 self.sendKV(sock, key, "")
         elif key == "RFID":
-            def pass_tags(self, sock: socket, key: str, value: str):
-                returned_tags = [0, 0, 0, 0]
-                # replace with direct call to the rfid sensor here
-                # ece.rfid(value, returned_tags)
-                self.sendKV(sock, key, ' '.join(str(e) for e in returned_tags))
-    
-            _thread.start_new_thread(pass_tags, (self, sock, key, value))
+            tags = [
+                "110631159936",
+                "1107911474124",
+                "1107815185135",
+                "1107696200239",
+                "110641412160",
+                "000000000000",
+                "111111111111",
+                "222222222222"
+            ]
+            tag = tags[random.randint(0, 7)]
+            self.sendKV(sock, key, tag)
         elif key == "TESTRFID":
             def test_rfid(self, sock: socket, key: str, value: str):
                 start_time = time.time()
