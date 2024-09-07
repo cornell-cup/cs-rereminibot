@@ -1,5 +1,7 @@
 """
 Minimal and functional version of CPython's argparse module.
+
+Note: when importing this file to the XRP code editor, rename the file to argparse.py
 """
 
 import sys

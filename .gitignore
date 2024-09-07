@@ -2,3 +2,6 @@ venv\
 \.vscode
 
 static\gui\node_modules
+
+minibot/__pycache__
+minibot/uart_scripts/__pycache__
