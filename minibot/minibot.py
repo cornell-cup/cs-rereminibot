@@ -346,11 +346,13 @@ class Minibot:
                 self.bs_repr.update_status_time()
             self.sendKV(sock, key, "ACTIVE")
         elif key == "MODE":
+            # TODO: replace with function calls when implemented
             if value == "object_detection":
                 _thread.start_new_thread(ece.object_detection, ())
             elif value == "line_follow":
                 _thread.start_new_thread(ece.line_follow, ())
         elif key == "PORTS":
+            # TODO: replace with function calls when implemented
             ece.set_ports(value)
         elif key == "WHEELS":
             print("key WHEELS")
@@ -377,20 +379,12 @@ class Minibot:
 
             drivetrain.set_effort(left_power, right_power)
         elif key == "IR":
+            # Replace with function calls when implemented
             return_val = []
             thread = _thread.start_new_thread(ece.read_ir, (return_val))
 
             while _thread.is_alive(thread):
                 time.sleep(0.01)
-
-            # Note: this is for testing and will be removed for MicroPython version
-            # now = time.localtime()
-            # file = open("/home/pi/Documents/" +
-            #             now.strftime('%H:%M:%S.%f') + ".txt", "w")
-
-            # file.write("From Arduino\n")
-            # file.write(str(return_val))
-            # file.close()
 
             if return_val[0] == 0:
                 self.sendKV(sock, key, "HIGH")
@@ -406,19 +400,10 @@ class Minibot:
                 self.sendKV(sock, key, tag)
             else:
                 self.sendKV(sock, key, "")
-        elif key == "TESTRFID":
-            def test_rfid(self, sock: socket, key: str, value: str):
-                start_time = time.time()
-                returned_tags = [0, 0, 0, 0]
-                ece.rfid(value, returned_tags)
-                latency = time.time() - start_time
-                return_str = "RFID Tag: " + ' '.join(str(e) for e in returned_tags) + " Latency: " + str(latency)
-                self.sendKV(sock, key, return_str)
-            
-            _thread.start_new_thread(test_rfid, (self, sock, key, value))
-        elif key == "SPR" or key == "PBS":
+        elif key == "SPR" or key == "PBS": # emotional framework
             print(key + "," + value)
-        elif key == "TEST":
+        elif key == "TEST": # Used to test latency
+            # TODO: rewrite to work with serial 
             start_time = time.time()
             returned_msg = [0, 0, 0, 0]
             ece.test(returned_msg)
