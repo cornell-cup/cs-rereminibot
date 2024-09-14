@@ -1,26 +1,74 @@
 {
-  "idle": {
-    "frame_width": 480,
-    "frame_height": 320,
-    "frame_count": 20,
-    "sheet_src": "Eyes_Idle.png"
-  },
-  "roll": {
-    "frame_width": 480,
-    "frame_height": 320,
-    "frame_count": 30,
-    "sheet_src": "Eyes_Roll.png"
-  },
-  "brow_raise": {
-    "frame_width": 480,
-    "frame_height": 320,
-    "frame_count": 30,
-    "sheet_src": "Eyes_Eyebrow_Raise.png"
-  },
   "excited": {
     "frame_width": 480,
     "frame_height": 320,
     "frame_count": 63,
     "sheet_src": "Excited.png"
+  },
+  "big_no": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 33,
+    "sheet_src": "Big_No.png"
+  },
+  "big_yes": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 21,
+    "sheet_src": "Big_Yes.png"
+  },
+  "blink_awake": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 66,
+    "sheet_src": "BlinkAwake.png"
+  },
+  "chuckle": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 33,
+    "sheet_src": "Chuckle.png"
+  },
+  "surprise": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 19,
+    "sheet_src": "ExclamationMark.png"
+  },
+  "no": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 28,
+    "sheet_src": "No.png"
+  },
+  "ready_to_race": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 10,
+    "sheet_src": "Ready_to_Race.png"
+  },
+  "sad": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 21,
+    "sheet_src": "Sad.png"
+  },
+  "idle_stable": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 19,
+    "sheet_src": "StableIdle.png"
+  },
+  "startled": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 25,
+    "sheet_src": "Startled.png"
+  },
+  "yes": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 27,
+    "sheet_src": "Yes.png"
   }
 }

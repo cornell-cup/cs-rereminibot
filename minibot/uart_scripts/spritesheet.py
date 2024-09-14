@@ -67,14 +67,12 @@ class Spritesheet:
         A PIL Image representing the current frame.
         """
         
-        while frame_number >= self._frame_count:
-            frame_number -= self._frame_count
+        num = abs(int(frame_number)) % self._frame_count
+        if frame_number < 0 and num != 0:
+            num = 10 - num
 
-        while frame_number < 0:
-            frame_number += self._frame_count
-
-        return self._frames[int(frame_number)]
+        return self._frames[num]
 
         
-        
+    
 
