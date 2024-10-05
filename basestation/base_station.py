@@ -84,7 +84,9 @@ class BaseStation:
 
             "set_expression": "bot_script.sendKV(\"SPR\",ARG)",
             "clear_expression": "bot_script.sendKV(\"SPR\",ARG)",
-            "set_expression_playback_speed": "bot_script.sendKV(\"PBS\",ARG)"
+            "set_expression_playback_speed": "bot_script.sendKV(\"PBS\",ARG)",
+
+            "start_accelerometer_streaming": "bot_script.sendKV(\"ACCEL\", 0)\nx = bot_script.readKV()\nprint(x)",
         }
 
         self.wheel_directions_multiplier_map = {
@@ -508,6 +510,7 @@ class BaseStation:
         return True
 
     def get_custom_function(self):
+        print(self.login_email)
         if not self.login_email:
             return False, ""
 
