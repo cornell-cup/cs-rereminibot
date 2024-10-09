@@ -88,9 +88,9 @@ class BaseStation:
 
             "start_accelerometer_streaming": "bot_script.sendKV(\"ACCEL\", 0)\nx = bot_script.readKV()\nprint(x)",
             "get_accelerometer_values": "bot_script.sendKV(\"IMU\", 0);bot_script.readKV();print(bot_script.accelerometer_values)",
-            "get_accel_x": "get_imu("", True)[0]",
-            "get_accel_y": "get_imu("", True)[1]",
-            "get_accel_z": "get_imu("", True)[2]",
+            "get_accel_x": "bot_script.get_imu()[0]",
+            "get_accel_y": "bot_script.get_imu()[1]",
+            "get_accel_z": "bot_script.get_imu()[2]",
         }
 
         self.wheel_directions_multiplier_map = {
@@ -273,16 +273,16 @@ class BaseStation:
             wheel_arg_str = "(" + str(wheel_arg[0]) + "," + str(wheel_arg[1]) + ")"
         bot.sendKV("WHEELS", wheel_arg_str)
 
-    def get_imu(self, bot_name: str, script: bool):
-        if script == True:
-            bot_script.sendKV("IMU", "")
-            bot_script.readKV()
-            return bot_script.accelerometer_values
-        else:
-            bot = self.get_bot(bot_name)
-            bot.sendKV("IMU", "")
-            bot.readKV()
-            return bot.accelerometer_values
+    # def get_imu(self, bot_name: str, script: bool):
+    #     if script == True:
+    #         bot_script.sendKV("IMU", "")
+    #         bot_script.readKV()
+    #         return bot_script.accelerometer_values
+    #     else:
+    #         bot = self.get_bot(bot_name)
+    #         bot.sendKV("IMU", "")
+    #         bot.readKV()
+    #         return bot.accelerometer_values
 
 
     def send_bot_script(self, bot_name: str, script: str):
