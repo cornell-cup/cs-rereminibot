@@ -607,3 +607,36 @@ Blockly.Python['get_accelerometer_values'] = function (block) {
   console.log("new block working!");
   return "bot.get_accelerometer_values()\n";
 };
+
+Blockly.Blocks['get_accel_x'] = {
+  init: function () {
+    this.jsonInit(miniblocks.get_accel_x)
+  }
+};
+
+Blockly.Python['get_accel_x'] = function (block) {
+  console.log("new block working!");
+  return "bot.get_accel_x()\n";
+};
+
+Blockly.Blocks['get_accel_y'] = {
+  init: function () {
+    this.jsonInit(miniblocks.get_accel_y)
+  }
+};
+
+Blockly.Python['get_accel_y'] = function (block) {
+  console.log("new block working!");
+  return "bot.get_accel_y()\n";
+};
+
+Blockly.Blocks['get_accel_z'] = {
+  init: function () {
+    this.jsonInit(miniblocks.get_accel_z)
+  }
+};
+
+Blockly.Python['get_accel_z'] = function (block) {
+  console.log("new block working!");
+  return "bot.get_accel_z()\n";
+};
