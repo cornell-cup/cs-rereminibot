@@ -1,7 +1,7 @@
 /*
   Code generators for custom blocks.
 */
-var BOT_HEADER = "bot.";
+var BOT_HEADER = "bot";
 var FCN_ENDING = "\n";
 
 /**
@@ -595,4 +595,15 @@ Blockly.Blocks['start_accelerometer_streaming'] = {
 Blockly.Python['start_accelerometer_streaming'] = function (block) {
   console.log("new block working!");
   return "bot.start_accelerometer_streaming()\n";
+};
+
+Blockly.Blocks['get_accelerometer_values'] = {
+  init: function () {
+    this.jsonInit(miniblocks.get_accelerometer_values)
+  }
+};
+
+Blockly.Python['get_accelerometer_values'] = function (block) {
+  console.log("new block working!");
+  return "bot.get_accelerometer_values()\n";
 };

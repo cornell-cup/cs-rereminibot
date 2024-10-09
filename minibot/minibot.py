@@ -398,6 +398,8 @@ class Minibot:
                 self.sendKV(sock, key, "LOW")
             else:
                 self.sendKV(sock, key, "")
+        elif key == "IMU":
+            self.sendKV(sock, key, ", ".join(map(str,imu.get_acc_rates())))
         elif key == "RFID":
             rfid = qwiic_rfid.QwiicRFID(address = 0x7D)
             if rfid.begin():
