@@ -118,14 +118,14 @@ class Bot:
                 if value == "":
                     self.accelerometer_values = []
                 else:
-                    self.accelerometer_values = value.split(" ")
+                    self.accelerometer_values = [float(x) for x in values.split(", ")]
             data_str = data_str[end + token_len:]
 
     def get_imu(self):
         # if script == True:
-        sendKV("IMU", "")
-        readKV()
-        return accelerometer_values
+        self.sendKV("IMU", "")
+        self.readKV()
+        return self.accelerometer_values
         # else:
         #     bot = self.get_bot(bot_name)
         #     bot.sendKV("IMU", "")
