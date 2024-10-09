@@ -121,6 +121,17 @@ class Bot:
                     self.accelerometer_values = value.split(" ")
             data_str = data_str[end + token_len:]
 
+    def get_imu(self):
+        # if script == True:
+        sendKV("IMU", "")
+        readKV()
+        return accelerometer_values
+        # else:
+        #     bot = self.get_bot(bot_name)
+        #     bot.sendKV("IMU", "")
+        #     bot.readKV()
+        #     return bot.accelerometer_values
+
     def is_connected(self) -> bool:
         """ Checks whether the Minibot has sent a heartbeat message recently 
         """
