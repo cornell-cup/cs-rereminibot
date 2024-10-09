@@ -37,6 +37,7 @@ class Bot:
         self.script_exec_result_var = LockedVariable(None, "Waiting for execution completion")
         self.script_alive_var = LockedVariable(False, True)
         self.rfid_tags = ""
+        self.accelerometer_values = []
 
     def try_receive_data(self, peek: bool = False) -> Optional[str]:
         """ Tries to receive data from the Minibot. 
@@ -113,7 +114,11 @@ class Bot:
                     self.rfid_tags = ""
                 else:
                     self.rfid_tags = value
-
+            elif key == "IMU":
+                if value == "":
+                    self.accelerometer_values = []
+                else:
+                    self.accelerometer_values = value.split(" ")
             data_str = data_str[end + token_len:]
 
     def is_connected(self) -> bool:

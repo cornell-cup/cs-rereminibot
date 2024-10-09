@@ -87,6 +87,7 @@ class BaseStation:
             "set_expression_playback_speed": "bot_script.sendKV(\"PBS\",ARG)",
 
             "start_accelerometer_streaming": "bot_script.sendKV(\"ACCEL\", 0)\nx = bot_script.readKV()\nprint(x)",
+            "get_accelerometer_values": "bot_script.sendKV(\"IMU\", 0);bot_script.readKV();print(bot_script.accelerometer_values)",
         }
 
         self.wheel_directions_multiplier_map = {
@@ -268,6 +269,10 @@ class BaseStation:
             wheel_arg[1] *= power
             wheel_arg_str = "(" + str(wheel_arg[0]) + "," + str(wheel_arg[1]) + ")"
         bot.sendKV("WHEELS", wheel_arg_str)
+
+    def get_imu(self, bot_name: str):
+        bot = self.get_bot(bot_name)
+        bot.sendKV("IMU", "")
 
     def send_bot_script(self, bot_name: str, script: str):
         """Sends a python program to the specific bot"""
