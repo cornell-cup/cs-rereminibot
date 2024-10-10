@@ -37,7 +37,7 @@ class Bot:
         self.script_exec_result_var = LockedVariable(None, "Waiting for execution completion")
         self.script_alive_var = LockedVariable(False, True)
         self.rfid_tags = ""
-        self.accelerometer_values = []
+        self.accelerometer_values = [None, None, None]
 
     def try_receive_data(self, peek: bool = False) -> Optional[str]:
         """ Tries to receive data from the Minibot. 
@@ -115,10 +115,15 @@ class Bot:
                 else:
                     self.rfid_tags = value
             elif key == "IMU":
-                if value == "":
-                    self.accelerometer_values = []
-                else:
-                    self.accelerometer_values = [float(x) for x in values.split(", ")]
+                try:
+                    self.accelerometer_values = [float(x) for x in value.split(" ")]
+                except: 
+                    self.accelerometer_values = [None, None, None]
+
+                if (len(self.accelerometer_values)) != 3:
+                    self.accelerometer_values = [None, None, None]
+
+                print(f"IMU {self.accelerometer_values}")
             data_str = data_str[end + token_len:]
 
     def get_imu(self):
@@ -126,11 +131,6 @@ class Bot:
         self.sendKV("IMU", "")
         self.readKV()
         return self.accelerometer_values
-        # else:
-        #     bot = self.get_bot(bot_name)
-        #     bot.sendKV("IMU", "")
-        #     bot.readKV()
-        #     return bot.accelerometer_values
 
     def is_connected(self) -> bool:
         """ Checks whether the Minibot has sent a heartbeat message recently 

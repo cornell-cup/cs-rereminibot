@@ -760,26 +760,6 @@ var miniblocks = {
              "Note: Negative values will play the animation backwards.",
     helpUrl: ""
   },
-
-  start_accelerometer_streaming: {
-    type: "start_accelerometer_streaming",
-    message0: "Start accelerometer streaming",
-    previousStatement: null,
-    nextStatement: null,
-    colour: 60,
-    tooltip: "Start accelerometer streaming process",
-    helpUrl: "",
-  },
-  get_accelerometer_values: {
-    type: "get_accelerometer_values",
-    message0: "Get accelerometer values",
-    previousStatement: null,
-    nextStatement: null,
-    colour: 60,
-    tooltip: "Get accelerometer values",
-    helpUrl: "",
-    output: "Number",
-  },
   get_accel_x: {
     type: "get_accel_x",
     message0: "Get accelerometer values in x direction",
