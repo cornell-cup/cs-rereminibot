@@ -52,10 +52,6 @@ def run_pi_zero(demo_expression : str = "excited"):
 
     # timeout=None means there is no timeout between messages
     # xonoff is software control for 
-
-    # while not os.path.exists('/dev/ttyACM0'):
-    #     pass
-
     serial_connected = 0
     print(os.path.exists('/dev/ttyACM0'))
     if os.path.exists('/dev/ttyACM0'):
@@ -134,7 +130,7 @@ def run_pi_zero(demo_expression : str = "excited"):
             print("Encountered Exception!")
             print(type(e), e)
             print(traceback.format_exc())
-
+    
     print("Pi Zero Script Complete.")
     pygame.quit()
 
