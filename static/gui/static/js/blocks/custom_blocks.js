@@ -586,28 +586,6 @@ Blockly.Python['set_current_playback_speed'] = function (block) {
   return code;
 };
 
-Blockly.Blocks['start_accelerometer_streaming'] = {
-  init: function () {
-    this.jsonInit(miniblocks.start_accelerometer_streaming)
-  }
-};
-
-Blockly.Python['start_accelerometer_streaming'] = function (block) {
-  console.log("new block working!");
-  return "bot.start_accelerometer_streaming()\n";
-};
-
-Blockly.Blocks['get_accelerometer_values'] = {
-  init: function () {
-    this.jsonInit(miniblocks.get_accelerometer_values)
-  }
-};
-
-Blockly.Python['get_accelerometer_values'] = function (block) {
-  console.log("new block working!");
-  return "bot.get_accelerometer_values()\n";
-};
-
 Blockly.Blocks['get_accel_x'] = {
   init: function () {
     this.jsonInit(miniblocks.get_accel_x)

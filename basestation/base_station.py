@@ -273,18 +273,6 @@ class BaseStation:
             wheel_arg_str = "(" + str(wheel_arg[0]) + "," + str(wheel_arg[1]) + ")"
         bot.sendKV("WHEELS", wheel_arg_str)
 
-    # def get_imu(self, bot_name: str, script: bool):
-    #     if script == True:
-    #         bot_script.sendKV("IMU", "")
-    #         bot_script.readKV()
-    #         return bot_script.accelerometer_values
-    #     else:
-    #         bot = self.get_bot(bot_name)
-    #         bot.sendKV("IMU", "")
-    #         bot.readKV()
-    #         return bot.accelerometer_values
-
-
     def send_bot_script(self, bot_name: str, script: str):
         """Sends a python program to the specific bot"""
         parsed_program_string = self.parse_program(script)
