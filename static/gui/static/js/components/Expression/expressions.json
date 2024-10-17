@@ -70,5 +70,17 @@
     "frame_height": 320,
     "frame_count": 27,
     "sheet_src": "Yes.png"
+  },
+  "vomit": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 62,
+    "sheet_src": "Vomit.png"
+  },
+  "love_it": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 24,
+    "sheet_src": "LoveIt.png"
   }
 }
