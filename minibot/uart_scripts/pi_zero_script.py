@@ -25,12 +25,16 @@ def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_coun
 
 def run_pi_zero(demo_expression : str = "excited"):
     pygame.init()
+    print("init")
     time.sleep(1)
+    print("sleep")
     infoObject = pygame.display.Info()
     screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
-    # screen = pygame.display.set_mode((50, 50), pygame.RESIZABLE) # Used to test in windowed mode
+    # screen = pygame.display.set_mode((320, 320), pygame.RESIZABLE) # Used to test in windowed mode
+    print("start screen")
     pygame.display.set_caption('Avatar Demo')
     pygame.mouse.set_visible(0)
+    print("window stuff")
 
     pi_ava = Avatar()
 
@@ -61,11 +65,12 @@ def run_pi_zero(demo_expression : str = "excited"):
 
     running = True
     while running:
+        print(f"Device exists {os.path.exists('/dev/ttyACM0')}")
         try:
             # Handle UART Signals
             
             # Run UART receive, nonblocking 
-            if ser.inWaiting() > 0:
+            if ser is not None and ser.inWaiting() > 0:
                 message = ser.readline().decode()
                 if len(message) > 0:
                     print(message)
@@ -125,11 +130,23 @@ def run_pi_zero(demo_expression : str = "excited"):
         except KeyboardInterrupt as ki:
             running = False
             continue
+        except OSError:
+            print("Remove power and plug it back in")
+            break
         except Exception as e:
-            running = False
-            print("Encountered Exception!")
-            print(type(e), e)
-            print(traceback.format_exc())
+            print("in exception")
+            print(type(e))
+            print(e)
+            # running = False
+            # print("Encountered Exception!")
+            # print(type(e), e)
+            # print(traceback.format_exc())
+            print(f"Device exists {os.path.exists('/dev/ttyACM0')}")
+            if os.path.exists('/dev/ttyACM0'):
+                print("Reinitializing ser")
+                ser = serial.Serial('/dev/ttyACM0', 115200)
+                serial_connected = 1
+                time.sleep(1)
     
     print("Pi Zero Script Complete.")
     pygame.quit()
