@@ -1,7 +1,7 @@
 /*
   Code generators for custom blocks.
 */
-var BOT_HEADER = "bot.";
+var BOT_HEADER = "bot";
 var FCN_ENDING = "\n";
 
 /**
@@ -429,4 +429,192 @@ Blockly.Python['sees_color'] = function (block) {
   var color_code = '==' + color_check;
 
   return [BOT_HEADER + sensor_code + color_code, Blockly.Python.ORDER_NONE];
+};
+
+// ============= EMOTIONAL SUBSYSTEM BLOCKS ============== //
+
+Blockly.Blocks['create_emotion'] = {
+  init: function () {
+    this.jsonInit(miniblocks.create_emotion)
+  }
+};
+
+Blockly.Python['create_emotion'] = function (block) {
+  var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
+  var emotion_action_steps = Blockly.Python.statementToCode(block, 'emotion_action_steps');
+
+  // Defines a function for the emotion's action steps
+  var processed_eas = 'def emotion_action_steps():\n';
+  processed_eas += emotion_action_steps;
+  processed_eas += '  \n';
+
+  var code = processed_eas;
+  code += 'self.emotion_repo[' + emotion_name + '] = Emotion(' + emotion_name + ',';
+  code += 'emotion_action_steps)\n';
+  return code;
+};
+
+Blockly.Blocks['add_emotion'] = {
+  init: function () {
+    this.jsonInit(miniblocks.add_emotion)
+  }
+};
+
+Blockly.Python['add_emotion'] = function (block) {
+  var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
+  var emotion_priority = Blockly.Python.valueToCode(block, 'emotion_priority', Blockly.Python.ORDER_NONE);
+
+  var code = 'added_emotions[' + emotion_name + '] = ' + emotion_priority + '\n';
+  return code;
+};
+
+Blockly.Blocks['add_required_device'] = {
+  init: function () {
+    this.jsonInit(miniblocks.add_required_device)
+  }
+};
+
+Blockly.Python['add_required_device'] = function (block) {
+  var dropdown_device_name = block.getFieldValue('device_name');
+  var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
+
+  var code = 'self.emotion_repo[' + emotion_name + '].add_required_device(\"' + dropdown_device_name + '\")\n';
+  return code;
+};
+
+Blockly.Blocks['set_device_emotion_status'] = {
+  init: function () {
+    this.jsonInit(miniblocks.set_device_emotion_status)
+  }
+};
+
+Blockly.Python['set_device_emotion_status'] = function (block) {
+  var dropdown_device_name = block.getFieldValue('device_name');
+  var device_status = Blockly.Python.valueToCode(block, 'device_status', Blockly.Python.ORDER_NONE);
+
+  var code = 'devices_emotional_status[\"' + dropdown_device_name + '\"] = ' + device_status + '\n';
+  return code;
+};
+
+Blockly.Blocks['set_emotion_if_possible'] = {
+  init: function () {
+    this.jsonInit(miniblocks.set_emotion_if_possible)
+  }
+};
+
+Blockly.Python['set_emotion_if_possible'] = function (block) {
+  var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
+
+  var code = 'if ' + emotion_name + ' in added_emotions:\n';
+     code += '    if current_emotion != None: \n';
+     code += '        if added_emotions[' + emotion_name + '] > added_emotions[current_emotion]:\n';
+     code += '            current_emotion = ' + emotion_name + '\n';
+     code += '    else:\n';
+     code += '        current_emotion = ' + emotion_name + '\n';
+  return code;
+};
+
+Blockly.Blocks['clear_current_emotion'] = {
+  init: function () {
+    this.jsonInit(miniblocks.clear_current_emotion)
+  }
+};
+
+Blockly.Python['clear_current_emotion'] = function (block) {
+
+  var code = 'current_emotion = None';
+  return code;
+};
+
+Blockly.Blocks['process_current_emotion'] = {
+  init: function () {
+    this.jsonInit(miniblocks.process_current_emotion)
+  }
+};
+
+Blockly.Python['process_current_emotion'] = function (block) {
+  
+  var code = 'if current_emotion is not None and current_emotion in self.emotion_repo:\n';
+     code += '    if self.emotion_repo[current_emotion].check_devices(devices_emotional_status):\n';
+     code += '        self.emotion_repo[current_emotion].process_emotion()\n'; 
+  return code;
+};
+
+// ============= FACIAL ANIMATION BLOCKS ============== //
+
+Blockly.Blocks['set_current_expression'] = {
+  init: function () {
+    this.jsonInit(miniblocks.set_current_expression)
+  }
+};
+
+Blockly.Python['set_current_expression'] = function (block) {
+  var expression_name = Blockly.Python.valueToCode(block, 'expression_name', Blockly.Python.ORDER_NONE);
+
+  // TODO - Find a way to merge these two lines into one line if possible
+  var code = 'self.current_expression = ' + expression_name + '\n';
+  code += 'bot.set_expression(' + expression_name + ')\n';
+  return code;
+};
+
+Blockly.Blocks['clear_current_expression'] = {
+  init: function () {
+    this.jsonInit(miniblocks.clear_current_expression)
+  }
+};
+
+Blockly.Python['clear_current_expression'] = function (block) {
+
+  // TODO - Find a way to merge these two lines into one line if possible
+  var code = 'self.current_expression = None\n';
+  code += 'bot.clear_expression()\n';
+  return code;
+};
+
+Blockly.Blocks['set_current_playback_speed'] = {
+  init: function () {
+    this.jsonInit(miniblocks.set_current_playback_speed)
+  }
+};
+
+Blockly.Python['set_current_playback_speed'] = function (block) {
+  var new_speed = Blockly.Python.valueToCode(block, 'new_speed', Blockly.Python.ORDER_NONE);
+
+  // TODO - Find a way to merge these two lines into one line if possible
+  var code = 'self.current_expression_playback_speed = ' + new_speed + '\n';
+  code += 'bot.set_expression_playback_speed(' + new_speed + ')\n';
+  return code;
+};
+
+Blockly.Blocks['get_accel_x'] = {
+  init: function () {
+    this.jsonInit(miniblocks.get_accel_x)
+  }
+};
+
+Blockly.Python['get_accel_x'] = function (block) {
+  console.log("new block working!");
+  return "bot.get_accel_x()\n";
+};
+
+Blockly.Blocks['get_accel_y'] = {
+  init: function () {
+    this.jsonInit(miniblocks.get_accel_y)
+  }
+};
+
+Blockly.Python['get_accel_y'] = function (block) {
+  console.log("new block working!");
+  return "bot.get_accel_y()\n";
+};
+
+Blockly.Blocks['get_accel_z'] = {
+  init: function () {
+    this.jsonInit(miniblocks.get_accel_z)
+  }
+};
+
+Blockly.Python['get_accel_z'] = function (block) {
+  console.log("new block working!");
+  return "bot.get_accel_z()\n";
 };

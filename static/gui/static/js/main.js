@@ -1,6 +1,6 @@
 /* ES6 */
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { nanoid } from 'nanoid';
 import ReactDOM from 'react-dom';
 import { CookiesProvider } from 'react-cookie';
@@ -91,6 +91,31 @@ function ClientGUI({ }) {
   }, [botVoiceControlMic, chatbotMic, changedMic])
   /****************************************************************************/
 
+  /**
+   ************************* EXPRESSION MANAGEMENT ****************************
+   * We use these props to manipulate the basestation's representation of the
+   * minibot's currently active expression.
+   ****************************************************************************
+   */
+
+   // Empty dependency array ensures the effect runs only once after mount
+
+  // // Use useRef to create a reference to the sprite element
+  // const expressionRef = useRef(null);
+
+  // useEffect(() => {
+  //   if(expressionRef.current){
+  //     try{
+  //       expr_funcs.setAnimation("excited", 15);
+  //     }
+  //     catch(error)
+  //     {
+  //       console.error('An error occurred while running setAnimation():', error.message);
+  //     }
+  //   }
+  // }, [expressionRef.current]);
+
+  /****************************************************************************/
 
   useEffect(() => {
     window.addEventListener("beforeunload", alertUser);

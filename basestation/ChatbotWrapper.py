@@ -27,7 +27,6 @@ class ChatbotWrapper:
         self.context_stack = [default_context]  # context
         self.url = url
 
-
     def replace_context_stack(self, context_stack):
         '''Replaces the self.context_stack with <context_stack>.
         '''

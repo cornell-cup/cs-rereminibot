@@ -573,5 +573,221 @@ var miniblocks = {
     colour: 180,
     tooltip: "",
     helpUrl: ""
+  },
+
+  create_emotion: {
+    type: "create_emotion",
+    message0: "Create Emotion named %1 %2\n which does %3",
+    args0: [
+      {
+        type: "input_value",
+        name: "emotion_name",
+        check: "String",
+      },
+      {
+        type: "input_dummy"
+      },
+      {
+        type: "input_statement",
+        name: "emotion_action_steps"
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 30,
+    tooltip: "Creates an Emotion which then can be added to a robot.",
+    helpUrl: ""
+  },
+
+  add_emotion: {
+    type: "add_emotion",
+    message0: "Add Emotion named %1\nwith priority %2",
+    args0: [
+      {
+        type: "input_value",
+        name: "emotion_name",
+        check: "String",
+      },
+      {
+        type: "input_value",
+        name: "emotion_priority",
+        check: "Number",
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 30,
+    tooltip: "Adds an Emotion to the robot with the specified priority.",
+    helpUrl: ""
+  },
+
+  add_required_device: {
+    type: "add_required_device",
+    message0: "Add required device %1 to emotion %2",
+    args0: [
+      {
+        type: "field_dropdown",
+        name: "device_name",
+        options: [
+          ["wheels", "wheels"],
+          ["screen", "display"],
+          ["speaker", "speaker"]
+        ]
+      },
+      {
+        type: "input_value",
+        name: "emotion_name",
+        check: "String",
+      },
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 20,
+    tooltip: "Adds a required device to an emotion (used to determine whether an emotion is available to be run).",
+    helpUrl: ""
+  },
+
+  set_device_emotion_status: {
+    type: "set_device_emotion_status",
+    message0: "Set whether device %1 %2\nis available for emotions to %3",
+    args0: [
+      {
+        type: "field_dropdown",
+        name: "device_name",
+        options: [
+          ["wheels", "wheels"],
+          ["screen", "display"],
+          ["speaker", "speaker"]
+        ]
+      },
+      {
+        type: "input_dummy"
+      },
+      {
+        type: "input_value",
+        name: "device_status",
+        check: "Boolean",
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 20,
+    tooltip: "Specifies whether a device should or should not be used by emotions.",
+    helpUrl: ""
+  },
+
+  set_emotion_if_possible: {
+    type: "set_emotion_if_possible",
+    message0: "Try to set emotion to %1",
+    args0: [
+      {
+        type: "input_value",
+        name: "emotion_name",
+        check: "String",
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 30,
+    tooltip: "Sets the robot's emotion to the emotion with the specified name if:\n" + 
+              "1) the emotion has been added to the robot, and\n" + 
+              "2) the emotion is higher priority than the currently running emotion.\n" + 
+              "Note: Use clear emotion first in order to change to a lower priority emotion.",
+    helpUrl: ""
+  },
+
+  clear_current_emotion: {
+    type: "clear_current_emotion",
+    message0: "Clear current emotion",
+    previousStatement: null,
+    nextStatement: null,
+    colour: 30,
+    tooltip: "Clears the robots current emotion.",
+    helpUrl: ""
+  },
+
+  process_current_emotion: {
+    type: "process_current_emotion",
+    message0: "Try to Emote",
+    previousStatement: null,
+    nextStatement: null,
+    colour: 30,
+    tooltip: "Runs the code associated with the current emotion, if all required devices are available.",
+    helpUrl: ""
+  },
+
+  set_current_expression: {
+    type: "set_current_expression",
+    message0: "Set current expression to %1",
+    args0: [
+      {
+        type: "input_value",
+        name: "expression_name",
+        check: "String",
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 60,
+    tooltip: "Sets the current expression to one with the specified name, if one exists.",
+    helpUrl: ""
+  },
+
+  clear_current_expression: {
+    type: "clear_current_expression",
+    message0: "Clear current expression",
+    previousStatement: null,
+    nextStatement: null,
+    colour: 60,
+    tooltip: "Clears the current expression, if one is active.",
+    helpUrl: ""
+  },
+
+  set_current_playback_speed: {
+    type: "set_current_playback_speed",
+    message0: "Set current playback speed to %1",
+    args0: [
+      {
+        type: "input_value",
+        name: "new_speed",
+        check: "Number",
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 60,
+    tooltip: "Sets the current playback speed in frames per second to the specified value.\n" + 
+             "Note: Negative values will play the animation backwards.",
+    helpUrl: ""
+  },
+  get_accel_x: {
+    type: "get_accel_x",
+    message0: "Get accelerometer values in x direction",
+    previousStatement: null,
+    nextStatement: null,
+    colour: 60,
+    tooltip: "Get accelerometer values in x direction",
+    helpUrl: "",
+    output: "Number",
+  },
+  get_accel_y: {
+    type: "get_accel_y",
+    message0: "Get accelerometer values in y direction",
+    previousStatement: null,
+    nextStatement: null,
+    colour: 60,
+    tooltip: "Get accelerometer values in y direction",
+    helpUrl: "",
+    output: "Number",
+  }, 
+  get_accel_z: {
+    type: "get_accel_z",
+    message0: "Get accelerometer values in z direction",
+    previousStatement: null,
+    nextStatement: null,
+    colour: 60,
+    tooltip: "Get accelerometer values in z direction",
+    helpUrl: "",
+    output: "Number",
   }
 };

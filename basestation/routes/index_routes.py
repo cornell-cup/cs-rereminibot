@@ -5,9 +5,7 @@ Main file from which BaseStation Websocket interface begins.
 from flask import Flask
 from flask import Blueprint, request, render_template, jsonify, session, redirect
 from flask_api import status
-import os.path
 import json
-import sys
 import time
 import datetime
 
@@ -47,6 +45,11 @@ def discover_bots():
     base_station.listen_for_minibot_broadcast()
     return json.dumps(True), status.HTTP_200_OK
 
+@index_bp.route('/get-py-command', methods=['GET'])
+def get_py_command(): 
+    """ Get the next python command for the physical blockly process """
+    v = base_station.get_next_py_command()
+    return json.dumps(v)
 
 @index_bp.route('/active-bots', methods=['GET'])
 def active_bots():
@@ -67,6 +70,16 @@ def wheels():
     base_station.move_bot_wheels(bot_name, direction, power)
     return json.dumps(True), status.HTTP_200_OK
 
+@index_bp.route('stop-script', methods=['POST'])
+def stop_script():
+    """ Make Minibot stop running the Python script (if any) """
+    data = request.get_json()
+    bot_name = data['bot_name']
+    if not bot_name:
+        error_json = {"error_msg": NO_BOT_ERROR_MSG}
+        return json.dumps(error_json), status.HTTP_400_BAD_REQUEST
+    base_station.stop_bot_script(bot_name)
+    return json.dumps(True), status.HTTP_200_OK
 
 @index_bp.route('/script', methods=['POST'])
 def script():
@@ -80,7 +93,8 @@ def script():
     script_code = data['script_code']
     login_email = data['login_email']
     try:
-        print("script code",script_code)
+        print("Script code:")
+        print(script_code)
         submission = base_station.save_submission(script_code, login_email)
         print("submissions",submission)
         submission_id = submission.id
@@ -114,16 +128,33 @@ def ports():
 
 @index_bp.route('/mode', methods=['POST'])
 def mode():
-    """ Makes the minibot run in either line follow or object detection mode """
+    """ Makes the minibot run in different physical blockly modes """
     data = request.get_json()
     bot_name = data['bot_name']
     if not bot_name:
         error_json = {"error_msg": NO_BOT_ERROR_MSG}
         return json.dumps(error_json), status.HTTP_400_BAD_REQUEST
     mode = data['mode']
-    base_station.set_bot_mode(bot_name, mode)
+    pb_map = data['pb_map']
+    power = data['power']
+    base_station.set_bot_mode(bot_name, mode, pb_map, power)
     return json.dumps(True), status.HTTP_200_OK
 
+@index_bp.route('/start_physical_blockly', methods=['POST'])
+def start_physical_blockly():
+    """ Starts the physical blockly process """
+    data = request.get_json()
+    bot_name = data['bot_name']
+    rfid = base_station.get_rfid(bot_name)
+    return json.dumps(rfid), status.HTTP_200_OK
+
+@index_bp.route('/end_physical_blockly', methods=['POST'])
+def end_physical_blockly():
+    """ Ends the physical blockly process """
+    data = request.get_json()
+    bot_name = data['bot_name']
+    base_station.end_physical_blockly(bot_name)
+    return json.dumps(True), status.HTTP_200_OK
 
 @index_bp.route('/vision', methods=['POST', 'GET'])
 def vision():
@@ -185,7 +216,7 @@ def error_message_update():
         error_json = {"error_msg": NO_BOT_ERROR_MSG}
         return json.dumps(error_json), status.HTTP_400_BAD_REQUEST
     script_exec_result = base_station.get_bot_script_exec_result(bot_name)
-    if not script_exec_result:
+    if script_exec_result == "Waiting for execution completion":
         code = -1
     else:
         # invariant: submission_id is not None inside this block
@@ -193,6 +224,18 @@ def error_message_update():
         code = 1 if script_exec_result == "Successful execution" else 0
     response_dict = {"result": script_exec_result, "code": code}
     return json.dumps(response_dict), status.HTTP_200_OK
+
+
+@index_bp.route('/expression-update', methods=['POST'])
+def check_expression():
+    current_expression = base_station.get_current_expression()
+    if current_expression is None:
+        current_expression = "none"
+    current_speed = base_station.get_current_expression_playback_speed()
+    response_dict = {"expression" : current_expression,
+                     "speed" : current_speed}
+    return json.dumps(response_dict), status.HTTP_200_OK
+
 
 
 @index_bp.route('/login', methods=['POST'])
@@ -276,6 +319,15 @@ def update_custom_function():
     else:
         return json.dumps({'error': ''}), status.HTTP_200_OK
 
+@index_bp.route('/get_custom_function/', methods=['GET'])
+def get_custom_function():
+    """Gets the logged in user's custom functions"""
+    result = base_station.get_custom_function()
+
+    if result[0]:
+        return json.dumps(result[1]), status.HTTP_200_OK
+    else:
+        return json.dumps({'error': 'Not logged in'}), status.HTTP_401_UNAUTHORIZED
 
 @index_bp.route('/speech_recognition', methods=['POST', 'GET'])
 def speech_recognition():

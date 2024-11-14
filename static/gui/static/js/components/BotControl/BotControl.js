@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 
 import AddBot from "./SetupBot/AddBot.js";
+import ExpressionAnimation from "../Expression/ExpressionAnimation.js";
 import MovementControls from "./MovementControl/MovementControl.js";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import InformationBoxModal from "../utils/InformationBoxModal.js";
-import { INFOBOXTYPE, INFOBOXID, INFO_ICON } from "../utils/Constants.js";
+import { INFOBOXTYPE, INFOBOXID, INFO_ICON, } from "../utils/Constants.js";
+
 library.add(faInfoCircle);
 
 
@@ -18,6 +20,9 @@ function BotControl({
   setActiveMicComponent,
   botVoiceControlMic,
   setBotVoiceControlMic }) {
+
+  const [power, setPower] = useState(50);
+
   return (
     <div className="row">
       <div className="col-md">
@@ -26,6 +31,35 @@ function BotControl({
           setSelectedBotName={setSelectedBotName}
           selectedBotStyle={selectedBotStyle}
           setSelectedBotStyle={setSelectedBotStyle}
+          power={power}
+          setPower={setPower}
+        />
+        <div className="control-option">
+            {/* <div id="component_view" className="box"> */}
+            <div className="mb-3 d-flex">
+
+              <h3 className="small-title">
+                Current Expression
+                <span style={{ leftMargin: "0.5em" }}> </span>
+
+                <input
+                  className="info-box"
+                  type="image"
+                  data-toggle="modal"
+                  data-target={"#" + INFOBOXID.EXPRESSION}
+                  src={INFO_ICON}
+                  width="18"
+                  height="18"
+                />
+
+
+              </h3>
+
+            </div>
+            < InformationBoxModal type={INFOBOXTYPE.EXPRESSION} />
+       </div>
+        <ExpressionAnimation
+          refreshRate={60}
         />
       </div>
 
@@ -41,6 +75,8 @@ function BotControl({
             activeMicComponent={activeMicComponent}
             botVoiceControlMic={botVoiceControlMic}
             setBotVoiceControlMic={setBotVoiceControlMic}
+            power={power}
+            setPower={setPower}
           />
         </div>
         <br />
@@ -62,6 +98,7 @@ function BotControl({
                 />
               </h3>
             </div>
+
             {/* <UltimateGridview
               view_width={520}
               view_height={520}
@@ -70,7 +107,7 @@ function BotControl({
               defaultEnabled={false}
               experimentalFeaturesEnabled={true} /> */}
             < InformationBoxModal type={INFOBOXTYPE.VISION} />
-          </div >
+          </div>
         </div>
       </div>
 
@@ -79,3 +116,5 @@ function BotControl({
 }
 
 export default BotControl;
+
+
