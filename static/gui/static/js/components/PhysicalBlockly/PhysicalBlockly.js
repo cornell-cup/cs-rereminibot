@@ -41,7 +41,8 @@ export default class PhysicalBlockly extends React.Component {
 		this.state = { stage: 0, tabs: 0, loopvar: 0, lastBlock: null, blockStack: [], loopList: [], code: "", 
 			customCommands: new Map(), tempCommandData: new Map(), detectionState: false, detectionCall: null, 
 			unsavedCustomization: false, collapsedSelection: true, collapsedDisplay: false, mode: -1, 
-			displayCommands: [], customBlocks: [], customPlacedBlocks: [], motorPower: 100, tempLoopIteration: 2, defaultLoopIteration: 2, customBlockFillCount: 0};
+			displayCommands: [], customBlocks: [], customPlacedBlocks: [], motorPower: 100, tempLoopIteration: 2, 
+			defaultLoopIteration: 2, customBlockFillCount: 0, collapsedCustomBlockDisplay: true };
 		this.codeRef = React.createRef();
 		this.pollForUpdates = this.pollForUpdates.bind(this);
 		this.saveSelection = this.saveSelection.bind(this);
@@ -49,6 +50,7 @@ export default class PhysicalBlockly extends React.Component {
 		this.getPBMap = this.getPBMap.bind(this);
 		this.toggleSelectionCollapse = this.toggleSelectionCollapse.bind(this);
 		this.toggleDisplayCollapse = this.toggleDisplayCollapse.bind(this);
+		this.toggleCustomBlockDisplay = this.toggleCustomBlockDisplay.bind(this);
 		this.updateMotorPowerValue = this.updateMotorPowerValue.bind(this);
 		this.updateLoopIteration = this.updateLoopIteration.bind(this);
 		this.updateTempLoopIteration = this.updateTempLoopIteration.bind(this);
@@ -58,15 +60,16 @@ export default class PhysicalBlockly extends React.Component {
 	}
 
 	componentDidMount() {
-		this.getCustomBlocks();
-		this.setState({  code: "", customCommands: customCommand, tempCommandData: new Map(customCommand) });
 		const _this = this;
+		_this.getCustomBlocks();
+		_this.setState({  code: "", customCommands: customCommand, tempCommandData: new Map(customCommand) });
 		_this.bWorkspace = window.Blockly.inject('pbBlocklyDiv', { scrollbars: true });
 		_this.bWorkspace.clear();
 	}
 
 	componentWillUnmount() {
-		this.endProcess();
+		const _this = this;
+		_this.endProcess();
 	}
 
 	//mode = 1 -> real time mode
@@ -100,13 +103,13 @@ export default class PhysicalBlockly extends React.Component {
 			console.log(error.response.data);
 		});
 
-		this.setState({ detectionCall: setInterval(this.pollForUpdates, 1000) });
+		_this.setState({ detectionCall: setInterval(_this.pollForUpdates, 1000) });
 	}
 
 	endProcess() {
 		console.log("end physical blockly process")
 		const _this = this;
-		clearInterval(this.state.detectionCall);
+		clearInterval(_this.state.detectionCall);
 		//post request to basestation to stop the process
 		axios({
 			method: 'POST',
@@ -159,7 +162,7 @@ export default class PhysicalBlockly extends React.Component {
 			_this.state.loopList[i].getChildren(false)[0].setFieldValue(val, "NUM");
 		}
 
-		if (this.state.customBlocks.length > 0) {
+		if (_this.state.customBlocks.length > 0) {
 			let codeList = _this.state.code.split("\n");
 
 			for (var i = 0; i < _this.state.customBlockFillCount; i++) {
@@ -364,10 +367,11 @@ export default class PhysicalBlockly extends React.Component {
 	}
 
 	export() {
-		this.props.setPythonCodeState(1);
-		this.props.setPythonCode(this.state.code, 1);
-		this.props.setBlocklyXml(Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
-		this.endProcess();
+		const _this = this;
+		_this.props.setPythonCodeState(1);
+		_this.props.setPythonCode(_this.state.code, 1);
+		_this.props.setBlocklyXml(Blockly.Xml.domToText(Blockly.Xml.workspaceToDom(Blockly.getMainWorkspace())));
+		_this.endProcess();
 	}
 
 	updateSelection(e, pb, command, choice) {
@@ -377,21 +381,23 @@ export default class PhysicalBlockly extends React.Component {
 	}
 
 	saveSelection() {
+		const _this = this;
 		let commandSet = new Set();
-		for (var val of this.state.tempCommandData.values()) {
+		for (var val of _this.state.tempCommandData.values()) {
 			commandSet.add(val);
 		}
 		if (commandSet.size != commands.length) {
 			$('#saveModal').modal('show');
 			return;
 		}
-		let newCustomCommand = new Map(this.state.tempCommandData);
-		this.setState({ customCommands: newCustomCommand, unsavedCustomization: false });
+		let newCustomCommand = new Map(_this.state.tempCommandData);
+		_this.setState({ customCommands: newCustomCommand, unsavedCustomization: false });
 	}
 
 	getCustomCommandID(id) {
+		const _this = this;
 		var color = choices[id];
-		let mapEntries = this.state.customCommands.entries();
+		let mapEntries = _this.state.customCommands.entries();
 		for (var i = 0; i < this.state.customCommands.size; i++) {
 			var binding = mapEntries.next().value;
 			if (binding[1] == color) {
@@ -402,32 +408,42 @@ export default class PhysicalBlockly extends React.Component {
 	}
 
 	toggleSelectionCollapse() {
-		this.setState({ collapsedSelection: !this.state.collapsedSelection });
+		const _this = this;
+		_this.setState({ collapsedSelection: !_this.state.collapsedSelection });
 	}
 
 	toggleDisplayCollapse() {
-		this.setState({ collapsedDisplay: !this.state.collapsedDisplay });
+		const _this = this;
+		_this.setState({ collapsedDisplay: !_this.state.collapsedDisplay });
+	}
+
+	toggleCustomBlockDisplay() {
+		const _this = this;
+		_this.setState({ collapsedCustomBlockDisplay: !_this.state.collapsedCustomBlockDisplay });
 	}
 
 	updateMotorPowerValue(e, value) {
 		e.preventDefault();
-		this.setState({ motorPower: value });
+		const _this = this;
+		_this.setState({ motorPower: value });
 	}
 
 	updateLoopIteration(e) {
 		e.preventDefault();
-		let tempLoopIteration = this.state.tempLoopIteration;
+		const _this = this;
+		let tempLoopIteration = _this.state.tempLoopIteration;
 		if(isNaN(parseInt(tempLoopIteration)) || parseInt(tempLoopIteration) < 1) {
-			this.setState({ tempLoopIteration: this.state.defaultLoopIteration });
+			_this.setState({ tempLoopIteration: _this.state.defaultLoopIteration });
 		} else {
-			this.setState({ defaultLoopIteration: tempLoopIteration });
+			_this.setState({ defaultLoopIteration: tempLoopIteration });
 		}
 		document.getElementById("loop-iteration").value = "";
 	}
 
 	updateTempLoopIteration(e, value) {
 		e.preventDefault();
-		this.setState({ tempLoopIteration: value });
+		const _this = this;
+		_this.setState({ tempLoopIteration: value });
 	}
 
 	render(props) {
@@ -467,7 +483,42 @@ export default class PhysicalBlockly extends React.Component {
 					</div>
 					<CustomBlockModal customCount={this.state.customBlockFillCount} loopCount={this.state.loopvar} defaultLoopIteration={this.state.defaultLoopIteration} customBlocks={this.state.customBlocks} saveSelection={this.saveCustomSelection} />
 					<SaveModal />
-
+				
+					<div className="container" id="customBlockDisplayContainer">
+						<div className="row">
+							<div className="column">
+								<div className="customBlockDisplayHeading">
+									<a className="btn btn-primary customBlockDisplayCollapse" type="button" data-toggle="collapse" data-target={"#customBlockDisplayContent"} aria-expanded="false" aria-controls={"customBlockDisplayContent"} onClick={this.toggleCustomBlockDisplay}>
+										<FontAwesomeIcon icon={this.state.collapsedCustomBlockDisplay ? Icons.faCaretRight : Icons.faCaretDown} />
+									</a>
+									<h4 className="modalText customTitle" id="customBlockDisplayTitle">Custom Blocks (from Blockly page) </h4>
+								</div>
+							</div>
+						</div>
+						<div className="row">
+							<div className="column">
+								<div className="collapse" id="customBlockDisplayContent">
+									<div className="container">
+										{this.state.customBlocks.length > 0 ?
+											this.state.customBlocks.map((c, i) => <div className="row customBlockDisplay" key={i}>
+												<div className="col">
+													<button className="btn btn-primary customCollapseButton" type="button" data-toggle="collapse" data-target={"#" + "customBlockCollapse" + i} aria-expanded="false" aria-controls={"customBlockCollapse" + i}>
+														{c[0]}
+													</button>
+												</div>
+												<div className="col collapse" id={"customBlockCollapse" + i}>
+													<div className="card card-body customBlockContentDisplay">
+														<code>{c[1]}</code>
+													</div>
+												</div>
+											</div>) : <div className="white-label">There is no custom block saved. Please also double check whether you are properly logged in. </div>
+										}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				
 					{this.props.selectedBotName != '' && this.state.stage == 0 ?
 						<div>
 							<div className="customBlockDisplaySection">
@@ -522,7 +573,7 @@ export default class PhysicalBlockly extends React.Component {
 									<span className="customTitle"> Customization of Blocks </span>
 								</div>
 								<div className="collapse" id="blockDisplayCollapse">
-									<div className="customBlockDisplay">
+									<div className="blockDisplay">
 										{/* Making the block display 2 columns */}
 										<div className="row">
 											<div className="col" style={{ paddingBottom: "12px" }}>

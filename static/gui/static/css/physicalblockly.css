@@ -1,19 +1,19 @@
-.customBlockDisplay {
+.blockDisplay {
     border: 5px solid #ff8484;
     border-radius: 15px;
     margin: 25px;
     max-width: 70%;
     color: white;
 }
-.customBlockDisplay ul {
+.blockDisplay ul {
     padding-left: 0;
 }
-.customBlockDisplay li.list-group-item {
+.blockDisplay li.list-group-item {
     color: white;
     background-color: rgba(0, 0, 0, 0);
     padding-bottom: 3px;
 }
-#selectionCollapseBtn, #displayCollapseBtn {
+#selectionCollapseBtn, #displayCollapseBtn, .customBlockDisplayContainer .customBlockDisplayCollapse {
     background-image: linear-gradient(to right, #e34850, rgb(255, 155, 0));
     box-shadow: none;
     color: white;
@@ -107,7 +107,7 @@
 .loopNumberInput {
     width: 80%;
 }
-.customBlockObject {
+.customBlockObject, .customBlockDisplay {
     display: block;
 }
 #customModal .customCollapseButton {
@@ -116,6 +116,7 @@
     margin-bottom: 10px;
     margin-top: 10px;
     background-color: #ff8484;
+    min-width: 40%;
 }
 #customModal .customBlockContent {
     background-color: gray;
@@ -123,8 +124,37 @@
     white-space: pre-line;
     color: white;
 }
-#customModal .customBlockContent code {
+#customModal .customBlockContent code, #customBlockDisplayContainer .customBlockContentDisplay code {
     color: white;
+}
+#customBlockDisplayContainer #customBlockDisplayContainer {
+    margin-left: 20px;
+}
+#customBlockDisplayContainer .customCollapseButton {
+    display: block;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    border: 2px solid #ff8484;
+    background-color: transparent;
+    color: white;
+}
+#customBlockDisplayContainer .customBlockContentDisplay  {
+    border: 2px solid gray;
+    white-space: pre-line;
+    background-color: transparent;
+    color: white;
+    margin-bottom: 10px;
+}
+.customBlockDisplayHeading {
+    margin-bottom: 10px;
+}
+.customBlockDisplayHeading .customBlockDisplayCollapse {
+    display: inline;
+    background-image: linear-gradient(to right, #e34850, rgb(255, 155, 0));
+    margin-right: 10px;
+}
+.customBlockDisplayHeading h4 {
+    display: inline;
 }
 .pb-btn {
     background-image: linear-gradient(to right, #e34850, rgb(255, 155, 0));

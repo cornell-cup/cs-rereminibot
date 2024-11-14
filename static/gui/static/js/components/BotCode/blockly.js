@@ -294,7 +294,7 @@ export default class MinibotBlockly extends React.Component {
             registerSuccessLabel: "",
             functionName: "default_function",
             codingStart: -1,
-            isLoggedIn: false,
+            isLoggedIn: props.loginEmail ? true : false,
             emptyFunctionName: "Create Custom Block",
             workspace: null,
         };
@@ -333,7 +333,8 @@ export default class MinibotBlockly extends React.Component {
     }
 
     updateCustomBlocks() {
-        if (!this.state.isLoggedIn) return;
+        const _this = this;
+        if (!_this.state.isLoggedIn) return;
         let formData = new FormData();
         formData.append("custom_function", JSON.stringify(this.props.customBlockList));
         axios({
@@ -442,7 +443,6 @@ export default class MinibotBlockly extends React.Component {
         _this.props.customBlockList.splice(0, _this.props.customBlockList.length);
         this.redefineCustomBlocks();
         this.updateCustomBlocks();
-
     }
 
 

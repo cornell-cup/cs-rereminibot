@@ -251,7 +251,6 @@ class BaseStation:
         """Removes the specified bot from list of active bots."""
         self.active_bots.pop(bot_name)
 
-    @make_thread_safe
     def move_bot_wheels(self, bot_name: str, direction: str, power: str):
         """ Gives wheels power based on user input """
         # stop currently running script (if any)
@@ -530,7 +529,6 @@ class BaseStation:
         print("rfid tag: " + bot.rfid_tags, flush=True)
         return bot.rfid_tags
 
-    @make_thread_safe
     def set_bot_mode(self, bot_name: str, mode: str, pb_map: json, power: str):
         """ Set the bot to different physical blockly modes """
         bot = self.get_bot(bot_name)
