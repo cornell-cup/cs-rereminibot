@@ -39,7 +39,8 @@ function Chatbot2({
   setActiveMicComponent,
   activeMicComponent,
   mic,
-  setMic }) {
+  setMic,
+  loginEmail }) {
   // use states for chatbot window appearance
   const [enter, setEnter] = useState("");
   const [open, setOpen] = useState(false);
@@ -202,6 +203,10 @@ function Chatbot2({
     setInputText("");
     setMessages(newList);
     setParentContext(inputText);
+
+    console.log('sending context')
+    console.log(loginEmail)
+
     axios({
       method: 'POST',
       url: '/chatbot-context',
@@ -298,6 +303,8 @@ function Chatbot2({
   }, [messages]);
 
   useEffect(() => {
+    console.log('login email');
+    console.log(loginEmail);
     initialList[0].timeStamp = getTimeStamp();
     setMessages(initialList);
   }, []);
