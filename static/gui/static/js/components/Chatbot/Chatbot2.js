@@ -93,7 +93,7 @@ function Chatbot2({
     const keyword = match_keywords(input, keywords);
 
     if (keyword !== null) {
-        console.log(`Keyword found - 00: ${keyword}`);
+        console.log(`Keyword found: ${keyword}`);
 
         var emotion;
         if (keyword === "robotics" || keyword === "coding "){emotion = "excited"}
@@ -101,8 +101,15 @@ function Chatbot2({
         else if (keyword === "interactive" || keyword === "fun"){emotion = "love_it"}
         else if (keyword === "difficult"){emotion = "startled"}
 
-        const pythonCode = `self.current_expression = ${emotion}\nbot.set_expression(${emotion})`;
-        console.log("assigned python code for emotion.");
+        const pythonCode = `self.current_expression = '${emotion}'\nbot.set_expression('${emotion})`;
+
+        const botName = selectedBotName;
+        const sciptCode = pythonCode;
+        const loginEmail = loginEmail;
+
+        console.log("botname: ", botName);
+        console.log("sciptcode: ", botName);
+        console.log("loginemail: ", loginEmail);
 
         axios({
             method: 'POST',
@@ -111,7 +118,7 @@ function Chatbot2({
                 'Content-Type': 'application/json'
             },
             data: JSON.stringify({
-                bot_name: selectedBotName,
+                bot_name: botName,
                 script_code: pythonCode,
                 login_email: loginEmail
             })
@@ -120,7 +127,7 @@ function Chatbot2({
           console.log(response);
         })
         .catch((error) => {
-          console.log(error)
+          console.log(error.message)
         });
     }
 };
