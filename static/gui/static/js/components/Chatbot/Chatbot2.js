@@ -84,6 +84,7 @@ function Chatbot2({
   }
 
   const changeInputText = (event) => {
+    console.log("changed!")
     event.preventDefault();
     if (!contextMode) return;
     const input = event.currentTarget.value;
@@ -96,20 +97,18 @@ function Chatbot2({
         console.log(`Keyword found: ${keyword}`);
 
         var emotion;
-        if (keyword === "robotics" || keyword === "coding "){emotion = "excited"}
+        if (keyword === "robotics" || keyword === "coding"){emotion = "excited"}
         else if (keyword === "learn" || keyword === "learning"){emotion = "big_yes"}
         else if (keyword === "interactive" || keyword === "fun"){emotion = "love_it"}
         else if (keyword === "difficult"){emotion = "startled"}
 
-        const pythonCode = `self.current_expression = '${emotion}'\nbot.set_expression('${emotion})`;
-
+        const pythonCode = `self.current_expression = None\nbot.clear_expression()\nself.current_expression = '${emotion}'\nbot.set_expression('${emotion}')`;
         const botName = selectedBotName;
-        const sciptCode = pythonCode;
-        const loginEmail = loginEmail;
+        const email = loginEmail;
 
         console.log("botname: ", botName);
         console.log("sciptcode: ", botName);
-        console.log("loginemail: ", loginEmail);
+        console.log("loginemail: ", email);
 
         axios({
             method: 'POST',
@@ -120,7 +119,7 @@ function Chatbot2({
             data: JSON.stringify({
                 bot_name: botName,
                 script_code: pythonCode,
-                login_email: loginEmail
+                login_email: email
             })
         })
         .then((response) => {
@@ -409,11 +408,12 @@ function Chatbot2({
         <div className="footer">
           {/* textbox for the user to enter text messages */}
           <textarea rows="3" cols="70" className="text-box" id="textbox"
-            onChange={changeInputText} value={inputText}
+            onChange={(e) => {setInputText(e.target.value)}} value={inputText}
             placeholder={contextMode ? "Enter a context/question" : selectedBotName != "" ?
               "Click the microphone to send a command" : "Please connect to a Minibot!"}
             onKeyDown={(e) => {
                 if(contextMode && e.key === "Enter"){
+                  changeInputText(e);
                   var message = e.target.value.trim();
                   var lastChar = message.slice(-1);
                   if(lastChar === "?"){
