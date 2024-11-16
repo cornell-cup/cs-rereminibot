@@ -73,13 +73,57 @@ function Chatbot2({
     empty: {}
   }
 
-  // functions responding to commands changing the appearance of the chatbot windows
+  const match_keywords = (message, keywords) => {
+    for (let i = 0; i < keywords.length; i++) {
+        if (message.includes(keywords[i])) {
+            return keywords[i];
+        }
+    }
+    return null;
+  }
+
   const changeInputText = (event) => {
     event.preventDefault();
     if (!contextMode) return;
     const input = event.currentTarget.value;
     setInputText(input);
-  }
+
+    const keywords = ["robotics", "learn", "learning", "fun", "interactive", "coding", "difficult"];
+    const keyword = match_keywords(input, keywords);
+
+    if (keyword !== null) {
+        console.log(`Keyword found - 00: ${keyword}`);
+
+        var emotion;
+        if (keyword === "robotics" || keyword === "coding "){emotion = "excited"}
+        else if (keyword === "learn" || keyword === "learning"){emotion = "big_yes"}
+        else if (keyword === "interactive" || keyword === "fun"){emotion = "love_it"}
+        else if (keyword === "difficult"){emotion = "startled"}
+
+        const pythonCode = `self.current_expression = ${emotion}\nbot.set_expression(${emotion})`;
+        console.log("assigned python code for emotion.");
+
+        axios({
+            method: 'POST',
+            url: '/script',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                bot_name: selectedBotName,
+                script_code: pythonCode,
+                login_email: loginEmail
+            })
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+    }
+};
+
 
   const openChatbox = (e) => {
     e.preventDefault();
