@@ -15,7 +15,7 @@ import {
 // Minibot components import
 import Navbar from './components/Navbar.js';
 import Platform from './components/Platform.js';
-import Chatbot from './components/Chatbot/chatbot2.js';
+import Chatbot from './components/Chatbot/Chatbot2.js';
 
 // Utils import
 import { ACT_MIC_CHATBOT, ACT_MIC_COMMAND } from './components/utils/Constants.js';
@@ -27,6 +27,7 @@ function ClientGUI({ }) {
   const [chatbotContext, setChatbotContext] = useState("");
   const [selectedBotName, setSelectedBotName] = useState("");
   const [contextHistoryLoaded, setContextHistoryLoaded] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
 
 
   /**
@@ -149,6 +150,9 @@ function ClientGUI({ }) {
 
             contextHistoryLoaded={contextHistoryLoaded}
             setContextHistoryLoaded={setContextHistoryLoaded}
+
+            loginEmail={loginEmail}
+            setLoginEmail={setLoginEmail}
           />
         </div>
         <Chatbot
@@ -158,6 +162,7 @@ function ClientGUI({ }) {
           setActiveMicComponent={setActiveMicComponent}
           mic={chatbotMic}
           setMic={setChatbotMic}
+          loginEmail={loginEmail}
         />
       </Router>
     </div>
