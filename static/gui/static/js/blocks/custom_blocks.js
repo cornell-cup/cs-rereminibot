@@ -1,7 +1,7 @@
 /*
   Code generators for custom blocks.
 */
-var BOT_HEADER = "bot";
+var BOT_HEADER = "bot.";
 var FCN_ENDING = "\n";
 
 /**
