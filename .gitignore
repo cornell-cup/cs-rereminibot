@@ -3,5 +3,6 @@ venv\
 
 static\gui\node_modules
 
+.env
 minibot/__pycache__
 minibot/uart_scripts/__pycache__
