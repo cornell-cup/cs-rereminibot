@@ -1,6 +1,7 @@
 from spritesheet import Spritesheet
 import time
 import json
+import traceback
 
 class Avatar:
 
@@ -32,6 +33,7 @@ class Avatar:
         self._expressions = expressions
         self.json_expressions_dict = {}
         self._current_expression = None
+        self._current_expression_s = None
         self._current_playback_speed = current_playback_speed
         self._current_frame = 0.0
         self.restartOnNextUpdate = True
@@ -86,6 +88,27 @@ class Avatar:
             self.save_expressions_json("expressions.json")
         print("exit avatar/add_or_update_expression")
 
+    def load_single_expression_json(self, json_src : str, key : str, img_parent_dir : str = ""):
+        temp_dict = {}
+        print("avatar/load_single_expression_json")
+        try:
+            with open(json_src, "r") as read_file:
+                temp_dict = json.load(read_file)
+                sheet = Spritesheet(src=img_parent_dir + temp_dict[key]["sheet_src"],
+                                frame_width=temp_dict[key]["frame_width"],
+                                frame_height=temp_dict[key]["frame_height"],
+                                frame_count=temp_dict[key]["frame_count"])
+                #self.add_or_update_expression(key, sheet)
+                self._current_expression = key
+                self._current_expression_s = sheet
+            print("exited with")
+            return True
+        except Exception as e:
+            print(e)
+            traceback.print_exec()
+            return False
+
+
     def load_expressions_json(self, json_src : str, img_parent_dir : str = ""):
         """
         """
@@ -101,15 +124,15 @@ class Avatar:
                                 frame_width=temp_dict[key]["frame_width"],
                                 frame_height=temp_dict[key]["frame_height"],
                                 frame_count=temp_dict[key]["frame_count"])
-                    # self.add_or_update_expression(key, sheet)
+                    self.add_or_update_expression(key, sheet)
+                    #self._current_expression = key
+                    #self._current_expression_s = sheet
                 print("exited forloop")
             print("exited with")
             return True
         except Exception as e:
             print(e)
             return False
-        
-        
 
     def save_expressions_json(self, path : str):
         """
@@ -136,7 +159,8 @@ class Avatar:
             The name of the expression.
         """
         try:
-            return self._expressions[expression_name]
+            #return self._expressions[expression_name]
+            return self._current_expression_s
         except KeyError as e:
             return None
         
@@ -177,7 +201,8 @@ class Avatar:
         """
         Sets the avatar's current expression to None.
         """
-        self._current_expression = None  
+        self._current_expression = None
+        self._current_expression_s = None
 
     def set_playback_speed(self, new_speed : float):
         """
@@ -191,7 +216,7 @@ class Avatar:
         Updates the current frame being displayed by the avatar based on the 
         time change since the previous update.
         """ 
-
+        print("avatar/update")
         if self._current_expression is None:
             return
 
@@ -213,7 +238,7 @@ class Avatar:
         
         # Get current expression spritesheet 
         # TODO: Handle 'None' case
-        current_expression = self._expressions[self._current_expression]
+        current_expression = self._current_expression_s
 
         while self._current_frame >= current_expression._frame_count:
             self._current_frame -= current_expression._frame_count
@@ -233,14 +258,16 @@ class Avatar:
         """
         if self._current_expression == None:
             return None
-
-        return self._expressions[self._current_expression].get_frame(self._current_frame)   
+        print("avatar/get_current_display")
+        #return self._expressions[self._current_expression].get_frame(self._current_frame)   
+        return self._current_expression_s.get_frame(self._current_frame)
 
     def get_current_frame_count(self):
         """
         Returns the active animation's total frame count.
         """
-        return self._expressions[self._current_expression]._frame_count 
+        #return self._expressions[self._current_expression]._frame_count 
+        return self._current_expression_s._frame_count
 
     def get_expression_names(self):
         """
