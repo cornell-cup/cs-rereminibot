@@ -1,0 +1,44 @@
+{
+  "neutral": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 8,
+    "sheet_src": "neutral.png"
+  },
+  "sick": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 6,
+    "sheet_src": "sick.png"
+  },
+  "vomit": {
+    "frame_width": 320,
+    "frame_height": 320, 
+    "frame_count": 62,
+    "sheet_src": "Vomit.png"
+  },
+  "vomit2": {
+    "frame_width": 360,
+    "frame_height": 360,
+    "frame_count": 9,
+    "sheet_src": "vomit2.png"
+  },
+  "ready_to_race": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 8,
+    "sheet_src": "Ready_to_Race.png"
+  },
+  "chuckle": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 33,
+    "sheet_src": "Chuckle.png"
+  },
+  "surprise": {
+    "frame_width" : 360,
+    "frame_height" : 360,
+    "frame_count" : 12,
+    "sheet_src" : "surprise2.png"
+  }
+}

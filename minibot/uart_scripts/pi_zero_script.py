@@ -3,9 +3,12 @@ from spritesheet import Spritesheet
 import time
 import pygame
 import numpy as np
+#from memory_profiler import profile
 
 import serial
 import os
+import psutil
+from PIL import Image
 
 import traceback
 
@@ -23,14 +26,15 @@ def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_coun
 
     avatar.add_or_update_expression(expr_name, sheet)
 
+#@profile
 def run_pi_zero(demo_expression : str = "excited"):
     pygame.init()
     print("init")
     time.sleep(1)
     print("sleep")
     infoObject = pygame.display.Info()
-    screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
-    # screen = pygame.display.set_mode((320, 320), pygame.RESIZABLE) # Used to test in windowed mode
+    # screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((50, 50), pygame.RESIZABLE) # Used to test in windowed mode
     print("start screen")
     pygame.display.set_caption('Avatar Demo')
     pygame.mouse.set_visible(0)
@@ -41,13 +45,17 @@ def run_pi_zero(demo_expression : str = "excited"):
     path_to_expression_json = "./static/gui/static/js/components/Expression/expressions.json"
     path_to_img_dir = "./static/gui/static/img/Expressions/"
 
+    pid = os.getpid()
+    process = psutil.Process(pid)
+    memory_info = process.memory_info()
+    print(f'RAM usage: {memory_info.rss / 1000 / 1000} MB')
     pi_ava.load_expressions_json(path_to_expression_json, path_to_img_dir)
 
     print("Loaded the following expressions:")
     for expression in pi_ava.get_expression_names():
         print(" - ", expression)
 
-    pi_ava.set_playback_speed(30)
+    pi_ava.set_playback_speed(15)
 
     print("Playback speed is currently at " + str(pi_ava._current_playback_speed))
     print("")
@@ -63,6 +71,7 @@ def run_pi_zero(demo_expression : str = "excited"):
         serial_connected = 1
         time.sleep(1)
 
+    message_asked = False
     running = True
     while running:
         print(f"Device exists {os.path.exists('/dev/ttyACM0')}")
@@ -75,6 +84,7 @@ def run_pi_zero(demo_expression : str = "excited"):
                 if len(message) > 0:
                     print(message)
                 if message.startswith("SPR"): # some key that represents an animation LCD[emotion]
+                    message_asked = False
                     # Run LCD methods
                     expression_name = message.split(",")[1].replace("\n", "").strip()
                 
@@ -86,9 +96,24 @@ def run_pi_zero(demo_expression : str = "excited"):
                         pi_ava.set_current_expression(expression_name)
 
                 elif message.startswith("PBS"):
+                    message_asked = False
                     playback_speed = message.split(",")[1]
 
                     pi_ava.set_playback_speed(float(playback_speed))
+
+                elif message.startswith("ASK"):
+                    message_asked = True
+                    white = (255, 255, 255)
+                    black = (0, 0, 0)
+                    expression_ask = message.split(",")[1]
+                    font = pygame.font.Font(None, 60)
+                    screen.fill(black)
+                    ask_phrase = "Play " + expression_ask[:-2] + "?"
+                    text = font.render(ask_phrase, True, white)
+                    textRect = text.get_rect()
+                    textRect.center = (infoObject.current_w//2, infoObject.current_h//2)
+                    screen.blit(text, textRect)
+                    print("ask")
 
                 # Send OK message back
                 # ser.write(b'OK')
@@ -112,7 +137,8 @@ def run_pi_zero(demo_expression : str = "excited"):
             frame_surface = pygame.surfarray.make_surface(frame_np.swapaxes(0,1))
             frame_surface = pygame.transform.scale(frame_surface, (infoObject.current_w, infoObject.current_h))
             # frame_surface = pygame.transform.scale(frame_surface, (50, 50)) # Used to test in windowed mode
-            screen.blit(frame_surface, (0, 0))
+            if not message_asked:
+                screen.blit(frame_surface, (0, 0))
             pygame.display.update()
             
             for event in pygame.event.get():

@@ -17,12 +17,6 @@
     "frame_count": 21,
     "sheet_src": "Big_Yes.png"
   },
-  "blink_awake": {
-    "frame_width": 320,
-    "frame_height": 320,
-    "frame_count": 66,
-    "sheet_src": "BlinkAwake.png"
-  },
   "chuckle": {
     "frame_width": 320,
     "frame_height": 320,
@@ -71,16 +65,22 @@
     "frame_count": 27,
     "sheet_src": "Yes.png"
   },
+  "love_it": {
+    "frame_width": 320,
+    "frame_height": 320,
+    "frame_count": 24,
+    "sheet_src": "LoveIt.png"
+  },
   "vomit": {
     "frame_width": 320,
     "frame_height": 320,
     "frame_count": 62,
     "sheet_src": "Vomit.png"
   },
-  "love_it": {
-    "frame_width": 320,
+  "blink_awake": {
+    "frame_width": 320
     "frame_height": 320,
-    "frame_count": 24,
-    "sheet_src": "LoveIt.png"
+    "frame_count": 66,
+    "sheet_src": "BlinkAwake.png"
   }
 }
