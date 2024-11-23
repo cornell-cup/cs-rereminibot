@@ -74,7 +74,7 @@ class Avatar:
             in frames per second. Negative values will play the animation
             backwards.
         """
-
+        print("avatar/add_or_update_expression")
         self._expressions[expression_name] = expression_spritesheet
         self.json_expressions_dict[expression_name] = {
             "frame_width" : expression_spritesheet._frame_width,
@@ -84,20 +84,26 @@ class Avatar:
         }
         if self.auto_save_expressions:
             self.save_expressions_json("expressions.json")
+        print("exit avatar/add_or_update_expression")
 
     def load_expressions_json(self, json_src : str, img_parent_dir : str = ""):
         """
         """
+        print("avatar/load_expression_json")
         temp_dict = {}
         try:
             with open(json_src, "r") as read_file:
                 temp_dict = json.load(read_file)
+                print(temp_dict.keys())
                 for key in temp_dict.keys():
+                    print(key)
                     sheet = Spritesheet(src=img_parent_dir + temp_dict[key]["sheet_src"],
                                 frame_width=temp_dict[key]["frame_width"],
                                 frame_height=temp_dict[key]["frame_height"],
                                 frame_count=temp_dict[key]["frame_count"])
-                    self.add_or_update_expression(key, sheet)
+                    # self.add_or_update_expression(key, sheet)
+                print("exited forloop")
+            print("exited with")
             return True
         except Exception as e:
             print(e)
