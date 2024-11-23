@@ -33,8 +33,8 @@ def run_pi_zero(demo_expression : str = "excited"):
     time.sleep(1)
     print("sleep")
     infoObject = pygame.display.Info()
-    # screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
-    screen = pygame.display.set_mode((50, 50), pygame.RESIZABLE) # Used to test in windowed mode
+    screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
+    # screen = pygame.display.set_mode((50, 50), pygame.RESIZABLE) # Used to test in windowed mode
     print("start screen")
     pygame.display.set_caption('Avatar Demo')
     pygame.mouse.set_visible(0)
@@ -49,7 +49,7 @@ def run_pi_zero(demo_expression : str = "excited"):
     process = psutil.Process(pid)
     memory_info = process.memory_info()
     print(f'RAM usage: {memory_info.rss / 1000 / 1000} MB')
-    pi_ava.load_expressions_json(path_to_expression_json, path_to_img_dir)
+    #pi_ava.load_expressions_json(path_to_expression_json, path_to_img_dir)
 
     print("Loaded the following expressions:")
     for expression in pi_ava.get_expression_names():
@@ -73,6 +73,7 @@ def run_pi_zero(demo_expression : str = "excited"):
 
     message_asked = False
     running = True
+    no = False
     while running:
         print(f"Device exists {os.path.exists('/dev/ttyACM0')}")
         try:
@@ -93,7 +94,8 @@ def run_pi_zero(demo_expression : str = "excited"):
                     if expression_name == "":
                         pi_ava.clear_current_expression()
                     else:
-                        pi_ava.set_current_expression(expression_name)
+                        pi_ava.clear_current_expression()
+                        pi_ava.load_single_expression_json(path_to_expression_json, expression_name, path_to_img_dir)
 
                 elif message.startswith("PBS"):
                     message_asked = False
@@ -122,7 +124,10 @@ def run_pi_zero(demo_expression : str = "excited"):
             # Update avatar
             pi_ava.update()
             frame = pi_ava.get_current_display()
-            
+            #if not no:
+            #    frame.show()
+            #    no = True
+            #print(pi_ava._current_expression)
 
             # Update Pygame Screen
             if frame is None:
@@ -136,7 +141,7 @@ def run_pi_zero(demo_expression : str = "excited"):
                 frame_np = frame_np[:, :, :3]
             frame_surface = pygame.surfarray.make_surface(frame_np.swapaxes(0,1))
             frame_surface = pygame.transform.scale(frame_surface, (infoObject.current_w, infoObject.current_h))
-            # frame_surface = pygame.transform.scale(frame_surface, (50, 50)) # Used to test in windowed mode
+            #frame_surface = pygame.transform.scale(frame_surface, (50, 50)) # Used to test in windowed mode
             if not message_asked:
                 screen.blit(frame_surface, (0, 0))
             pygame.display.update()

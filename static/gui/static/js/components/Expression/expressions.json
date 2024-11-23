@@ -78,7 +78,7 @@
     "sheet_src": "Vomit.png"
   },
   "blink_awake": {
-    "frame_width": 320
+    "frame_width": 320,
     "frame_height": 320,
     "frame_count": 66,
     "sheet_src": "BlinkAwake.png"
