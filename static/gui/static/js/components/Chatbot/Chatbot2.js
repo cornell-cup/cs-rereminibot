@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
+import Sentiment from 'sentiment';
 import {
   commands,
   X_BTN, MIC_BTN, MIC_BTNON,
@@ -83,32 +84,39 @@ function Chatbot2({
     return null;
   }
 
+  const sentiment = new Sentiment();
+
   const changeInputText = (event) => {
-    console.log("changed!")
     event.preventDefault();
     if (!contextMode) return;
     const input = event.currentTarget.value;
+    console.log("reached")
     setInputText(input);
 
-    const keywords = ["robotics", "learn", "learning", "fun", "interactive", "coding", "difficult"];
-    const keyword = match_keywords(input, keywords);
+    const result = sentiment.analyze(input);
+    const comparativeScore = result.comparative
+    console.log(comparativeScore)
 
-    if (keyword !== null) {
-        console.log(`Keyword found: ${keyword}`);
+    // const keywords = ["robotics", "learn", "learning", "fun", "interactive", "coding", "difficult"];
+    // const keyword = match_keywords(input, keywords);
 
+    // if (keyword !== null) {
         var emotion;
-        if (keyword === "robotics" || keyword === "coding"){emotion = "excited"}
-        else if (keyword === "learn" || keyword === "learning"){emotion = "big_yes"}
-        else if (keyword === "interactive" || keyword === "fun"){emotion = "love_it"}
-        else if (keyword === "difficult"){emotion = "startled"}
+        // if (keyword === "robotics" || keyword === "coding"){emotion = "excited"}
+        // else if (keyword === "learn" || keyword === "learning"){emotion = "big_yes"}
+        // else if (keyword === "interactive" || keyword === "fun"){emotion = "love_it"}
+        // else if (keyword === "difficult"){emotion = "startled"}
+
+        if(comparativeScore >= 1.0) {emotion = "love_it"}
+        else if (comparativeScore >= 0.5){emotion = "excited"}
+        else if (comparativeScore >= 0.1){emotion = "surprise"}
+        else if (comparativeScore >= -0.1){emotion = "idle_stable" }
+        else if (comparativeScore >= -0.5){emotion = "no"}
+        else if (comparativeScore >= -1.0){emotion = "startled"}
+        else {emotion = "sad"}
+        console.log(emotion)
 
         const pythonCode = `self.current_expression = None\nbot.clear_expression()\nself.current_expression = '${emotion}'\nbot.set_expression('${emotion}')`;
-        const botName = selectedBotName;
-        const email = loginEmail;
-
-        console.log("botname: ", botName);
-        console.log("sciptcode: ", botName);
-        console.log("loginemail: ", email);
 
         axios({
             method: 'POST',
@@ -117,9 +125,9 @@ function Chatbot2({
                 'Content-Type': 'application/json'
             },
             data: JSON.stringify({
-                bot_name: botName,
+                bot_name: selectedBotName,
                 script_code: pythonCode,
-                login_email: email
+                login_email: loginEmail
             })
         })
         .then((response) => {
@@ -128,7 +136,7 @@ function Chatbot2({
         .catch((error) => {
           console.log(error.message)
         });
-    }
+    // }
 };
 
 
