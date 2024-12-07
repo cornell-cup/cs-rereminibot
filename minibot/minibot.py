@@ -376,10 +376,14 @@ class Minibot:
                 return
 
             drivetrain.set_effort(left_power, right_power)
-        # elif key == "SERVO":
-        #     # value structure "id{id}_angle{angle}"
-        #     servo_id = value[2:]
-        #     servo = 
+        elif key == "SERVO":
+            # value structure "angle"
+            servo_angle = int(value)
+            servo_one.set_angle(servo_angle)
+            servo_two.set_angle(servo_angle)
+            
+            
+
         elif key == "BUTTON":
             # value structure "id{id}"
             print("button pressed")

@@ -87,7 +87,7 @@ class BaseStation:
             "set_expression_playback_speed": "bot_script.sendKV(\"PBS\",ARG)",
 
             "is_button_pressed": "bot_script.get_button_press(ARG)",
-            "move_servo":"bot_script.sendKV(\"SERVO\", ARG)",
+            "move_servos":"bot_script.sendKV(\"SERVO\", ARG)",
             "get_accel_x": "bot_script.get_imu()[0]",
             "get_accel_y": "bot_script.get_imu()[1]",
             "get_accel_z": "bot_script.get_imu()[2]",
@@ -324,7 +324,7 @@ class BaseStation:
             bot.script_exec_result_var.set_with_lock(True, "Stop current program in execution", timeout=1)
             res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(self.script_thread.ident), ctypes.py_object(SystemExit))
             print("interrupting the thread executing the script, result: " + str(res))
-            bot.sendKV("WHEELS", "stop")
+            bot.sendKV("WHEELS", "(0,0)")
 
     # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
     #     script = query_params['script_code']
@@ -384,6 +384,10 @@ class BaseStation:
 
                 if command == "is_button_pressed":
                     func = func.replace("ARG", argument)
+                
+                if command == "move_servos":
+                    func = func.replace("ARG", argument)
+                    
 
                 # TODO: implement custom power  
                 # elif func.startswith("bot_script.sendKV(\"WHEELS\","):

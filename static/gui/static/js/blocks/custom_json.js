@@ -446,8 +446,8 @@ var miniblocks = {
     helpUrl: "",
     output: "Boolean"
   },
-  move_servo: {
-    type: "move_servo",
+  move_servos: {
+    type: "move_servos",
     message0: "move servo to %1 angle",
     args0: [
       {
@@ -455,7 +455,7 @@ var miniblocks = {
         name: "angle",
         value: 360,
         min: 0,
-        max: 360
+        max: 200
       }
     ],
     previousStatement: null,
@@ -709,10 +709,10 @@ var miniblocks = {
     previousStatement: null,
     nextStatement: null,
     colour: 30,
-    tooltip: "Sets the robot's emotion to the emotion with the specified name if:\n" + 
-              "1) the emotion has been added to the robot, and\n" + 
-              "2) the emotion is higher priority than the currently running emotion.\n" + 
-              "Note: Use clear emotion first in order to change to a lower priority emotion.",
+    tooltip: "Sets the robot's emotion to the emotion with the specified name if:\n" +
+      "1) the emotion has been added to the robot, and\n" +
+      "2) the emotion is higher priority than the currently running emotion.\n" +
+      "Note: Use clear emotion first in order to change to a lower priority emotion.",
     helpUrl: ""
   },
 
@@ -776,8 +776,8 @@ var miniblocks = {
     previousStatement: null,
     nextStatement: null,
     colour: 60,
-    tooltip: "Sets the current playback speed in frames per second to the specified value.\n" + 
-             "Note: Negative values will play the animation backwards.",
+    tooltip: "Sets the current playback speed in frames per second to the specified value.\n" +
+      "Note: Negative values will play the animation backwards.",
     helpUrl: ""
   },
   get_accel_x: {
@@ -799,7 +799,7 @@ var miniblocks = {
     tooltip: "Get accelerometer values in y direction",
     helpUrl: "",
     output: "Number",
-  }, 
+  },
   get_accel_z: {
     type: "get_accel_z",
     message0: "Get accelerometer values in z direction",

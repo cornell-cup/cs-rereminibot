@@ -380,15 +380,15 @@ Blockly.Python['is_button_pressed'] = function (block) {
 
 // ================ SERVO BLOCKS ================ //
 
-Blockly.Blocks['move_servo'] = {
+Blockly.Blocks['move_servos'] = {
   init: function () {
-    this.jsonInit(miniblocks.move_servo);
+    this.jsonInit(miniblocks.move_servos);
   }
 };
 
-Blockly.Python['move_servo'] = function (block) {
+Blockly.Python['move_servos'] = function (block) {
   var angle = block.getFieldValue('angle');
-  var funcCall = "move_servo(" + angle + ")";
+  var funcCall = "move_servos(" + angle + ")";
 
   return BOT_HEADER + funcCall + FCN_ENDING;
 };
@@ -519,11 +519,11 @@ Blockly.Python['set_emotion_if_possible'] = function (block) {
   var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
 
   var code = 'if ' + emotion_name + ' in added_emotions:\n';
-     code += '    if current_emotion != None: \n';
-     code += '        if added_emotions[' + emotion_name + '] > added_emotions[current_emotion]:\n';
-     code += '            current_emotion = ' + emotion_name + '\n';
-     code += '    else:\n';
-     code += '        current_emotion = ' + emotion_name + '\n';
+  code += '    if current_emotion != None: \n';
+  code += '        if added_emotions[' + emotion_name + '] > added_emotions[current_emotion]:\n';
+  code += '            current_emotion = ' + emotion_name + '\n';
+  code += '    else:\n';
+  code += '        current_emotion = ' + emotion_name + '\n';
   return code;
 };
 
@@ -546,10 +546,10 @@ Blockly.Blocks['process_current_emotion'] = {
 };
 
 Blockly.Python['process_current_emotion'] = function (block) {
-  
+
   var code = 'if current_emotion is not None and current_emotion in self.emotion_repo:\n';
-     code += '    if self.emotion_repo[current_emotion].check_devices(devices_emotional_status):\n';
-     code += '        self.emotion_repo[current_emotion].process_emotion()\n'; 
+  code += '    if self.emotion_repo[current_emotion].check_devices(devices_emotional_status):\n';
+  code += '        self.emotion_repo[current_emotion].process_emotion()\n';
   return code;
 };
 
