@@ -426,6 +426,26 @@ var miniblocks = {
     tooltip: "",
     helpUrl: ""
   },
+  is_button_pressed: {
+    type: "is_button_pressed",
+    message0: "is button %1 pressed",
+    args0: [
+      {
+        type: "field_number",
+        name: "id",
+        value: 1,
+        min: 0,
+        max: 2,
+        check: "Number"
+      }
+    ],
+    previousStatement: null,
+    nextStatement: null,
+    colour: 230,
+    tooltip: "",
+    helpUrl: "",
+    output: "Boolean"
+  },
   move_servo: {
     type: "move_servo",
     message0: "move servo to %1 angle",

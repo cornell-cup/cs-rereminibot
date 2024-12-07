@@ -86,8 +86,8 @@ class BaseStation:
             "clear_expression": "bot_script.sendKV(\"SPR\",ARG)",
             "set_expression_playback_speed": "bot_script.sendKV(\"PBS\",ARG)",
 
-            "start_accelerometer_streaming": "bot_script.sendKV(\"ACCEL\", 0)\nx = bot_script.readKV()\nprint(x)",
-            "get_accelerometer_values": "bot_script.sendKV(\"IMU\", 0);bot_script.readKV();print(bot_script.accelerometer_values)",
+            "is_button_pressed": "bot_script.get_button_press(ARG)",
+            "move_servo":"bot_script.sendKV(\"SERVO\", ARG)",
             "get_accel_x": "bot_script.get_imu()[0]",
             "get_accel_y": "bot_script.get_imu()[1]",
             "get_accel_z": "bot_script.get_imu()[2]",
@@ -382,6 +382,8 @@ class BaseStation:
                 if command == "clear_expression":
                     func = func.replace("ARG", "\"\"")
 
+                if command == "is_button_pressed":
+                    func = func.replace("ARG", argument)
 
                 # TODO: implement custom power  
                 # elif func.startswith("bot_script.sendKV(\"WHEELS\","):

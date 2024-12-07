@@ -1,7 +1,7 @@
 /*
   Code generators for custom blocks.
 */
-var BOT_HEADER = "bot";
+var BOT_HEADER = "bot.";
 var FCN_ENDING = "\n";
 
 /**
@@ -365,20 +365,33 @@ Blockly.Python['while_wait_for_commands'] = function (block) {
   return code + FCN_ENDING;
 };
 
+Blockly.Blocks['is_button_pressed'] = {
+  init: function () {
+    this.jsonInit(miniblocks.is_button_pressed);
+  }
+};
+
+Blockly.Python['is_button_pressed'] = function (block) {
+  var id = block.getFieldValue('id');
+  var funcCall = "is_button_pressed(" + id + ")";
+
+  return BOT_HEADER + funcCall + FCN_ENDING;
+};
+
 // ================ SERVO BLOCKS ================ //
 
 Blockly.Blocks['move_servo'] = {
   init: function () {
     this.jsonInit(miniblocks.move_servo);
   }
-}
+};
 
 Blockly.Python['move_servo'] = function (block) {
   var angle = block.getFieldValue('angle');
   var funcCall = "move_servo(" + angle + ")";
 
   return BOT_HEADER + funcCall + FCN_ENDING;
-}
+};
 
 // ================ ULTRASONIC BLOCKS ================ //
 
@@ -386,7 +399,7 @@ Blockly.Blocks['read_ultrasonic'] = {
   init: function () {
     this.jsonInit(miniblocks.read_ultrasonic)
   }
-}
+};
 
 Blockly.Python['read_ultrasonic'] = function (block) {
   var lowerBound = "0 < ";
@@ -395,7 +408,7 @@ Blockly.Python['read_ultrasonic'] = function (block) {
   var funcName = "read_ultrasonic()";
 
   return [lowerBound + BOT_HEADER + funcName + upperBound, Blockly.Python.ORDER_NONE];
-}
+};
 
 // ================ COLOR SENSING BLOCKS ================ //
 
