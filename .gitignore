@@ -4,5 +4,6 @@ venv\
 static\gui\node_modules
 
 .env
+node_modules/
 minibot/__pycache__
 minibot/uart_scripts/__pycache__
