@@ -160,6 +160,18 @@ def end_physical_blockly():
     base_station.end_physical_blockly(bot_name)
     return json.dumps(True), status.HTTP_200_OK
 
+@index_bp.route('/set_servo_angle', methods=['POST'])
+def set_servo_angle():
+    """ Sets servo angle """
+    data = request.get_json()
+    bot_name = data['bot_name']
+    angle = data['servo_angle']
+    res = base_station.set_servo_angle(bot_name, angle)
+    if not res:
+        error_json = {"error_msg": "/set_servo_angle leads to bot not found"}
+        return json.dumps(error_json), status.HTTP_400_BAD_REQUEST
+    return json.dumps(True), status.HTTP_200_OK
+
 @index_bp.route('/vision', methods=['POST', 'GET'])
 def vision():
     """Updates vision status"""

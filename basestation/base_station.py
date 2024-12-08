@@ -607,6 +607,13 @@ class BaseStation:
         print("ending physical blockly thread")
 
     # ==================== NEW SPEECH RECOGNITION ============================
+    def set_servo_angle(self, bot_name: str, servo_angle: str):
+        bot = self.get_bot(bot_name)
+        if bot == None:
+            return False
+        bot.sendKV("SERVO", servo_angle)
+        return True
+
     def send_command(self, bot_name, command):
         if command in self.commands:
             self.move_bot_wheels(bot_name, command, 100)
