@@ -77,8 +77,8 @@ class BaseStation:
         self.blockly_function_map = {
             "move_forward": "bot_script.sendKV(\"WHEELS\",\"(pow,pow)\")",
             "move_backward": "bot_script.sendKV(\"WHEELS\",\"(-pow,-pow)\")",
-            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"(pow,0)\")",
-            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"(0,pow)\")",
+            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"(pow,-pow)\")",
+            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"(-pow,pow)\")",
             "wait": "time.sleep",        
             "stop": "bot_script.sendKV(\"WHEELS\",\"(0,0)\")",
 
@@ -90,8 +90,8 @@ class BaseStation:
         self.wheel_directions_multiplier_map = {
             "forward": [1, 1],
             "backward": [-1, -1],
-            "left": [1, 0],
-            "right": [0, 1],
+            "left": [1, -1],
+            "right": [-1, 1],
             "stop": [0, 0]
         }
 
