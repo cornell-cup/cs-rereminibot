@@ -71,7 +71,7 @@ def chatbot_context():
 
      
 load_dotenv()
-client = OpenAI(api_key=os.environ.get("API_KEY"))
+# client = OpenAI(api_key=os.environ.get("API_KEY"))
 
 @chatbot_bp.route('/chatbot-ask', methods=['POST', 'GET'])
 def chatbot_ask():
