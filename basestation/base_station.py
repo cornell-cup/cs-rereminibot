@@ -8,6 +8,7 @@ import sys
 import time
 import threading
 import math
+import copy
 
 from basestation.bot import Bot
 from basestation.controller.minibot_sim_gui_adapter import run_program_string_for_gui_data
@@ -94,6 +95,16 @@ class BaseStation:
         # self.blockly_threaded_functions = [
         #     "fwd", "back", "right", "left", "stop", "ECE_wheel_pwr"
         # ]
+
+        self.wheel_directions_multiplier_map = {
+            "forward": [1, 1],
+            "backward": [-1, -1],
+            "left": [-1, 1],
+            "right": [1, -1],
+            "stop": [0, 0]
+        }   
+
+        self.wheel_directions = ["forward", "backward", "left", "right", "stop"]
 
         # This socket is used to listen for new incoming Minibot broadcasts
         # The Minibot broadcast will allow us to learn the Minibot's ipaddress
@@ -250,7 +261,13 @@ class BaseStation:
         """ Gives wheels power based on user input """
         bot = self.get_bot(bot_name)
         direction = direction.lower()
-        bot.sendKV("WHEELS", direction)
+        if direction in self.wheel_directions_multiplier_map.keys():
+            wheel_arg = copy.deepcopy(self.wheel_directions_multiplier_map[direction])
+            power = self.parse_power(power)
+            wheel_arg[0] *= power
+            wheel_arg[1] *= power
+            wheel_arg_str = "(" + str(wheel_arg[0]) + "," + str(wheel_arg[1]) + ")"
+        bot.sendKV("WHEELS", wheel_arg_str)
         
     # def set_bot_mode(self, bot_name: str, mode: str):
     #     """ Set the bot to either line follow or object detection mode """
@@ -347,6 +364,20 @@ class BaseStation:
         # this value might be None if the bot hasn't replied yet
         return bot.script_exec_result
 
+    def parse_power(self, power: str) -> float:
+        """ Convert power string (with max of 100) to a float with max of 1.
+        """
+        try:
+            power = int(power)
+            if power < 0:
+                power = 0
+            elif power > 100:
+                power = 100
+        except:
+            power = 0
+        power /= 100
+        return power
+    
     # ==================== DATABASE ====================
     def login(self, email: str, password: str) -> Tuple[int, Optional[str]]:
         """Logs in the user if the email and password are valid"""
@@ -413,6 +444,14 @@ class BaseStation:
         user = User.query.filter(User.email == self.login_email).first()
         user.custom_function = custom_function
         db.session.commit()
+        return True
+
+    # ==================== MOTORS AND SENSORS ============================
+    def set_servo_angle(self, bot_name: str, servo_angle: str):
+        bot = self.get_bot(bot_name)
+        if bot == None:
+            return False
+        bot.sendKV("SERVO", servo_angle)
         return True
 
     # ==================== NEW SPEECH RECOGNITION ============================
