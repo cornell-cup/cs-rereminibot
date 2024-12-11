@@ -23,6 +23,7 @@ export default class AddBot extends React.Component {
             availableBots: [], // bots connected to Base Station but not GUI
             botList: [],
             showPorts: false,
+            servoAngle: -1,
         };
 
         // Needed to use a ref for react
@@ -33,6 +34,7 @@ export default class AddBot extends React.Component {
         this.handleArrowKeyDown = this.handleArrowKeyDown.bind(this);
         this.motorPorts = this.motorPorts.bind(this);
         this.portConfigBttnOnClick = this.portConfigBttnOnClick.bind(this);
+        this.setServoAngle = this.setServoAngle.bind(this);
     }
 
     portConfigBttnOnClick() {
@@ -250,7 +252,26 @@ export default class AddBot extends React.Component {
         });
     }
 
-    
+    setServoAngle() {
+        const _this = this;
+        console.log(_this.state.servoAngle);
+        axios({
+            method: 'POST',
+            url: '/set_servo_angle',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                bot_name: _this.props.selectedBotName,
+                servo_angle: _this.state.servoAngle,
+            })
+        }).catch(function (error) {
+            if (error.response.data.error_msg.length > 0)
+                window.alert(error.response.data.error_msg);
+            else
+                console.log(error);
+        });
+    }    
 
 
     render() {
@@ -297,6 +318,19 @@ export default class AddBot extends React.Component {
                 </div>
                 <InformationBoxModal type={INFOBOXTYPE.SETUP} />
                 <br />
+                <br />
+                <br />
+                <div className="container">
+                    <div className="row">
+                        <div className="col horizontalDivCenter">
+                            <p className="small-title"> Servo Control </p>
+                            <div className="element-wrapper">
+                                <input type="text" onChange={(e) => _this.setState({ servoAngle : e.target.value })}></input>
+                            </div>
+                            <button className="btn btn-secondary" onClick={() => this.setServoAngle()}>Confirm</button>
+                        </div>
+                    </div>
+                </div>
                 <br />
                 <br />
                 <div className="container">

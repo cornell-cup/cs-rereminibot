@@ -599,6 +599,13 @@ class BaseStation:
         else:
             return "invalid commands"
 
+    def set_servo_angle(self, bot_name: str, servo_angle: str):
+        bot = self.get_bot(bot_name)
+        if bot == None:
+            return False
+        bot.sendKV("SERVO", servo_angle)
+        return True
+    
     # ==================== CHATBOT ==========================================
 
     def chatbot_compute_answer(self, question: str) -> str:
