@@ -97,16 +97,17 @@ function Chatbot2({
     const comparativeScore = result.comparative
     console.log(comparativeScore)
 
-    // const keywords = ["robotics", "learn", "learning", "fun", "interactive", "coding", "difficult"];
-    // const keyword = match_keywords(input, keywords);
+    const keywords = ["robotics", "learn", "learning", "fun", "interactive", "coding", "difficult"];
+    const keyword = match_keywords(input, keywords);
 
-    // if (keyword !== null) {
-        var emotion;
-        // if (keyword === "robotics" || keyword === "coding"){emotion = "excited"}
-        // else if (keyword === "learn" || keyword === "learning"){emotion = "big_yes"}
-        // else if (keyword === "interactive" || keyword === "fun"){emotion = "love_it"}
-        // else if (keyword === "difficult"){emotion = "startled"}
+    var emotion;
 
+    if (keyword !== null) {
+        if (keyword === "robotics" || keyword === "coding"){emotion = "excited"}
+        else if (keyword === "learn" || keyword === "learning"){emotion = "big_yes"}
+        else if (keyword === "interactive" || keyword === "fun"){emotion = "love_it"}
+        else if (keyword === "difficult"){emotion = "startled"}
+    } else {
         if(comparativeScore >= 1.0) {emotion = "love_it"}
         else if (comparativeScore >= 0.5){emotion = "excited"}
         else if (comparativeScore >= 0.1){emotion = "surprise"}
