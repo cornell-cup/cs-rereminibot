@@ -1,5 +1,0 @@
-import socket
-s = socket.socket()
-ip = 0
-addrinfo = socket.getaddrinfo(ip, 10000, 0, SOCKSTREAM) [0] [1] 
-s.connect(addrinfo)
