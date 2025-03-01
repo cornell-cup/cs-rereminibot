@@ -6,7 +6,8 @@ import Sentiment from 'sentiment';
 import {
   commands,
   X_BTN, MIC_BTN, MIC_BTNON,
-  ACT_MIC_CHATBOT
+  ACT_MIC_CHATBOT,
+  ZIP_FILE_UPLOAD
 } from "../utils/Constants.js";
 import SpeechRecognitionComp from "../utils/SpeechRecognitionComp.js";
 
@@ -59,6 +60,12 @@ function Chatbot2({
   const [date, setDate] = useState("");
   const [tempCommands, setTempCommands] = useState("");
   const [isAnimating, setAnimating] = useState(false);
+
+  const hiddenFileInput = useRef(null);
+
+  const handleClick = (e) => {
+    e.preventDefault();
+  };
 
   // style for the overall chatbot window
   const styles = {
@@ -466,7 +473,22 @@ function Chatbot2({
                   </button>
                 </span>
               </span>
-              : <div></div>
+              :
+               <span>
+              <input type="image"
+                id='zipFileUpload'
+                src={ZIP_FILE_UPLOAD}
+                style={{ width: "40%", height: "40%", objectFit: "contain", }}
+                onClick={handleClick} />
+              <input
+                type="file"
+                id="zipfile"
+                ref={hiddenFileInput}
+                accept=".zip"
+                // onChange={handleChange}
+                style={{ display: 'none' }}
+              />
+            </span>
             }
           </div>
         </div>
