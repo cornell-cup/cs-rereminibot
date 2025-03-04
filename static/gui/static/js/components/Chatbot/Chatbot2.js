@@ -474,6 +474,6 @@ function Chatbot2({
     </div >
   );
 }
-
+  
 
 export default Chatbot2;
