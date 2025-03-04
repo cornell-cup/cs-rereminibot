@@ -137,9 +137,8 @@ function Chatbot2({
         .catch((error) => {
           console.log(error.message)
         });
-    // }
-};
-
+      }
+    }
 
   const openChatbox = (e) => {
     e.preventDefault();
