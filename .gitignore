@@ -1,7 +1,8 @@
 venv\
 \.vscode
 
-static\gui\node_modules
+static/gui/node_modules
+node_modules/
 
 .env
 minibot/__pycache__
