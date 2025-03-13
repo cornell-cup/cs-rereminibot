@@ -58,6 +58,9 @@ To activate this environment and install the required Python packages, run the f
 conda activate cup
 cd basestation
 python -m pip install -r requirements.txt
+python -m pip install opencv-python
+conda install numpy
+conda install requests
 ```
 
 Note: After installing the packages within the Anaconda environment, you **must run** `conda activate cup` on a newly opened shell window to activate the environment before starting the GUI. You'll know the environment is activated if the name of the environment `(cup)` is displayed before the shell prompt. Example of what the Windows Powershell prompt should look like: `(cup) C:\Users\YourName`
@@ -71,6 +74,9 @@ Run the following commands to navigate to the basestation directory in and insta
 ```
 cd basestation
 python -m pip install -r requirements.txt
+python -m pip install opencv-python
+python -m pip install numpy
+python -m pip install requests
 cd ..
 ```
 
