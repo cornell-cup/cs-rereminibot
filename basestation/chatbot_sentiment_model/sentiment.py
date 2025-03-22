@@ -52,9 +52,10 @@ trainer = Trainer(
     eval_dataset=test_dataset
 )
 trainer.train()
-model.save_pretrained("./chatbot-sentiment-model")
+model.save_pretrained("./chatbot-sentiment-model-s")
+tokenizer.save_pretrained("./chatbot-sentiment-model-s")
 
-pipe = TextClassificationPipeline(model=model, tokenizer=tokenizer, return_all_scores=False)
+pipe = TextClassificationPipeline(model=model, tokenizer=tokenizer, top_k=1)
 x = pipe(["Hello I'm so happy. I want to go outside and enjoy the sun. The lovely weather inspires me."])
 print (x)
 

@@ -7,3 +7,7 @@ static\gui\node_modules
 node_modules/
 minibot/__pycache__
 minibot/uart_scripts/__pycache__
+
+basestation/chatbot_sentiment_model/chatbot-sentiment-model-s
+
+basestation/chatbot_sentiment_model/results
