@@ -1,4 +1,5 @@
 from avatar import Avatar
+import xrp_sr_2 as sound
 from spritesheet import Spritesheet
 import time
 import pygame
@@ -33,8 +34,8 @@ def run_pi_zero(demo_expression : str = "excited"):
     time.sleep(1)
     print("sleep")
     infoObject = pygame.display.Info()
-    screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
-    # screen = pygame.display.set_mode((50, 50), pygame.RESIZABLE) # Used to test in windowed mode
+    #screen = pygame.display.set_mode((infoObject.current_w, infoObject.current_h), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((320, 320), pygame.RESIZABLE) # Used to test in windowed mode
     print("start screen")
     pygame.display.set_caption('Avatar Demo')
     pygame.mouse.set_visible(0)
@@ -78,17 +79,19 @@ def run_pi_zero(demo_expression : str = "excited"):
         print(f"Device exists {os.path.exists('/dev/ttyACM0')}")
         try:
             # Handle UART Signals
-            
+            print(ser)
+            print(ser.inWaiting())
             # Run UART receive, nonblocking 
-            if ser is not None and ser.inWaiting() > 0:
+            if ser is not None:# and ser.inWaiting() > 0:
                 message = ser.readline().decode()
                 if len(message) > 0:
                     print(message)
                 if message.startswith("SPR"): # some key that represents an animation LCD[emotion]
+                    print("reached here1 ")
                     message_asked = False
                     # Run LCD methods
                     expression_name = message.split(",")[1].replace("\n", "").strip()
-                
+                    print("reached here2")
                     print("Expression Name: \'" + expression_name + "\'")
 
                     if expression_name == "":
@@ -96,6 +99,7 @@ def run_pi_zero(demo_expression : str = "excited"):
                     else:
                         pi_ava.clear_current_expression()
                         pi_ava.load_single_expression_json(path_to_expression_json, expression_name, path_to_img_dir)
+                        sound.play_expression(expression_name)
 
                 elif message.startswith("PBS"):
                     message_asked = False
