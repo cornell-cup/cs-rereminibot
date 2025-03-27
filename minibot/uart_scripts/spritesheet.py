@@ -9,25 +9,9 @@ class Spritesheet:
         
         try:
             print("in try, before img")
-            pid = os.getpid()
-            process = psutil.Process(pid)
-            memory_info = process.memory_info()
-            print(f'RAM usage:{memory_info.rss / 1000 / 1000} MB')
-            print(psutil.virtual_memory())
-            print(psutil.swap_memory())
-            print(psutil.getloadavg())
             self._full_spriteheet = Image.open(src)
-            memory_info = process.memory_info()
-            print(f'RAM usage:{memory_info.rss / 1000 / 1000} MB')
-            print(psutil.virtual_memory())
-            print(psutil.swap_memory())
-            print(psutil.getloadavg())
             self._full_spriteheet.load()
-            memory_info = process.memory_info()
-            print(f'RAM usage:{memory_info.rss / 1000 / 1000} MB')
-            print(psutil.virtual_memory())
-            print(psutil.swap_memory())
-            print(psutil.getloadavg())
+
             print("in try, after img")
 
         except Exception as e:

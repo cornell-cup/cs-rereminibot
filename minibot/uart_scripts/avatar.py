@@ -125,8 +125,6 @@ class Avatar:
                                 frame_height=temp_dict[key]["frame_height"],
                                 frame_count=temp_dict[key]["frame_count"])
                     self.add_or_update_expression(key, sheet)
-                    #self._current_expression = key
-                    #self._current_expression_s = sheet
                 print("exited forloop")
             print("exited with")
             return True
