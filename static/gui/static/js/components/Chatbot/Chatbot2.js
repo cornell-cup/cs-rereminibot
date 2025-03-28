@@ -82,70 +82,73 @@ function Chatbot2({
     empty: {}
   }
 
-  const match_keywords = (message, keywords) => {
-    for (let i = 0; i < keywords.length; i++) {
-        if (message.includes(keywords[i])) {
-            return keywords[i];
-        }
+  //for sentiment analysis using model
+  const getSentiment = async (text) => {
+    try{
+      const response = await fetch ("http://127.0.0.1:2300/predict",{
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({text: text})
+      });
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      console.error("Error with sentiment analysis.", err);
     }
-    return null;
   }
 
-  const sentiment = new Sentiment();
 
-  const changeInputText = (event) => {
+  //for sentiment js library
+  // const sentiment = new Sentiment();
+
+  const changeInputText = async (event) => {
     event.preventDefault();
     if (!contextMode) return;
     const input = event.currentTarget.value;
     console.log("reached")
     setInputText(input);
 
-    const result = sentiment.analyze(input);
-    const comparativeScore = result.comparative
-    console.log(comparativeScore)
+    // const result = sentiment.analyze(input);
+    // const comparativeScore = result.comparative
+    // console.log(comparativeScore)
 
-    // const keywords = ["robotics", "learn", "learning", "fun", "interactive", "coding", "difficult"];
-    // const keyword = match_keywords(input, keywords);
+    const sentimentResponse = await getSentiment(input);
+    const sentiment = sentimentResponse[0][0].label;
+    console.log(sentiment);
+    let emotion;
 
-    // if (keyword !== null) {
-        var emotion;
-        // if (keyword === "robotics" || keyword === "coding"){emotion = "excited"}
-        // else if (keyword === "learn" || keyword === "learning"){emotion = "big_yes"}
-        // else if (keyword === "interactive" || keyword === "fun"){emotion = "love_it"}
-        // else if (keyword === "difficult"){emotion = "startled"}
+    if(sentiment == "LABEL_0") {emotion = "vomit"}
+    else if (sentiment == "LABEL_1"){emotion = "startled"}
+    else if (sentiment == "LABEL_2"){emotion = "sad"}
+    else if (sentiment == "LABEL_3"){emotion = "big_no" }
+    else if (sentiment == "LABEL_4"){emotion = "no"}
+    else if (sentiment == "LABEL_5"){emotion = "idle_stable"}
+    else if (sentiment == "LABEL_6"){emotion = "surprise"}
+    else if (sentiment == "LABEL_7"){emotion = "love_it"}
+    else if (sentiment == "LABEL_8"){emotion = "big_yes" }
+    else {emotion = "excited"}
 
-        if(comparativeScore >= 1.0) {emotion = "love_it"}
-        else if (comparativeScore >= 0.5){emotion = "excited"}
-        else if (comparativeScore >= 0.1){emotion = "surprise"}
-        else if (comparativeScore >= -0.1){emotion = "idle_stable" }
-        else if (comparativeScore >= -0.5){emotion = "no"}
-        else if (comparativeScore >= -1.0){emotion = "startled"}
-        else {emotion = "sad"}
-        console.log(emotion)
+    const pythonCode = `self.current_expression = None\nbot.clear_expression()\nself.current_expression = '${emotion}'\nbot.set_expression('${emotion}')`;
 
-        const pythonCode = `self.current_expression = None\nbot.clear_expression()\nself.current_expression = '${emotion}'\nbot.set_expression('${emotion}')`;
-
-        axios({
-            method: 'POST',
-            url: '/script',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: JSON.stringify({
-                bot_name: selectedBotName,
-                script_code: pythonCode,
-                login_email: loginEmail
+    axios({
+        method: 'POST',
+        url: '/script',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            bot_name: selectedBotName,
+            script_code: pythonCode,
+            login_email: loginEmail
             })
-        })
+        }) 
         .then((response) => {
           console.log(response);
         })
         .catch((error) => {
           console.log(error.message)
         });
-    // }
 };
-
 
   const openChatbox = (e) => {
     e.preventDefault();
