@@ -88,18 +88,14 @@ function Chatbot2({
       const response = await fetch ("http://127.0.0.1:2300/predict",{
         method: "POST",
         headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({text: text})
+        body: JSON.stringify({input: text})
       });
       const data = await response.json();
       return data;
     } catch (err) {
-      console.error("Error with sentiment analysis.", err);
+      return -1;
     }
   }
-
-
-  //for sentiment js library
-  // const sentiment = new Sentiment();
 
   const changeInputText = async (event) => {
     event.preventDefault();
@@ -108,24 +104,20 @@ function Chatbot2({
     console.log("reached")
     setInputText(input);
 
-    // const result = sentiment.analyze(input);
-    // const comparativeScore = result.comparative
-    // console.log(comparativeScore)
-
-    const sentimentResponse = await getSentiment(input);
-    const sentiment = sentimentResponse[0][0].label;
-    console.log(sentiment);
+    const sentiment = await getSentiment(input);
+    console.log("model assigned label:", sentiment);
     let emotion;
 
-    if(sentiment == "LABEL_0") {emotion = "vomit"}
-    else if (sentiment == "LABEL_1"){emotion = "startled"}
-    else if (sentiment == "LABEL_2"){emotion = "sad"}
-    else if (sentiment == "LABEL_3"){emotion = "big_no" }
-    else if (sentiment == "LABEL_4"){emotion = "no"}
-    else if (sentiment == "LABEL_5"){emotion = "idle_stable"}
-    else if (sentiment == "LABEL_6"){emotion = "surprise"}
-    else if (sentiment == "LABEL_7"){emotion = "love_it"}
-    else if (sentiment == "LABEL_8"){emotion = "big_yes" }
+    if(sentiment == "-1") {emotion = "idle_stable"}
+    else if (sentiment == "0"){emotion = "vomit"}
+    else if (sentiment == "1"){emotion = "startled"}
+    else if (sentiment == "2"){emotion = "sad"}
+    else if (sentiment == "3"){emotion = "big_no" }
+    else if (sentiment == "4"){emotion = "no"}
+    else if (sentiment == "5"){emotion = "idle_stable"}
+    else if (sentiment == "6"){emotion = "surprise"}
+    else if (sentiment == "7"){emotion = "love_it"}
+    else if (sentiment == "8"){emotion = "big_yes" }
     else {emotion = "excited"}
 
     const pythonCode = `self.current_expression = None\nbot.clear_expression()\nself.current_expression = '${emotion}'\nbot.set_expression('${emotion}')`;

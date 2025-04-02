@@ -5,34 +5,45 @@ from sklearn.model_selection import train_test_split
 from transformers import BertTokenizer, BertForSequenceClassification, TrainingArguments, Trainer
 from transformers import TextClassificationPipeline
 
-df = pd.read_csv("Chatbot_Sentiment_Data.csv")
-label_mapping = {-5: 0, -4: 1, -3: 2, -2: 3, -1: 4, 0: 5, 1: 6, 2: 7, 3: 8, 4: 9}
-df["Label"] = df["Category"].map(label_mapping)
-# Train-Test Split
+df = pd.read_csv("training_data.tsv", sep="\t", header=None, names=["Statement","Category", "id"])
+df.drop(columns=["id"], inplace=True)
+
+def row_to_vector(label_str):
+    vector = [0] * 28
+    for label in label_str.split(","):
+        if label.strip():
+            label_int = int(label.strip())
+            vector[label_int] = 1
+    return vector
+
+df["Label"] = df["Category"].apply(row_to_vector)
+
 train_texts, test_texts, train_labels, test_labels = train_test_split(
     df["Statement"].tolist(), df["Label"].tolist(), test_size=0.2, random_state=42
 )
 
 tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
-train_encodings = tokenizer(train_texts, truncation=True, padding=True, max_length=128)
-test_encodings = tokenizer(test_texts, truncation=True, padding=True, max_length=128)
+train_statements = tokenizer(train_texts, truncation=True, padding=True, max_length=128)
+test_statements = tokenizer(test_texts, truncation=True, padding=True, max_length=128)
 
-class SentimentDataset(torch.utils.data.Dataset):
+class MultiLabelDataset(torch.utils.data.Dataset):
     def __init__(self, encodings, labels):
         self.encodings = encodings
         self.labels = labels
+
     def __len__(self):
         return len(self.labels)
+    
     def __getitem__(self, idx):
         item = {key: torch.tensor(val[idx]) for key, val in self.encodings.items()}
-        item["labels"] = torch.tensor(self.labels[idx])
+        item["labels"] = torch.tensor(self.labels[idx], dtype=torch.float)
         return item
-train_dataset = SentimentDataset(train_encodings, train_labels)
-test_dataset = SentimentDataset(test_encodings, test_labels)
+    
+train_dataset = MultiLabelDataset(train_statements, train_labels)
+test_dataset = MultiLabelDataset(test_statements, test_labels)
 
 
-model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=10)
-model.eval()
+model = BertForSequenceClassification.from_pretrained("bert-base-uncased", num_labels=28, problem_type="multi_label_classification")
 
 training_args = TrainingArguments(
     output_dir="./results",
@@ -42,7 +53,7 @@ training_args = TrainingArguments(
     warmup_steps=500,
     weight_decay=0.01,
     logging_dir="./logs",
-    evaluation_strategy="epoch",
+    eval_strategy="epoch",
     report_to="none"
 )
 trainer = Trainer(
@@ -51,17 +62,7 @@ trainer = Trainer(
     train_dataset=train_dataset,
     eval_dataset=test_dataset
 )
+
 trainer.train()
-model.save_pretrained("./chatbot-sentiment-model-s")
-tokenizer.save_pretrained("./chatbot-sentiment-model-s")
-
-pipe = TextClassificationPipeline(model=model, tokenizer=tokenizer, top_k=1)
-x = pipe(["Hello I'm so happy. I want to go outside and enjoy the sun. The lovely weather inspires me."])
-print (x)
-
-
-
-
-
-
-
+model.save_pretrained("./sentiment-model")
+tokenizer.save_pretrained("./sentiment-model")
