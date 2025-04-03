@@ -108,6 +108,23 @@ function Chatbot2({
     console.log("model assigned label:", sentiment);
     let emotion;
 
+    // temporary possible emotion labels
+    
+    const excitement_labels = [0, 1, 5, 6, 8, 9, 14, 19, 21, 23]
+    const sad_labels = [10, 17, 25, 26]
+    const vomit_labels = [3, 4, 11, 12]
+    const chuckle_labels = [2, 16, 18, 22, 24]
+    const startle_labels = [7, 13, 15, 20, 27]
+    const stable_labels = [28]   
+    
+    if (stable_labels.includes(sentiment)){emotion = "idle_stable"}
+    else if (excitement_labels.includes(sentiment)) {emotion = "excited"}
+    else if (sad_labels.includes(sentiment)) {emotion = "sad"}
+    else if (vomit_labels.includes(sentiment)) {emotion = "vomit"}
+    else if (chuckle_labels.includes(sentiment)) {emotion = "chuckle"}
+    else if (startle_labels.includes(sentiment)) {emotion = "startled"}
+
+
     if(sentiment == "-1") {emotion = "idle_stable"}
     else if (sentiment == "0"){emotion = "vomit"}
     else if (sentiment == "1"){emotion = "startled"}
