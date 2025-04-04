@@ -82,7 +82,6 @@ function Chatbot2({
     empty: {}
   }
 
-
   const processSentiment = async (text) => {
     let sentiment;
     try{
@@ -100,21 +99,21 @@ function Chatbot2({
     console.log("assigned label:", sentiment);
     let emotion;
 
-    if(sentiment == -1 || sentiment == 27) {emotion = "idle_stable"}
-    else if (sentiment == 11){emotion = "vomit"}
-    else if (sentiment == 12 || sentiment == 14 || sentiment == 19){emotion = "startled"}
-    else if (sentiment == 16 || sentiment == 24 || sentiment == 25){emotion = "sad"}
-    else if (sentiment == 2 || sentiment == 10){emotion = "big_no" }
-    else if (sentiment == 3 || sentiment == 9){emotion = "no"}
-    else if (sentiment == 6 || sentiment == 26){emotion = "surprise"}
-    else if (sentiment == 4 || sentiment == 5){emotion = "yes"}
-    else if (sentiment == 8 || sentiment == 18){emotion = "love_it"}
-    else if (sentiment == 0 || sentiment == 15 || sentiment == 21){emotion = "big_yes" }
-    else if (sentiment == 1){emotion = "chuckle" }
-    else if (sentiment == 22){emotion = "ready_to_race" } //check this one - realization
-    else if (sentiment == 7 || sentiment == 23){emotion = "blink_awake" }
-    else if (sentiment == 13 || sentiment == 17 || sentiment == 20) {emotion = "excited"}
-    console.log("assigned emotion:",emotion)
+    // temporary possible emotion labels
+    const excitement_labels = [0, 1, 5, 6, 8, 9, 14, 19, 21, 23]
+    const sad_labels = [10, 17, 25, 26]
+    const vomit_labels = [3, 4, 11, 12]
+    const chuckle_labels = [2, 16, 18, 22, 24]
+    const startle_labels = [7, 13, 15, 20, 27]
+    const stable_labels = [28]   
+    
+    if (stable_labels.includes(sentiment)){emotion = "idle_stable"}
+    else if (excitement_labels.includes(sentiment)) {emotion = "excited"}
+    else if (sad_labels.includes(sentiment)) {emotion = "sad"}
+    else if (vomit_labels.includes(sentiment)) {emotion = "vomit"}
+    else if (chuckle_labels.includes(sentiment)) {emotion = "chuckle"}
+    else if (startle_labels.includes(sentiment)) {emotion = "startled"}
+
     const pythonCode = `self.current_expression = None\nbot.clear_expression()\nself.current_expression = '${emotion}'\nbot.set_expression('${emotion}')`;
     console.log("reached axios call")
     axios({
