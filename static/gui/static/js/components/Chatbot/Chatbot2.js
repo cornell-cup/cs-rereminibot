@@ -82,8 +82,9 @@ function Chatbot2({
     empty: {}
   }
 
-  //for sentiment analysis using model
-  const getSentiment = async (text) => {
+
+  const processSentiment = async (text) => {
+    let sentiment;
     try{
       const response = await fetch ("http://127.0.0.1:2300/predict",{
         method: "POST",
@@ -91,37 +92,31 @@ function Chatbot2({
         body: JSON.stringify({input: text})
       });
       const data = await response.json();
-      return data;
+      sentiment = data;
     } catch (err) {
-      return -1;
+      sentiment = -1;
     }
-  }
 
-  const changeInputText = async (event) => {
-    event.preventDefault();
-    if (!contextMode) return;
-    const input = event.currentTarget.value;
-    console.log("reached")
-    setInputText(input);
-
-    const sentiment = await getSentiment(input);
-    console.log("model assigned label:", sentiment);
+    console.log("assigned label:", sentiment);
     let emotion;
 
-    if(sentiment == "-1") {emotion = "idle_stable"}
-    else if (sentiment == "0"){emotion = "vomit"}
-    else if (sentiment == "1"){emotion = "startled"}
-    else if (sentiment == "2"){emotion = "sad"}
-    else if (sentiment == "3"){emotion = "big_no" }
-    else if (sentiment == "4"){emotion = "no"}
-    else if (sentiment == "5"){emotion = "idle_stable"}
-    else if (sentiment == "6"){emotion = "surprise"}
-    else if (sentiment == "7"){emotion = "love_it"}
-    else if (sentiment == "8"){emotion = "big_yes" }
-    else {emotion = "excited"}
-
+    if(sentiment == -1 || sentiment == 27) {emotion = "idle_stable"}
+    else if (sentiment == 11){emotion = "vomit"}
+    else if (sentiment == 12 || sentiment == 14 || sentiment == 19){emotion = "startled"}
+    else if (sentiment == 16 || sentiment == 24 || sentiment == 25){emotion = "sad"}
+    else if (sentiment == 2 || sentiment == 10){emotion = "big_no" }
+    else if (sentiment == 3 || sentiment == 9){emotion = "no"}
+    else if (sentiment == 6 || sentiment == 26){emotion = "surprise"}
+    else if (sentiment == 4 || sentiment == 5){emotion = "yes"}
+    else if (sentiment == 8 || sentiment == 18){emotion = "love_it"}
+    else if (sentiment == 0 || sentiment == 15 || sentiment == 21){emotion = "big_yes" }
+    else if (sentiment == 1){emotion = "chuckle" }
+    else if (sentiment == 22){emotion = "ready_to_race" } //check this one - realization
+    else if (sentiment == 7 || sentiment == 23){emotion = "blink_awake" }
+    else if (sentiment == 13 || sentiment == 17 || sentiment == 20) {emotion = "excited"}
+    console.log("assigned emotion:",emotion)
     const pythonCode = `self.current_expression = None\nbot.clear_expression()\nself.current_expression = '${emotion}'\nbot.set_expression('${emotion}')`;
-
+    console.log("reached axios call")
     axios({
         method: 'POST',
         url: '/script',
@@ -140,7 +135,15 @@ function Chatbot2({
         .catch((error) => {
           console.log(error.message)
         });
-};
+  }
+
+  const changeInputText = async (event) => {
+    event.preventDefault();
+    if (!contextMode) return;
+    const input = event.currentTarget.value;
+    console.log("reached")
+    setInputText(input);
+  };
 
   const openChatbox = (e) => {
     e.preventDefault();
@@ -211,6 +214,7 @@ function Chatbot2({
 
   // functions processing commands: sending context, question, toggling mics
   const sendContext = (e) => {
+    processSentiment(inputText);
     e.preventDefault();
     if (inputText === emptyStr) return;
     var temp_id = id + 1;
@@ -246,6 +250,7 @@ function Chatbot2({
   }
 
   const sendQuestion = (e) => {
+    processSentiment(inputText)
     e.preventDefault();
     if (inputText === emptyStr) return;
     var temp_id = id + 1;
@@ -458,12 +463,12 @@ function Chatbot2({
             {contextMode ?
               <span>
                 <span>
-                  <button style={{ marginLeft: "2px", objectFit: "inline", width: "30%" }} onClick={(e) => { sendContext(e); }}>
+                  <button style={{ marginLeft: "2px", objectFit: "inline", width: "30%" }} onClick={(e) => { sendContext(e);}}>
                     <FontAwesomeIcon icon={Icons.faPaperPlane} />
                   </button>
                 </span>
                 <span>
-                  <button style={{ marginLeft: "2px", objectFit: "inline" }} onClick={(e) => { sendQuestion(e); }}>
+                  <button style={{ marginLeft: "2px", objectFit: "inline" }} onClick={(e) => { sendQuestion(e);}}>
                     <FontAwesomeIcon icon={Icons.faQuestion} />
                   </button>
                 </span>
