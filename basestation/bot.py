@@ -70,7 +70,6 @@ class Bot:
         """ Send message with specified key and value. """
         if not self.is_socket_connected:
             return
-
         data = f"<<<<{key},{value}>>>>".encode()
 
         # check whether the socket connection is still open

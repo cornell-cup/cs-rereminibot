@@ -91,6 +91,7 @@ class BaseStation:
             "get_accel_x": "bot_script.get_imu()[0]",
             "get_accel_y": "bot_script.get_imu()[1]",
             "get_accel_z": "bot_script.get_imu()[2]",
+            #TODO
         }
 
         self.wheel_directions_multiplier_map = {
@@ -341,6 +342,7 @@ class BaseStation:
     #     return run_program_string_for_gui_data(parsed_program_string, start, worlds)
 
     def parse_program(self, script: str) -> str:
+        #TODO
         """ Parses python program into commands that can be sent to the bot """
         # Regex is for bot-specific functions (move forward, stop, etc)
         # 1st group is the whitespace (useful for def, for, etc),
@@ -599,7 +601,14 @@ class BaseStation:
         self.py_commands = queue.Queue()
         self.move_bot_wheels(bot_name, "STOP", "100")
         print("ending physical blockly thread")
-
+    # ==================== Set Servo ============================
+    def set_servo_angle(self, bot_name:str, servo_angle: str):
+        bot = self.get_bot(bot_name)
+        if bot == None:
+            return False
+        bot.sendKV("SERVO", servo_angle)
+        return True
+    
     # ==================== NEW SPEECH RECOGNITION ============================
     def send_command(self, bot_name, command):
         if command in self.commands:

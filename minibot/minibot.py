@@ -10,7 +10,7 @@ import network
 import time
 import _thread
 import sys
-import argparse
+import micropython_argparse as argparse
 
 # NOTE: "flush=True" was removed from all print statements as a temporary
 # solution to how flush is not present in MicroPython. Additional configs
@@ -376,6 +376,29 @@ class Minibot:
                 return
 
             drivetrain.set_effort(left_power, right_power)
+        elif key == "SERVO":
+            # value structure "angle"
+            servo_angle = int(value)
+            print(key, servo_angle)
+            servo_one.set_angle(servo_angle)
+            servo_two.set_angle(servo_angle)
+            
+            
+
+        elif key == "BUTTON":
+            # value structure "id{id}"
+            print("button pressed")
+            button_id = value[2:]
+            result = board.is_button_pressed()
+            if button_id  == "1":
+                result = result.split(",")[0]
+                print(result)
+                self.sendKV(sock, key, f"id{button_id}_{result}")
+            elif button_id == "2":
+                result = result.split(",")[1]
+                print(result)
+                self.sendKV(sock, key, f"id{button_id}_{result}")
+        
         elif key == "IR":
             return_val = []
             thread = _thread.start_new_thread(ece.read_ir, (return_val))
