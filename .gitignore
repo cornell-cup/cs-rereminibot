@@ -6,4 +6,4 @@ node_modules/
 
 .env
 minibot/__pycache__
-minibot/uart_scripts/__pycache__
+minibot/pi_scripts/__pycache__

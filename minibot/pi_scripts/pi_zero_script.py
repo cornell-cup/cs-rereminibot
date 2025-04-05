@@ -1,5 +1,4 @@
 from avatar import Avatar
-import xrp_sr_2 as sound
 from spritesheet import Spritesheet
 import time
 import pygame
@@ -79,8 +78,6 @@ def run_pi_zero(demo_expression : str = "excited"):
         print(f"Device exists {os.path.exists('/dev/ttyACM0')}")
         try:
             # Handle UART Signals
-            print(ser)
-            print(ser.inWaiting())
             # Run UART receive, nonblocking 
             if ser is not None:# and ser.inWaiting() > 0:
                 message = ser.readline().decode()
@@ -99,7 +96,6 @@ def run_pi_zero(demo_expression : str = "excited"):
                     else:
                         pi_ava.clear_current_expression()
                         pi_ava.load_single_expression_json(path_to_expression_json, expression_name, path_to_img_dir)
-                        sound.play_expression(expression_name)
 
                 elif message.startswith("PBS"):
                     message_asked = False
