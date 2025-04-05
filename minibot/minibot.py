@@ -1,16 +1,10 @@
-from XRPLib.defaults import *
-import qwiic_rfid
-
 from bs_repr import BS_Repr
 
 from select import select
-from socket import socket, AF_INET, SOCK_STREAM, SOCK_DGRAM
+from socket import SO_BROADCAST, socket, AF_INET, SOCK_STREAM, SOCK_DGRAM
 from socket import SOL_SOCKET, SO_REUSEADDR
-import network
 import time
-import _thread
 import sys
-import micropython_argparse as argparse
 
 # NOTE: "flush=True" was removed from all print statements as a temporary
 # solution to how flush is not present in MicroPython. Additional configs
@@ -27,6 +21,7 @@ class Minibot:
     # 255.255.255.255 to indicate that we are broadcasting to all addresses
     # on port 5001.  The Basestation has been hard-coded to listen on port 5001
     # for incoming Minibot broadcasts
+    # BROADCAST_ADDRESS = ('255.255.255.255', 5001)
     BROADCAST_ADDRESS = ('255.255.255.255', 5001)
     MINIBOT_MESSAGE = "i_am_a_minibot"
     BASESTATION_MESSAGE = "i_am_the_basestation"
@@ -36,16 +31,17 @@ class Minibot:
     END_CMD_TOKEN = ">>>>"
 
     def __init__(self, port_number: int):
-        # Set up WiFi connection
-        sta_if = network.WLAN(network.STA_IF)
-        sta_if.active(True)
-        sta_if.connect("CornellCup-Web", "disneyworld!")
+        if not simulation:
+            # Set up WiFi connection
+            sta_if = network.WLAN(network.STA_IF)
+            sta_if.active(True)
+            sta_if.connect("CornellCup-Web", "disneyworld!")
 
-        # Wait for connection to be established
-        while not sta_if.isconnected():
-            pass
+            # Wait for connection to be established
+            while not sta_if.isconnected():
+                pass
 
-        print("Connected to WiFi")
+            print("Connected to WiFi")
 
         # Create a UDP socket.  We want to establish a TCP (reliable) connection
         # between the basestation and the
@@ -53,7 +49,7 @@ class Minibot:
         # can immediately rebind if the program is killed and then restarted
         self.broadcast_sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
         # can broadcast messages to all
-        # self.broadcast_sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
+        self.broadcast_sock.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
         self.broadcast_sock.setblocking(False)
 
         # listens for a TCP connection from the basestation
@@ -293,7 +289,10 @@ class Minibot:
            basestation  
         """
         print("Basestation Disconnected")
-        drivetrain.set_effort(0, 0)
+        if simulation:
+            pass
+        else:
+            drivetrain.set_effort(0, 0)
         self.close_sock(basestation_sock)
         self.bs_repr = None
 
@@ -347,14 +346,17 @@ class Minibot:
             self.sendKV(sock, key, "ACTIVE")
         elif key == "MODE":
             if value == "object_detection":
-                _thread.start_new_thread(ece.object_detection, ())
+                # TODO: put object detection call here
+                # _thread.start_new_thread(ece.object_detection, ())
+                pass
             elif value == "line_follow":
-                _thread.start_new_thread(ece.line_follow, ())
+                # TODO: put line follow sensor code here
+                # _thread.start_new_thread(ece.line_follow, ())
+                pass
         elif key == "PORTS":
-            ece.set_ports(value)
+            # TODO: evaluate if port configuration is needed with XRP
+            pass
         elif key == "WHEELS":
-            print("key WHEELS")
-    
             left_power = value.split(',')[0][1:]
             right_power = value.split(',')[1][:-1]
             
@@ -375,82 +377,63 @@ class Minibot:
                 # return early for invalid power value
                 return
 
-            drivetrain.set_effort(left_power, right_power)
+            if simulation:
+                print(f"Setting drivetrain to ({left_power}, {right_power})")
+            else:
+                drivetrain.set_effort(left_power, right_power)
         elif key == "SERVO":
             # value structure "angle"
+            # TODO: add code to move a specific servo (either one or two)
             servo_angle = int(value)
-            print(key, servo_angle)
-            servo_one.set_angle(servo_angle)
-            servo_two.set_angle(servo_angle)
-            
-            
-
+            if simulation:
+                print(f"setting servo_one and servo_two to {servo_angle}")
+            else:
+                servo_one.set_angle(servo_angle)
+                servo_two.set_angle(servo_angle)
         elif key == "BUTTON":
             # value structure "id{id}"
-            print("button pressed")
             button_id = value[2:]
-            result = board.is_button_pressed()
-            if button_id  == "1":
-                result = result.split(",")[0]
-                print(result)
-                self.sendKV(sock, key, f"id{button_id}_{result}")
-            elif button_id == "2":
-                result = result.split(",")[1]
-                print(result)
-                self.sendKV(sock, key, f"id{button_id}_{result}")
-        
+            if simulation:
+                self.sendKV(sock, key, f"id{button_id}_True")
+                print(f"Button {button_id} is pressed.")
+            else:
+                result = board.is_button_pressed()
+                if button_id  == "1":
+                    result = result.split(",")[0]
+                    self.sendKV(sock, key, f"id{button_id}_{result}")
+                elif button_id == "2":
+                    result = result.split(",")[1]
+                    self.sendKV(sock, key, f"id{button_id}_{result}")
+                else:
+                    self.sendKV(sock, key, "")
         elif key == "IR":
-            return_val = []
-            thread = _thread.start_new_thread(ece.read_ir, (return_val))
-
-            while _thread.is_alive(thread):
-                time.sleep(0.01)
-
-            # Note: this is for testing and will be removed for MicroPython version
-            # now = time.localtime()
-            # file = open("/home/pi/Documents/" +
-            #             now.strftime('%H:%M:%S.%f') + ".txt", "w")
-
-            # file.write("From Arduino\n")
-            # file.write(str(return_val))
-            # file.close()
-
-            if return_val[0] == 0:
-                self.sendKV(sock, key, "HIGH")
-            elif return_val[0] == 1:
-                self.sendKV(sock, key, "LOW")
+            if simulation:
+                print("Reading IR.")
+                # TODO: add dummy sendKV response
             else:
-                self.sendKV(sock, key, "")
+                # TODO: replace with IR sensor code for XRP
+                pass
         elif key == "IMU":
-            self.sendKV(sock, key, ", ".join(map(str,imu.get_acc_rates())))
-        elif key == "RFID":
-            rfid = qwiic_rfid.QwiicRFID(address = 0x7D)
-            if rfid.begin():
-                tag = rfid.get_tag()
-                print(tag)
-                self.sendKV(sock, key, tag)
+            if simulation:
+                print("Reading IMU [100, 140, 160]")
+                self.sendKV(sock, key, ", ".join(map(str,[100, 140, 160])))
             else:
-                self.sendKV(sock, key, "")
-        elif key == "TESTRFID":
-            def test_rfid(self, sock: socket, key: str, value: str):
-                start_time = time.time()
-                returned_tags = [0, 0, 0, 0]
-                ece.rfid(value, returned_tags)
-                latency = time.time() - start_time
-                return_str = "RFID Tag: " + ' '.join(str(e) for e in returned_tags) + " Latency: " + str(latency)
-                self.sendKV(sock, key, return_str)
-            
-            _thread.start_new_thread(test_rfid, (self, sock, key, value))
+                self.sendKV(sock, key, ", ".join(map(str,imu.get_acc_rates())))
+        elif key == "RFID":
+            if simulation:
+                # send a dummy rfid tag
+                print("Reading RFID 110631159936")
+                self.sendKV(sock, key, "110631159936")    
+            else:    
+                rfid = qwiic_rfid.QwiicRFID(address = 0x7D)
+                if rfid.begin():
+                    tag = rfid.get_tag()
+                    print(tag)
+                    self.sendKV(sock, key, tag)
+                else:
+                    self.sendKV(sock, key, "")            
         elif key == "SPR" or key == "PBS":
             print(key + "," + value)
-        elif key == "TEST":
-            start_time = time.time()
-            returned_msg = [0, 0, 0, 0]
-            ece.test(returned_msg)
-            time_elapsed = time.time() - start_time
-            return_str = "Return Message: " + ' '.join(str(e) for e in returned_msg) + " Latency: " + str(time_elapsed)
-            self.sendKV(sock, key, return_str)
-
             
     def sendKV(self, sock: socket, key: str, value: str):
         """ Sends a key-value pair to the specified socket. The key value
@@ -484,6 +467,11 @@ class Minibot:
         return -1
 
 if __name__ == "__main__":
+    try:
+        import argparse
+    except:
+        import micropython_argparse as argparse
+    
     parser = argparse.ArgumentParser(description='Arguments for Minibot')
     parser.add_argument(
         '-t', action="store_true", dest="is_simulation", default=False
@@ -491,23 +479,14 @@ if __name__ == "__main__":
     parser.add_argument(
         '-p', type=int, dest="port_number", default=10000
     )
-    parser.add_argument(
-        '-m', type=int, dest="comm_mode", default=2
-    )
-    args = parser.parse_args()
 
-    if args.is_simulation: # and args.comm_mode == 1:
-        import uart_scripts.ece_dummy_ops as ece
-        BOT_LIB_FUNCS = "ece_dummy_ops"
-    #elif args.is_simulation and args.comm_mode == 2:
-        # import uart_scripts.ece_dummy_ops2 as ece
-        # BOT_LIB_FUNCS = "ece_dummy_ops2"
-    elif args.comm_mode == 1:
-        import uart_scripts.pi_arduino2 as ece
-        BOT_LIB_FUNCS = "pi_arduino"
-    elif args.comm_mode == 2:
-        import uart_scripts.pi_arduino2 as ece
-        BOT_LIB_FUNCS = "pi_arduino2"
+    args = parser.parse_args()
+    simulation = args.is_simulation
+
+    if not simulation:
+        from XRPLib.defaults import *
+        import qwiic_rfid
+        import network
 
     minibot = Minibot(args.port_number)
     minibot.main()
