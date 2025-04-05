@@ -97,8 +97,8 @@ class BaseStation:
         self.wheel_directions_multiplier_map = {
             "forward": [1, 1],
             "backward": [-1, -1],
-            "left": [1, 0],
-            "right": [0, 1],
+            "left": [1, -1],
+            "right": [-1, 1],
             "stop": [0, 0]
         }
 
