@@ -382,28 +382,42 @@ class Minibot:
             else:
                 drivetrain.set_effort(left_power, right_power)
         elif key == "SERVO":
-            # value structure "angle"
+            # value structure "id_angle"
             # TODO: add code to move a specific servo (either one or two)
-            servo_angle = int(value)
-            if simulation:
-                print(f"setting servo_one and servo_two to {servo_angle}")
+            servo_args = value.split("_")
+            print(servo_args)
+            servo_id = servo_args[0]
+            servo_angle = int(servo_args[1])
+            
+            if servo_angle < 0 or servo_angle > 200:
+                print(f"{servo_angle} is an invalid angle.")
             else:
-                servo_one.set_angle(servo_angle)
-                servo_two.set_angle(servo_angle)
+                if servo_id == "1":
+                    if simulation:
+                        print(f"setting servo_one to {servo_angle}")
+                    else:
+                        servo_one.set_angle(servo_angle)
+                elif servo_id == "2":
+                    if simulation:
+                        print(f"setting servo_two to {servo_angle}")
+                    else:
+                        servo_two.set_angle(servo_angle)
+                else:
+                    print("not valid servo id")
         elif key == "BUTTON":
-            # value structure "id{id}"
-            button_id = value[2:]
+            # value structure "id"
+            button_id = int(value)
             if simulation:
-                self.sendKV(sock, key, f"id{button_id}_True")
+                self.sendKV(sock, key, f"{button_id}_True")
                 print(f"Button {button_id} is pressed.")
             else:
                 result = board.is_button_pressed()
                 if button_id  == "1":
                     result = result.split(",")[0]
-                    self.sendKV(sock, key, f"id{button_id}_{result}")
+                    self.sendKV(sock, key, f"{button_id}_{result}")
                 elif button_id == "2":
                     result = result.split(",")[1]
-                    self.sendKV(sock, key, f"id{button_id}_{result}")
+                    self.sendKV(sock, key, f"{button_id}_{result}")
                 else:
                     self.sendKV(sock, key, "")
         elif key == "IR":

@@ -23,6 +23,7 @@ export default class AddBot extends React.Component {
             availableBots: [], // bots connected to Base Station but not GUI
             botList: [],
             showPorts: false,
+            servoID: 1, 
             servoAngle: -1,
         };
 
@@ -263,6 +264,7 @@ export default class AddBot extends React.Component {
             },
             data: JSON.stringify({
                 bot_name: _this.props.selectedBotName,
+                servo_id: _this.state.servoID,
                 servo_angle: _this.state.servoAngle,
             })
         }).catch(function (error) {
@@ -325,8 +327,21 @@ export default class AddBot extends React.Component {
                         <div className="col horizontalDivCenter">
                             <p className="small-title"> Servo Control </p>
                             <div className="element-wrapper">
-                                <input type="text" onChange={(e) => _this.setState({ servoAngle : e.target.value })}></input>
-                            </div>
+                                <input
+                                    type="text"
+                                    placeholder="ID"
+                                    style={{ width: "50px" }}
+                                    onChange={(e) => _this.setState({ servoID: e.target.value })}
+                                />
+                                </div>
+                                <div className="element-wrapper">
+                                <input
+                                    type="text"
+                                    placeholder="Angle"
+                                    style={{ width: "200px" }}
+                                    onChange={(e) => _this.setState({ servoAngle: e.target.value })}
+                                />
+                                </div>
                             <button className="btn btn-secondary" onClick={() => this.setServoAngle()}>Confirm</button>
                         </div>
                     </div>

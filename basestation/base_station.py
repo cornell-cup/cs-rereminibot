@@ -325,7 +325,7 @@ class BaseStation:
             bot.script_exec_result_var.set_with_lock(True, "Stop current program in execution", timeout=1)
             res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(self.script_thread.ident), ctypes.py_object(SystemExit))
             print("interrupting the thread executing the script, result: " + str(res))
-            bot.sendKV("WHEELS", "stop")
+            bot.sendKV("WHEELS", "(0,0)")
 
     # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
     #     script = query_params['script_code']
@@ -602,11 +602,11 @@ class BaseStation:
         self.move_bot_wheels(bot_name, "STOP", "100")
         print("ending physical blockly thread")
     # ==================== Set Servo ============================
-    def set_servo_angle(self, bot_name:str, servo_angle: str):
+    def set_servo_angle(self, bot_name:str, servo_id: str, servo_angle: str):
         bot = self.get_bot(bot_name)
         if bot == None:
             return False
-        bot.sendKV("SERVO", servo_angle)
+        bot.sendKV("SERVO", f"{servo_id}_{servo_angle}")
         return True
     
     # ==================== NEW SPEECH RECOGNITION ============================

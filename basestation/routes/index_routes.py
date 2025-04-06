@@ -162,7 +162,8 @@ def set_servo_angle():
     data = request.get_json()
     bot_name = data["bot_name"]
     angle = data["servo_angle"]
-    res = base_station.set_servo_angle(bot_name, angle)
+    servo_id = data["servo_id"]
+    res = base_station.set_servo_angle(bot_name, servo_id, angle)
     if not res:
         error_json = {"error_msg": "./set_servo_angle leads to bot not found"}
         return json.dumps(error_json), status.HTTP_400_BAD_REQUEST
