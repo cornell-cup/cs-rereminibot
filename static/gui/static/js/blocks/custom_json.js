@@ -433,9 +433,9 @@ var miniblocks = {
       {
         type: "field_number",
         name: "angle",
-        value: 360,
+        value: 0,
         min: 0,
-        max: 360
+        max: 200
       }
     ],
     previousStatement: null,

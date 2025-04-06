@@ -349,10 +349,6 @@ class Minibot:
                 # TODO: put object detection call here
                 # _thread.start_new_thread(ece.object_detection, ())
                 pass
-            elif value == "line_follow":
-                # TODO: put line follow sensor code here
-                # _thread.start_new_thread(ece.line_follow, ())
-                pass
         elif key == "PORTS":
             # TODO: evaluate if port configuration is needed with XRP
             pass
@@ -381,6 +377,20 @@ class Minibot:
                 print(f"Setting drivetrain to ({left_power}, {right_power})")
             else:
                 drivetrain.set_effort(left_power, right_power)
+        elif key == "LINE_FOLLOW":
+            # value structure "left" or "right"
+            if value == "LEFT":
+                result = reflectance.get_left()
+            elif value == "RIGHT":
+                result = reflectance.get_left()
+            else:
+                print("Invalid value. Should be LEFT or RIGHT")
+                return
+            self.sendKV(sock, key, f"{value}_{result}")
+        elif key == "RANGE":
+            # value structure ""
+            result = rangefinder.distance()
+            self.sendKV(sock, key, result)
         elif key == "SERVO":
             # value structure "id_angle"
             # TODO: add code to move a specific servo (either one or two)
