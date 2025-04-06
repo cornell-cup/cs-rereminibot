@@ -161,53 +161,53 @@ Blockly.Python['move_power_time'] = function (block) {
 };
 
 
-Blockly.Blocks['move_distance'] = {
-  init: function () {
-    this.jsonInit(miniblocks.move_distance);
-  }
-};
+// Blockly.Blocks['move_distance'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.move_distance);
+//   }
+// };
 
-Blockly.Python['move_distance'] = function (block) {
-  var dropdown_direction = block.getFieldValue('direction');
-  var number_inches = block.getFieldValue('inches');
+// Blockly.Python['move_distance'] = function (block) {
+//   var dropdown_direction = block.getFieldValue('direction');
+//   var number_inches = block.getFieldValue('inches');
 
-  var fcn = {
-    fwd_dst: "move_forward_distance(",
-    bk_dst: "move_backward_distance("
-  }[dropdown_direction];
+//   var fcn = {
+//     fwd_dst: "move_forward_distance(",
+//     bk_dst: "move_backward_distance("
+//   }[dropdown_direction];
 
-  return BOT_HEADER + fcn + number_inches + ")\n";
-};
+//   return BOT_HEADER + fcn + number_inches + ")\n";
+// };
 
-Blockly.Blocks['move_to_position'] = {
-  init: function () {
-    this.jsonInit(miniblocks.move_to_position);
-  }
-};
+// Blockly.Blocks['move_to_position'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.move_to_position);
+//   }
+// };
 
-Blockly.Python['move_to_position'] = function (block) {
-  var x_inches = block.getFieldValue('x_inches');
-  var y_inches = block.getFieldValue('y_inches');
+// Blockly.Python['move_to_position'] = function (block) {
+//   var x_inches = block.getFieldValue('x_inches');
+//   var y_inches = block.getFieldValue('y_inches');
 
-  var fcn = "move_to("
+//   var fcn = "move_to("
 
-  return BOT_HEADER + fcn + x_inches + "," + y_inches + ")\n";
-};
+//   return BOT_HEADER + fcn + x_inches + "," + y_inches + ")\n";
+// };
 
-Blockly.Blocks['path_plan_to_position'] = {
-  init: function () {
-    this.jsonInit(miniblocks.path_plan_to_position);
-  }
-};
+// Blockly.Blocks['path_plan_to_position'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.path_plan_to_position);
+//   }
+// };
 
-Blockly.Python['path_plan_to_position'] = function (block) {
-  var x_inches = block.getFieldValue('x_inches');
-  var y_inches = block.getFieldValue('y_inches');
+// Blockly.Python['path_plan_to_position'] = function (block) {
+//   var x_inches = block.getFieldValue('x_inches');
+//   var y_inches = block.getFieldValue('y_inches');
 
-  var fcn = "path_plan_to("
+//   var fcn = "path_plan_to("
 
-  return BOT_HEADER + fcn + x_inches + "," + y_inches + ")\n";
-};
+//   return BOT_HEADER + fcn + x_inches + "," + y_inches + ")\n";
+// };
 
 
 
@@ -258,56 +258,56 @@ Blockly.Python['turn_power'] = function (block) {
   return BOT_HEADER + fcn + number_percent + ")" + FCN_ENDING;
 };
 
-Blockly.Blocks['turn_power_time'] = {
-  init: function () {
-    this.jsonInit(miniblocks.turn_power_time);
-  }
-};
+// Blockly.Blocks['turn_power_time'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.turn_power_time);
+//   }
+// };
 
-Blockly.Python['turn_power_time'] = function (block) {
-  var dropdown_direction = block.getFieldValue('direction');
-  var number_percent = block.getFieldValue('percent');
-  var number_seconds = block.getFieldValue('seconds');
+// Blockly.Python['turn_power_time'] = function (block) {
+//   var dropdown_direction = block.getFieldValue('direction');
+//   var number_percent = block.getFieldValue('percent');
+//   var number_seconds = block.getFieldValue('seconds');
 
-  var fcn = {
-    turn_clockwise: "turn_clockwise(",
-    turn_counter_clockwise: "turn_counter_clockwise("
-  }[dropdown_direction];
+//   var fcn = {
+//     turn_clockwise: "turn_clockwise(",
+//     turn_counter_clockwise: "turn_counter_clockwise("
+//   }[dropdown_direction];
 
-  return BOT_HEADER + fcn + number_percent + ")\n" + generateWait(number_seconds);
-};
+//   return BOT_HEADER + fcn + number_percent + ")\n" + generateWait(number_seconds);
+// };
 
-Blockly.Blocks['turn_angle'] = {
-  init: function () {
-    this.jsonInit(miniblocks.turn_angle);
-  }
-};
+// Blockly.Blocks['turn_angle'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.turn_angle);
+//   }
+// };
 
-Blockly.Python['turn_angle'] = function (block) {
-  var dropdown_direction = block.getFieldValue('direction');
-  var number_degrees = block.getFieldValue('degrees');
+// Blockly.Python['turn_angle'] = function (block) {
+//   var dropdown_direction = block.getFieldValue('direction');
+//   var number_degrees = block.getFieldValue('degrees');
 
-  var fcn = {
-    turn_clockwise_angle: "turn_clockwise_angle(",
-    turn_counter_clockwise_angle: "turn_counter_clockwise_angle("
-  }[dropdown_direction];
+//   var fcn = {
+//     turn_clockwise_angle: "turn_clockwise_angle(",
+//     turn_counter_clockwise_angle: "turn_counter_clockwise_angle("
+//   }[dropdown_direction];
 
-  return BOT_HEADER + fcn + number_degrees + ")\n";
-};
+//   return BOT_HEADER + fcn + number_degrees + ")\n";
+// };
 
-Blockly.Blocks['turn_to_angle'] = {
-  init: function () {
-    this.jsonInit(miniblocks.turn_to_angle);
-  }
-};
+// Blockly.Blocks['turn_to_angle'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.turn_to_angle);
+//   }
+// };
 
-Blockly.Python['turn_to_angle'] = function (block) {
-  var angle_degrees = block.getFieldValue('angle_degrees');
+// Blockly.Python['turn_to_angle'] = function (block) {
+//   var angle_degrees = block.getFieldValue('angle_degrees');
 
-  var fcn = "turn_to("
+//   var fcn = "turn_to("
 
-  return BOT_HEADER + fcn + angle_degrees + ")\n";
-};
+//   return BOT_HEADER + fcn + angle_degrees + ")\n";
+// };
 
 // ================ WAIT BLOCK ================ //
 
@@ -324,46 +324,46 @@ Blockly.Python['wait_seconds'] = function (block) {
 
 // ================ COMMUNICATION BLOCKS ================ //
 
-Blockly.Blocks['send_commands'] = {
-  init: function () {
-    this.jsonInit(miniblocks.send_commands);
-  }
-};
+// Blockly.Blocks['send_commands'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.send_commands);
+//   }
+// };
 
-Blockly.Python['send_commands'] = function (block) {
-  var dropdown_bot_name = block.getFieldValue('bot_name');
-  var statements_send_commands = Blockly.Python.statementToCode(block, 'send_commands');
-  // TODO: Assemble Python into code variable.
-  var code = 'pass #TODO Implement backend for send_commands';
-  return code + FCN_ENDING;
-};
+// Blockly.Python['send_commands'] = function (block) {
+//   var dropdown_bot_name = block.getFieldValue('bot_name');
+//   var statements_send_commands = Blockly.Python.statementToCode(block, 'send_commands');
+//   // TODO: Assemble Python into code variable.
+//   var code = 'pass #TODO Implement backend for send_commands';
+//   return code + FCN_ENDING;
+// };
 
-Blockly.Blocks['wait_for_commands'] = {
-  init: function () {
-    this.jsonInit(miniblocks.wait_for_commands);
-  }
-};
+// Blockly.Blocks['wait_for_commands'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.wait_for_commands);
+//   }
+// };
 
-Blockly.Python['wait_for_commands'] = function (block) {
-  var dropdown_bot_name = block.getFieldValue('bot_name');
-  // TODO: Assemble Python into code variable.
-  var code = 'pass #TODO Implement backend for wait_for_commands';
-  return code + FCN_ENDING;
-};
+// Blockly.Python['wait_for_commands'] = function (block) {
+//   var dropdown_bot_name = block.getFieldValue('bot_name');
+//   // TODO: Assemble Python into code variable.
+//   var code = 'pass #TODO Implement backend for wait_for_commands';
+//   return code + FCN_ENDING;
+// };
 
-Blockly.Blocks['while_wait_for_commands'] = {
-  init: function () {
-    this.jsonInit(miniblocks.while_wait_for_commands);
-  }
-};
+// Blockly.Blocks['while_wait_for_commands'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.while_wait_for_commands);
+//   }
+// };
 
-Blockly.Python['while_wait_for_commands'] = function (block) {
-  var dropdown_bot_name = block.getFieldValue('bot_name');
-  var statements_wait_commands = Blockly.Python.statementToCode(block, 'wait_commands');
-  // TODO: Assemble Python into code variable.
-  var code = 'pass #TODO Implement backend for while_wait_for_commands';
-  return code + FCN_ENDING;
-};
+// Blockly.Python['while_wait_for_commands'] = function (block) {
+//   var dropdown_bot_name = block.getFieldValue('bot_name');
+//   var statements_wait_commands = Blockly.Python.statementToCode(block, 'wait_commands');
+//   // TODO: Assemble Python into code variable.
+//   var code = 'pass #TODO Implement backend for while_wait_for_commands';
+//   return code + FCN_ENDING;
+// };
 
 // ================ SERVO BLOCKS ================ //
 
