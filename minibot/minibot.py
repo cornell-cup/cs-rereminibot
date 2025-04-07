@@ -498,7 +498,7 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description='Arguments for Minibot')
     parser.add_argument(
-        '-t', action="store_true", dest="is_simulation", default=False
+        '-t', type=bool, dest="is_simulation", default=False
     )
     parser.add_argument(
         '-p', type=int, dest="port_number", default=10000
