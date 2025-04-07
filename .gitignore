@@ -7,3 +7,4 @@ node_modules/
 .env
 minibot/__pycache__
 minibot/pi_scripts/__pycache__
+basestation/program.db

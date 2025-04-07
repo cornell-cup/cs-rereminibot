@@ -98,7 +98,6 @@ function BotControl({
                 />
               </h3>
             </div>
-
             {/* <UltimateGridview
               view_width={520}
               view_height={520}
