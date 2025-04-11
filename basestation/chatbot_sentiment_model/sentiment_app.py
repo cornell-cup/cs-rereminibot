@@ -18,7 +18,7 @@ def predict_labels(text):
         logits = model(**inputs).logits
         probs = torch.sigmoid(logits)[0].cpu().numpy() 
     predicted_label = int(np.argmax(probs))
-    return predicted_label if probs[predicted_label] > 0.09 else -1
+    return predicted_label if probs[predicted_label] > 0.07 else -1
 
 @app.route("/predict", methods = ["POST"])
 def predict():

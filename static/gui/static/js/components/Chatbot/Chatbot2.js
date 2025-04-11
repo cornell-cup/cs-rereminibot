@@ -100,20 +100,26 @@ function Chatbot2({
     let emotion;
 
     // temporary possible emotion labels
-    const excitement_labels = [0, 1, 5, 6, 8, 9, 14, 19, 21, 23]
-    const sad_labels = [10, 17, 25, 26]
-    const vomit_labels = [3, 4, 11, 12]
-    const chuckle_labels = [2, 16, 18, 22, 24]
-    const startle_labels = [7, 13, 15, 20, 27]
-    const stable_labels = [28]   
+    const excitement_labels = [4, 8, 13, 17,]
+    const sad_labels = [9, 10, 16, 24, 25]
+    const vomit_labels = [11, 12]
+    const chuckle_labels = [1, 19]
+    const surprise_labels = [6, 7, 26]
+    const stable_labels = [-1, 21, 22, 23, 27]  
+    const love_it_labels = [0, 5, 15, 18, 20] 
+    const big_no_labels = [2, 3, 14]
     
     if (stable_labels.includes(sentiment)){emotion = "idle_stable"}
     else if (excitement_labels.includes(sentiment)) {emotion = "excited"}
     else if (sad_labels.includes(sentiment)) {emotion = "sad"}
     else if (vomit_labels.includes(sentiment)) {emotion = "vomit"}
     else if (chuckle_labels.includes(sentiment)) {emotion = "chuckle"}
-    else if (startle_labels.includes(sentiment)) {emotion = "startled"}
+    else if (surprise_labels.includes(sentiment)) {emotion = "surprise"}
+    else if (love_it_labels.includes(sentiment)) {emotion = "love_it"}
+    else if (big_no_labels.includes(sentiment)) {emotion = "big_no"}
 
+    console.log(emotion);
+    
     const pythonCode = `self.current_expression = None\nbot.clear_expression()\nself.current_expression = '${emotion}'\nbot.set_expression('${emotion}')`;
     console.log("reached axios call")
     axios({
