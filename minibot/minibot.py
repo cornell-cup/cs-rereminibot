@@ -384,10 +384,7 @@ class Minibot:
                 print("Invalid value. Should be LEFT or RIGHT")
                 return
             elif simulation:
-                if random.random() > 0.5:
-                    result = "0"
-                else:
-                    result = "1"
+                result = random.uniform(0.0, 1.0)
                 print(f"{value} reflectance sensor {result} (random)")
             elif value == "LEFT":
                 result = reflectance.get_left()

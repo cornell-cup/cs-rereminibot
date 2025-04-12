@@ -91,7 +91,10 @@ class BaseStation:
             "get_accel_z": "bot_script.get_imu()[2]",
 
             "move_servo": "bot_script.sendKV(\"SERVO\", \"ARG\")",
-            "read_rangefinder": "bot_script.get_rangefinder()"
+            "read_rangefinder": "bot_script.get_rangefinder()",
+
+            "read_line_follow_left": "bot_script.get_line_follow(\"LEFT\")",
+            "read_line_follow_right": "bot_script.get_line_follow(\"RIGHT\")"
             # read_rangefinder: have to sleep because it will get the older distance
             #TODO
         }
@@ -610,6 +613,8 @@ class BaseStation:
         self.py_commands = queue.Queue()
         self.move_bot_wheels(bot_name, "STOP", "100")
         print("ending physical blockly thread")
+    
+    
     # ==================== Set Servo ============================
     def set_servo_angle(self, bot_name:str, servo_id: str, servo_angle: str):
         bot = self.get_bot(bot_name)

@@ -395,6 +395,32 @@ Blockly.Python['read_rangefinder'] = function (block) {
   return BOT_HEADER + funcName + FCN_ENDING;
 }
 
+// ================ Get Line Follow ================ //
+
+Blockly.Blocks['read_line_follow_left'] = {
+  init: function () {
+    this.jsonInit(miniblocks.read_line_follow_left);
+  }
+}
+
+Blockly.Python['read_line_follow_left'] = function (block) {
+  var funcName = "read_line_follow_left()";
+
+  return BOT_HEADER + funcName + FCN_ENDING;
+}
+
+Blockly.Blocks['read_line_follow_right'] = {
+  init: function () {
+    this.jsonInit(miniblocks.read_line_follow_right);
+  }
+}
+
+Blockly.Python['read_line_follow_right'] = function (block) {
+  var funcName = "read_line_follow_right()";
+
+  return BOT_HEADER + funcName + FCN_ENDING;
+}
+
 // ================ COLOR SENSING BLOCKS ================ //
 
 Blockly.Blocks['sees_color'] = {

@@ -538,6 +538,25 @@ var miniblocks = {
     tooltip: "",
     helpUrl: ""
   },
+
+  read_line_follow_left: {
+    type: "read_line_follow_left",
+    message0: "get line follow left",
+    output: "field_number",
+    colour: 180,
+    tooltip: "",
+    helpUrl: ""
+  },
+
+  read_line_follow_right: {
+    type: "read_line_follow_right",
+    message0: "get line follow right",
+    output: "field_number",
+    colour: 180,
+    tooltip: "",
+    helpUrl: ""
+  },
+
   sees_color: {
     type: "sees_color",
     message0: "color sensor %1 sees %2",

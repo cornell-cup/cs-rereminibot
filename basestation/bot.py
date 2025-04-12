@@ -39,6 +39,8 @@ class Bot:
         self.rfid_tags = ""
         self.accelerometer_values = [None, None, None]
         self.rangefinder_distance = -1
+        self.line_follow_left_value = 0
+        self.line_follow_right_value = 0
 
     def try_receive_data(self, peek: bool = False) -> Optional[str]:
         """ Tries to receive data from the Minibot. 
@@ -129,6 +131,15 @@ class Bot:
                     self.rangefinder_distance = float(value)
                 except:
                     self.rangefinder_distance = -1
+            elif key == "LINE_FOLLOW":
+                v = value.split('_')[0]
+                if v == "LEFT":
+                    self.line_follow_left_value = value.split('_')[1]
+                elif v == "RIGHT":
+                    self.line_follow_right_value = value.split('_')[1]
+                else:
+                    print(f"INVALID value {v}")
+        
             data_str = data_str[end + token_len:]
 
     def get_imu(self):
@@ -144,6 +155,18 @@ class Bot:
         self.readKV()
         return self.rangefinder_distance 
 
+        # ==================== Get Line Follow ============================
+    def get_line_follow(self, line_value):
+        self.sendKV("LINE_FOLLOW", line_value)
+        time.sleep(0.5) # TODO needs to be changed so that it isn't a wait and instead waits until the value is available
+        self.readKV()
+        if line_value == "LEFT":
+            return self.line_follow_left_value
+        elif line_value == "RIGHT":
+            return self.line_follow_right_value
+        else:
+            return 0 ##TODO or Raise Error?
+    
     def is_connected(self) -> bool:
         """ Checks whether the Minibot has sent a heartbeat message recently 
         """
