@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from transformers import BertTokenizer, BertForSequenceClassification
-import os
 import torch
 import numpy as np
 

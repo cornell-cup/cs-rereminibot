@@ -3,7 +3,6 @@ import numpy as np
 import torch
 from sklearn.model_selection import train_test_split
 from transformers import BertTokenizer, BertForSequenceClassification, TrainingArguments, Trainer
-from transformers import TextClassificationPipeline
 
 df = pd.read_csv("training_data.tsv", sep="\t", header=None, names=["Statement","Category", "id"])
 df.drop(columns=["id"], inplace=True)

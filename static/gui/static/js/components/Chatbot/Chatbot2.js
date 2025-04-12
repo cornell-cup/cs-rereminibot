@@ -2,7 +2,6 @@ import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
-import Sentiment from 'sentiment';
 import {
   commands,
   X_BTN, MIC_BTN, MIC_BTNON,
@@ -99,7 +98,6 @@ function Chatbot2({
     console.log("assigned label:", sentiment);
     let emotion;
 
-    // temporary possible emotion labels
     const excitement_labels = [4, 8, 13, 17, 20]
     const sad_labels = [9, 10, 16, 24, 25]
     const vomit_labels = [11, 12]
@@ -121,7 +119,30 @@ function Chatbot2({
     console.log(emotion);
     
     const pythonCode = `self.current_expression = None\nbot.clear_expression()\nself.current_expression = '${emotion}'\nbot.set_expression('${emotion}')`;
-    console.log("reached axios call")
+
+    //stop current script (if any) to avoid conflict 
+    if (selectedBotName) {
+      axios({
+        method: 'POST',
+        url: '/stop-script',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({ 
+          bot_name: selectedBotName 
+        })
+      })
+      .then((response) => {
+        console.log("Stopped script:", response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to stop script:", error.message);
+      });
+    } else {
+      console.log("selectedBotName empty");
+    }
+    
+    //display emotion
     axios({
         method: 'POST',
         url: '/script',
