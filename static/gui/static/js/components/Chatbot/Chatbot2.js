@@ -100,13 +100,13 @@ function Chatbot2({
     let emotion;
 
     // temporary possible emotion labels
-    const excitement_labels = [4, 8, 13, 17,]
+    const excitement_labels = [4, 8, 13, 17, 20]
     const sad_labels = [9, 10, 16, 24, 25]
     const vomit_labels = [11, 12]
     const chuckle_labels = [1, 19]
     const surprise_labels = [6, 7, 26]
     const stable_labels = [-1, 21, 22, 23, 27]  
-    const love_it_labels = [0, 5, 15, 18, 20] 
+    const love_it_labels = [0, 5, 15, 18] 
     const big_no_labels = [2, 3, 14]
     
     if (stable_labels.includes(sentiment)){emotion = "idle_stable"}
