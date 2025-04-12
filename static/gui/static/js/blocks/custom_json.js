@@ -428,8 +428,13 @@ var miniblocks = {
   },
   move_servo: {
     type: "move_servo",
-    message0: "move servo to %1 angle",
+    message0: "move servo %1 to %2 angle",
     args0: [
+      {
+        type: "field_dropdown",
+        name: "id",
+        options: [["1", "1"], ["2", "2"]]
+      },
       {
         type: "field_number",
         name: "angle",
@@ -525,24 +530,14 @@ var miniblocks = {
     tooltip: "",
     helpUrl: ""
   },
-
-  read_ultrasonic: {
-    type: "read_ultrasonic",
-    message0: "ultrasonic sensor detects object within %1",
-    args0: [
-      {
-        type: "field_number",
-        name: "input",
-        value: 1,
-        min: 1
-      }
-    ],
-    output: "Boolean",
+  read_rangefinder: {
+    type: "read_rangefinder",
+    message0: "get rangefinder distance",
+    output: "field_number",
     colour: 180,
     tooltip: "",
     helpUrl: ""
   },
-
   sees_color: {
     type: "sees_color",
     message0: "color sensor %1 sees %2",
@@ -574,7 +569,6 @@ var miniblocks = {
     tooltip: "",
     helpUrl: ""
   },
-
   create_emotion: {
     type: "create_emotion",
     message0: "Create Emotion named %1 %2\n which does %3",
@@ -763,31 +757,25 @@ var miniblocks = {
   get_accel_x: {
     type: "get_accel_x",
     message0: "Get accelerometer values in x direction",
-    previousStatement: null,
-    nextStatement: null,
     colour: 60,
     tooltip: "Get accelerometer values in x direction",
     helpUrl: "",
-    output: "Number",
+    output: "field_number",
   },
   get_accel_y: {
     type: "get_accel_y",
     message0: "Get accelerometer values in y direction",
-    previousStatement: null,
-    nextStatement: null,
     colour: 60,
     tooltip: "Get accelerometer values in y direction",
     helpUrl: "",
-    output: "Number",
+    output: "field_number",
   }, 
   get_accel_z: {
     type: "get_accel_z",
     message0: "Get accelerometer values in z direction",
-    previousStatement: null,
-    nextStatement: null,
     colour: 60,
     tooltip: "Get accelerometer values in z direction",
     helpUrl: "",
-    output: "Number",
-  }
+    output: "field_number",
+  },
 };

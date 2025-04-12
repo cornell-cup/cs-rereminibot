@@ -375,26 +375,24 @@ Blockly.Blocks['move_servo'] = {
 
 Blockly.Python['move_servo'] = function (block) {
   var angle = block.getFieldValue('angle');
-  var funcCall = "move_servo(" + angle + ")";
+  var id = block.getFieldValue('id');
+  var funcCall = "move_servo(" + id + ", " + angle + ")";
 
   return BOT_HEADER + funcCall + FCN_ENDING;
 }
 
 // ================ ULTRASONIC BLOCKS ================ //
 
-Blockly.Blocks['read_ultrasonic'] = {
+Blockly.Blocks['read_rangefinder'] = {
   init: function () {
-    this.jsonInit(miniblocks.read_ultrasonic)
+    this.jsonInit(miniblocks.read_rangefinder);
   }
 }
 
-Blockly.Python['read_ultrasonic'] = function (block) {
-  var lowerBound = "0 < ";
-  var upperLimit = block.getFieldValue('input');
-  var upperBound = " <= " + upperLimit;
-  var funcName = "read_ultrasonic()";
+Blockly.Python['read_rangefinder'] = function (block) {
+  var funcName = "read_rangefinder()";
 
-  return [lowerBound + BOT_HEADER + funcName + upperBound, Blockly.Python.ORDER_NONE];
+  return BOT_HEADER + funcName + FCN_ENDING;
 }
 
 // ================ COLOR SENSING BLOCKS ================ //

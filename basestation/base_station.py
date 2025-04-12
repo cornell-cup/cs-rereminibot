@@ -9,7 +9,6 @@ import threading
 import ctypes
 import json
 import queue
-import random
 import copy
 from time import sleep
 from typing import Tuple, Optional
@@ -26,6 +25,7 @@ import basestation.piVision.pb_utils as pb_utils
 
 from basestation.emotion_bs import *
 
+import random
 from random import choice, randint
 from string import digits, ascii_lowercase, ascii_uppercase
 from typing import Any, Dict, List, Tuple, Optional
@@ -77,8 +77,8 @@ class BaseStation:
         self.blockly_function_map = {
             "move_forward": "bot_script.sendKV(\"WHEELS\",\"(pow,pow)\")",
             "move_backward": "bot_script.sendKV(\"WHEELS\",\"(-pow,-pow)\")",
-            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"(pow,0)\")",
-            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"(0,pow)\")",
+            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"(pow,-pow)\")",
+            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"(-pow,pow)\")",
             "wait": "time.sleep",        
             "stop": "bot_script.sendKV(\"WHEELS\",\"(0,0)\")",
 
@@ -86,11 +86,13 @@ class BaseStation:
             "clear_expression": "bot_script.sendKV(\"SPR\",ARG)",
             "set_expression_playback_speed": "bot_script.sendKV(\"PBS\",ARG)",
 
-            "start_accelerometer_streaming": "bot_script.sendKV(\"ACCEL\", 0)\nx = bot_script.readKV()\nprint(x)",
-            "get_accelerometer_values": "bot_script.sendKV(\"IMU\", 0);bot_script.readKV();print(bot_script.accelerometer_values)",
             "get_accel_x": "bot_script.get_imu()[0]",
             "get_accel_y": "bot_script.get_imu()[1]",
             "get_accel_z": "bot_script.get_imu()[2]",
+
+            "move_servo": "bot_script.sendKV(\"SERVO\", \"ARG\")",
+            "read_rangefinder": "bot_script.get_rangefinder()"
+            # read_rangefinder: have to sleep because it will get the older distance
             #TODO
         }
 
@@ -396,7 +398,14 @@ class BaseStation:
                         func = func.replace("pow", str(power))   
                     else:
                         func = func.replace("-pow", "0").replace("pow", "0")
-                
+
+                if func.startswith("bot_script.sendKV(\"SERVO\","):
+                    try:
+                        arguments = [int(x) for x in argument.replace(" ", "").split(",")]
+                    except:
+                        arguments = [0, 0]
+                    
+                    func = func.replace("ARG", f"{arguments[0]}_{arguments[1]}")
 
                 whitespace = match.group(1)
                 if not whitespace:
@@ -604,11 +613,23 @@ class BaseStation:
     # ==================== Set Servo ============================
     def set_servo_angle(self, bot_name:str, servo_id: str, servo_angle: str):
         bot = self.get_bot(bot_name)
-        if bot == None:
+        if bot is None:
             return False
+        servo_id = str(servo_id)
+        servo_angle = str(servo_angle)
         bot.sendKV("SERVO", f"{servo_id}_{servo_angle}")
         return True
     
+    # ==================== RANGEFINDER/ULTRASONIC ============================
+    def get_rangefinder(self, bot_name:str):
+        bot = self.get_bot(bot_name)
+        if bot is None:
+            return False
+        bot.sendKV("RANGE", "")
+        bot.readKV()
+        print(f"Rangefinder distance: {bot.rangefinder_distance}")
+        return True
+
     # ==================== NEW SPEECH RECOGNITION ============================
     def send_command(self, bot_name, command):
         if command in self.commands:

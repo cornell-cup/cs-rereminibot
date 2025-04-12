@@ -5,6 +5,7 @@ from socket import SO_BROADCAST, socket, AF_INET, SOCK_STREAM, SOCK_DGRAM
 from socket import SOL_SOCKET, SO_REUSEADDR
 import time
 import sys
+import random
 
 # NOTE: "flush=True" was removed from all print statements as a temporary
 # solution to how flush is not present in MicroPython. Additional configs
@@ -379,18 +380,29 @@ class Minibot:
                 drivetrain.set_effort(left_power, right_power)
         elif key == "LINE_FOLLOW":
             # value structure "left" or "right"
-            if value == "LEFT":
-                result = reflectance.get_left()
-            elif value == "RIGHT":
-                result = reflectance.get_left()
-            else:
+            if value != "LEFT" and value != "RIGHT":
                 print("Invalid value. Should be LEFT or RIGHT")
                 return
+            elif simulation:
+                if random.random() > 0.5:
+                    result = "0"
+                else:
+                    result = "1"
+                print(f"{value} reflectance sensor {result} (random)")
+            elif value == "LEFT":
+                result = reflectance.get_left()
+            elif value == "RIGHT":
+                result = reflectance.get_right()
+                
             self.sendKV(sock, key, f"{value}_{result}")
         elif key == "RANGE":
             # value structure ""
-            result = rangefinder.distance()
-            self.sendKV(sock, key, result)
+            if simulation:
+                result = random.random() * 10
+                print(f"Rangefinder {result} (random float from 0 to 10)")
+            else:
+                result = rangefinder.distance()
+            self.sendKV(sock, key, str(result))
         elif key == "SERVO":
             # value structure "id_angle"
             # TODO: add code to move a specific servo (either one or two)
