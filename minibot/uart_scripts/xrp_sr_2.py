@@ -26,11 +26,11 @@ sound_library = {
 }
 
 sound_mappings = {
-    "big_no": ['D','O','L','D','O','L'],
-    "big_yes": ['A', 'I','C','A','I','C'],
-    "chuckle": ['G','G','G','G','G','G'],
+    "big_no": ['D','O','L','D','O','L'], #isn't working 
+    "big_yes": ['A', 'I','C','A','I','C'], #isn't working 
+    "chuckle": ['G','G','G','G','G','G','G', 'G'],
     "surprise": ['N','M','N', 'H'],
-    "no": ['O','O','O', 'D', 'O','O','O','D'],
+    "no": ['O','O','B','O', 'B', 'O','O','B','O','B'], #isn't working 
     "ready_to_race": ['F','I','F','I','F','I','F'],
     "sad": ['L','L','B','L','L','B', 'B','B'],
     "idle_stable": ['E','E','E','E'],
