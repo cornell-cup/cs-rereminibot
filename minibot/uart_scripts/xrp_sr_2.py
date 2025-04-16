@@ -1,11 +1,12 @@
 import time
 import RPi.GPIO as GPIO
+import threading
 
-# Set up GPIO
+# GPIO setup lock to prevent conflicts
+gpio_lock = threading.Lock()
+
+# Set up GPIO 
 BUZZER_PIN = 20
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(BUZZER_PIN, GPIO.OUT)
-pwm = GPIO.PWM(BUZZER_PIN, 1000)  # Initialize PWM on pin 20 with 1000 Hz
 
 # Mapping letters to sounds
 sound_library = {
@@ -42,7 +43,20 @@ sound_mappings = {
     "blink_awake": ['E','M','E','M']
 }
 
-def generate_sound(frequency, duration, end_freq=None):
+def setup_gpio():
+    """Initialize GPIO with thread safety"""
+    with gpio_lock:
+        # Check if already setup - prevents errors in threading scenarios
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(BUZZER_PIN, GPIO.OUT, initial=GPIO.LOW)
+    return GPIO.PWM(BUZZER_PIN, 1000)  # Initialize PWM on pin 20 with 1000 Hz
+
+def cleanup_gpio():
+    """Clean up GPIO pins after use with thread safety"""
+    with gpio_lock:
+        GPIO.cleanup(BUZZER_PIN)
+
+def generate_sound(pwm, frequency, duration, end_freq=None):
     """Generate a beep sound with optional pitch sliding using a piezo buzzer."""
     pwm.start(50)  # Start PWM with 50% duty cycle
     
@@ -64,18 +78,23 @@ def generate_sound(frequency, duration, end_freq=None):
 
 def play_beeps(beep_sequence):
     """Generate and play beeps dynamically, mimicking R2-D2-style expressive speech."""
-    for beep in beep_sequence:
-        if beep is None:
-            time.sleep(0.03)  # Reduced pause for more natural flow
-        elif len(beep) == 2:
-            generate_sound(beep[0], beep[1])
-        elif len(beep) == 3:
-            generate_sound(beep[0], beep[1], beep[2])
-        elif len(beep) > 3:
-            for i in range(0, len(beep), 2):
-                if i+1 < len(beep):  # Make sure we don't go out of bounds
-                    generate_sound(beep[i], beep[i+1])
-                    time.sleep(0.01)
+    pwm = setup_gpio()
+    
+    try:
+        for beep in beep_sequence:
+            if beep is None:
+                time.sleep(0.03)  # Reduced pause for more natural flow
+            elif len(beep) == 2:
+                generate_sound(pwm, beep[0], beep[1])
+            elif len(beep) == 3:
+                generate_sound(pwm, beep[0], beep[1], beep[2])
+            elif len(beep) > 3:
+                for i in range(0, len(beep), 2):
+                    if i+1 < len(beep):  # Make sure we don't go out of bounds
+                        generate_sound(pwm, beep[i], beep[i+1])
+                        time.sleep(0.01)
+    finally:
+        cleanup_gpio()
 
 def play_expression(expression_name):
     """Play sounds corresponding to a specific expression name."""
@@ -87,9 +106,7 @@ def play_expression(expression_name):
         
         print(f"Playing '{expression_name}' expression...")
         play_beeps(beep_sequence)
-        GPIO.cleanup()
         return True
     else:
         print(f"Expression '{expression_name}' not found in sound mappings.")
-        GPIO.cleanup()
         return False

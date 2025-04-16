@@ -10,7 +10,7 @@ import serial
 import os
 import psutil
 from PIL import Image
-
+import threading
 import traceback
 
 MIN_ANIMATION_DURATION = 4
@@ -26,6 +26,13 @@ def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_coun
         return
 
     avatar.add_or_update_expression(expr_name, sheet)
+
+def play_sound_thread(expression_name):
+    """Function to run in a separate thread for sound playback"""
+    try:
+        sound.play_expression(expression_name)
+    except Exception as e:
+        print(f"Sound playback error: {e}")
 
 #@profile
 def run_pi_zero(demo_expression : str = "excited"):
@@ -75,6 +82,9 @@ def run_pi_zero(demo_expression : str = "excited"):
     message_asked = False
     running = True
     no = False
+    # Keep track of active sound threads
+    sound_thread = None
+    
     while running:
         print(f"Device exists {os.path.exists('/dev/ttyACM0')}")
         try:
@@ -96,10 +106,21 @@ def run_pi_zero(demo_expression : str = "excited"):
 
                     if expression_name == "":
                         pi_ava.clear_current_expression()
+                        # No need to start sound thread for empty expression
                     else:
                         pi_ava.clear_current_expression()
                         pi_ava.load_single_expression_json(path_to_expression_json, expression_name, path_to_img_dir)
-                        sound.play_expression(expression_name)
+                        
+                        # Start sound playback in a separate thread
+                        if sound_thread and sound_thread.is_alive():
+                            # Wait for the previous sound thread to finish if it's still running
+                            # This prevents overlapping sounds
+                            sound_thread.join(0.1)  # Wait up to 100ms for previous thread to finish
+                            
+                        # Create and start a new thread for sound playback
+                        sound_thread = threading.Thread(target=play_sound_thread, args=(expression_name,))
+                        sound_thread.daemon = True  # Make thread daemon so it exits when main program exits
+                        sound_thread.start()
 
                 elif message.startswith("PBS"):
                     message_asked = False
@@ -124,7 +145,6 @@ def run_pi_zero(demo_expression : str = "excited"):
                 # Send OK message back
                 # ser.write(b'OK')
             
-
             # Update avatar
             pi_ava.update()
             frame = pi_ava.get_current_display()
