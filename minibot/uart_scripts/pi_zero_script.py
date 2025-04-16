@@ -17,8 +17,6 @@ MIN_ANIMATION_DURATION = 4
 
 # Flag to interrupt current sound playback
 sound_interrupt_flag = threading.Event()
-# Flag to indicate when the animation is complete
-animation_complete_flag = threading.Event()
 
 def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_count : int, frame_width : int, frame_height : int):
     sheet = Spritesheet(src=sheet_src,
@@ -32,49 +30,17 @@ def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_coun
 
     avatar.add_or_update_expression(expr_name, sheet)
 
-def play_sound_thread(expression_name, animation_duration=None):
-    """Function to run in a separate thread for sound playback that plays for the duration of animation"""
+def play_sound_thread(expression_name):
+    """Function to run in a separate thread for sound playback"""
     try:
         # Reset interrupt flag at beginning of new sound
         sound_interrupt_flag.clear()
-        animation_complete_flag.clear()
         
-        print(f"Starting sound for '{expression_name}' with animation duration ~{animation_duration}s")
-        
-        # Keep playing the sound until the animation completes or an interrupt occurs
-        start_time = time.time()
-        while not sound_interrupt_flag.is_set() and not animation_complete_flag.is_set():
-            # Play the sound once
-            sound.play_expression(expression_name, sound_interrupt_flag)
-            
-            # Check if we've played for the expected animation duration
-            if animation_duration and (time.time() - start_time) >= animation_duration:
-                break
-                
-            # Short pause between repetitions to avoid abrupt transitions
-            if not sound_interrupt_flag.is_set() and not animation_complete_flag.is_set():
-                time.sleep(0.1)
-                
-        print(f"Sound playback for '{expression_name}' completed or interrupted")
-            
+        # Pass the interrupt flag to the sound module
+        sound.play_expression(expression_name)
     except Exception as e:
         print(f"Sound playback error: {e}")
         traceback.print_exc()  # Print full error for debugging
-
-def get_animation_duration(avatar, expression_name):
-    """Estimate the duration of an animation based on frame count and playback speed"""
-    if expression_name not in avatar._expressions:
-        return None
-    
-    # Get the frame count and playback speed
-    frame_count = avatar._expressions[expression_name]._frame_count
-    playback_speed = avatar._current_playback_speed
-    
-    # Calculate approximate duration in seconds
-    # The playback_speed is in frames per second
-    if playback_speed > 0:
-        return frame_count / playback_speed
-    return None
 
 #@profile
 def run_pi_zero(demo_expression : str = "excited"):
@@ -110,9 +76,11 @@ def run_pi_zero(demo_expression : str = "excited"):
     print("Playback speed is currently at " + str(pi_ava._current_playback_speed))
     print("")
 
-    # Serial setup
+    # pi_ava.set_current_expression(demo_expression)
+
+    # timeout=None means there is no timeout between messages
+    # xonoff is software control for 
     serial_connected = 0
-    ser = None
     print(os.path.exists('/dev/ttyACM0'))
     if os.path.exists('/dev/ttyACM0'):
         ser = serial.Serial('/dev/ttyACM0', 115200)
@@ -122,140 +90,76 @@ def run_pi_zero(demo_expression : str = "excited"):
     message_asked = False
     running = True
     no = False
-    
-    # Animation tracking variables
+    # Keep track of active sound threads
     sound_thread = None
-    current_expression = None
-    animation_in_progress = False
-    frame_count = 0
-    last_frame_time = time.time()
-    animation_start_time = None
-    
-    # Expression queue to ensure we complete one before starting another
-    expression_queue = []
     
     while running:
+        print(f"Device exists {os.path.exists('/dev/ttyACM0')}")
         try:
-            # Handle UART Signals if serial port exists
-            if ser is not None and os.path.exists('/dev/ttyACM0'):
-                try:
-                    if ser.inWaiting() > 0:
-                        message = ser.readline().decode()
-                        if len(message) > 0:
-                            print(message)
-                        
-                        # Handle SPR (expression) messages
-                        if message.startswith("SPR"):
-                            print("reached here1 ")
-                            message_asked = False
-                            expression_name = message.split(",")[1].replace("\n", "").strip()
-                            print("reached here2")
-                            print("Expression Name: \'" + expression_name + "\'")
-                            
-                            # Add expression to queue instead of processing immediately
-                            expression_queue.append(expression_name)
-                            
-                        elif message.startswith("PBS"):
-                            message_asked = False
-                            playback_speed = message.split(",")[1]
-                            pi_ava.set_playback_speed(float(playback_speed))
+            # Handle UART Signals
+            print(ser)
+            print(ser.inWaiting())
+            # Run UART receive, nonblocking 
+            if ser is not None:# and ser.inWaiting() > 0:
+                message = ser.readline().decode()
+                if len(message) > 0:
+                    print(message)
+                if message.startswith("SPR"): # some key that represents an animation LCD[emotion]
+                    print("reached here1 ")
+                    message_asked = False
+                    # Run LCD methods
+                    expression_name = message.split(",")[1].replace("\n", "").strip()
+                    print("reached here2")
+                    print("Expression Name: \'" + expression_name + "\'")
 
-                        elif message.startswith("ASK"):
-                            message_asked = True
-                            white = (255, 255, 255)
-                            black = (0, 0, 0)
-                            expression_ask = message.split(",")[1]
-                            font = pygame.font.Font(None, 60)
-                            screen.fill(black)
-                            ask_phrase = "Play " + expression_ask[:-2] + "?"
-                            text = font.render(ask_phrase, True, white)
-                            textRect = text.get_rect()
-                            textRect.center = (infoObject.current_w//2, infoObject.current_h//2)
-                            screen.blit(text, textRect)
-                            print("ask")
-                except Exception as e:
-                    print(f"Serial read error: {e}")
-            
-            # Process next expression from queue if we're not currently animating
-            if not animation_in_progress and expression_queue:
-                # Signal any running sound thread to stop
-                sound_interrupt_flag.set()
-                animation_complete_flag.set()
-                
-                # If there's a thread running, wait briefly for it to terminate
-                if sound_thread and sound_thread.is_alive():
-                    sound_thread.join(0.1)  # Wait briefly, but don't block indefinitely
-                
-                # Get next expression
-                expression_name = expression_queue.pop(0)
-                
-                if expression_name == "":
-                    pi_ava.clear_current_expression()
-                    current_expression = None
-                else:
-                    pi_ava.clear_current_expression()
-                    pi_ava.load_single_expression_json(path_to_expression_json, expression_name, path_to_img_dir)
-                    current_expression = expression_name
-                    frame_count = 0  # Reset frame counter for new expression
-                    animation_in_progress = True
-                    animation_start_time = time.time()
-                    
-                    # Get animation duration for synchronized sound playback
-                    animation_duration = get_animation_duration(pi_ava, expression_name)
-                    if animation_duration:
-                        # Ensure minimum duration for very short animations
-                        animation_duration = max(animation_duration, MIN_ANIMATION_DURATION)
-                        print(f"Animation duration: {animation_duration}s")
-                    
-                    # Reset flags
-                    sound_interrupt_flag.clear()
-                    animation_complete_flag.clear()
-                    
-                    # Create and start a new thread for sound playback
-                    sound_thread = threading.Thread(
-                        target=play_sound_thread, 
-                        args=(expression_name, animation_duration)
-                    )
-                    sound_thread.daemon = True  # Make thread daemon so it exits when main program exits
-                    sound_thread.start()
-                    
-                    print(f"Started animation and sound for {expression_name}")
+                    if expression_name == "":
+                        pi_ava.clear_current_expression()
+                        # No need to start sound thread for empty expression
+                    else:
+                        pi_ava.clear_current_expression()
+                        pi_ava.load_single_expression_json(path_to_expression_json, expression_name, path_to_img_dir)
+                        
+                        # Signal any running sound thread to stop
+                        sound_interrupt_flag.set()
+                        
+                        # Create and start a new thread for sound playback without waiting
+                        sound_thread = threading.Thread(target=play_sound_thread, args=(expression_name,))
+                        sound_thread.daemon = True  # Make thread daemon so it exits when main program exits
+                        sound_thread.start()
+                        
+                        # Print debug info
+                        print(f"Started sound thread for {expression_name}")
+
+                elif message.startswith("PBS"):
+                    message_asked = False
+                    playback_speed = message.split(",")[1]
+
+                    pi_ava.set_playback_speed(float(playback_speed))
+
+                elif message.startswith("ASK"):
+                    message_asked = True
+                    white = (255, 255, 255)
+                    black = (0, 0, 0)
+                    expression_ask = message.split(",")[1]
+                    font = pygame.font.Font(None, 60)
+                    screen.fill(black)
+                    ask_phrase = "Play " + expression_ask[:-2] + "?"
+                    text = font.render(ask_phrase, True, white)
+                    textRect = text.get_rect()
+                    textRect.center = (infoObject.current_w//2, infoObject.current_h//2)
+                    screen.blit(text, textRect)
+                    print("ask")
+
+                # Send OK message back
+                # ser.write(b'OK')
             
             # Update avatar
             pi_ava.update()
             frame = pi_ava.get_current_display()
-            
-            # Check if we have an ongoing animation to track
-            if animation_in_progress and current_expression:
-                now = time.time()
-                
-                # Check if animation has been running long enough to complete
-                if frame is not None:
-                    frame_count += 1
-                    last_frame_time = now
-                    
-                    # Get the total frames in the animation
-                    total_frames = pi_ava._expressions.get(current_expression)._frame_count if current_expression in pi_ava._expressions else 0
-                    
-                    # Determine if we've gone through at least one full cycle
-                    # We check either if we've seen enough frames or if enough time has passed
-                    animation_elapsed_time = now - animation_start_time
-                    animation_duration = get_animation_duration(pi_ava, current_expression)
-                    
-                    # Check if we've completed at least one full cycle
-                    if (frame_count >= total_frames or 
-                        (animation_duration and animation_elapsed_time >= animation_duration * 1.5)):
-                        
-                        print(f"Animation for {current_expression} completed after {frame_count} frames")
-                        print(f"Animation took {animation_elapsed_time:.2f} seconds")
-                        
-                        # Mark animation as complete
-                        animation_complete_flag.set()
-                        animation_in_progress = False
-                        
-                        # Only stop sound if there are no more expressions in queue
-                        if not expression_queue:
-                            sound_interrupt_flag.set()
+            #if not no:
+            #    frame.show()
+            #    no = True
+            #print(pi_ava._current_expression)
 
             # Update Pygame Screen
             if frame is None:
@@ -274,7 +178,6 @@ def run_pi_zero(demo_expression : str = "excited"):
                 screen.blit(frame_surface, (0, 0))
             pygame.display.update()
             
-            # Handle Pygame events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -287,8 +190,7 @@ def run_pi_zero(demo_expression : str = "excited"):
                         running = False
             
             time.sleep(0.005)  # Adjust as needed for framerate
-            
-        except KeyboardInterrupt:
+        except KeyboardInterrupt as ki:
             running = False
             continue
         except OSError:
@@ -308,6 +210,8 @@ def run_pi_zero(demo_expression : str = "excited"):
     
     # Signal all threads to terminate
     sound_interrupt_flag.set()
-    animation_complete_flag.set()
     print("Pi Zero Script Complete.")
     pygame.quit()
+
+if __name__ == "__main__":
+    run_pi_zero()
