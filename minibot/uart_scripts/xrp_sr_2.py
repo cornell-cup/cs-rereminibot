@@ -62,7 +62,7 @@ def generate_sound(pwm, frequency, duration, end_freq=None, interrupt_flag=None)
     
     if end_freq:
         # For sliding pitches, we'll step through frequencies
-        steps = int(duration * 100)  # 100 steps per second
+        steps = int(duration * 33)  # 100 steps per second
         step_time = duration / steps
         for i in range(steps):
             # Check for interrupt
