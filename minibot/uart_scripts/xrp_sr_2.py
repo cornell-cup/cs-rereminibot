@@ -28,11 +28,11 @@ sound_library = {
 sound_mappings = {
     "big_no": ['D','O','L','D','O','L'],
     "big_yes": ['A', 'I','C','A','I','C'],
-    "chuckle": ['G','G','G'],
-    "surprise": ['N','M','N'],
-    "no": ['O','O','O'],
+    "chuckle": ['G','G','G','G','G','G'],
+    "surprise": ['N','M','N', 'H'],
+    "no": ['O','O','O', 'D', 'O','O','O','D'],
     "ready_to_race": ['F','I','F','I','F','I','F'],
-    "sad": ['L','L','B','L','L','B'],
+    "sad": ['L','L','B','L','L','B', 'B','B'],
     "idle_stable": ['E','E','E','E'],
     "startled": ['M','N','M','N'],
     "yes": ['A','A','A'],
@@ -80,10 +80,10 @@ def generate_sound(pwm, frequency, duration, end_freq=None):
 def play_beeps(beep_sequence):
     """Generate and play beeps dynamically, mimicking R2-D2-style expressive speech."""
     pwm = init_gpio()
-    
+    time.sleep(0.5)
     for beep in beep_sequence:
         if beep is None:
-            time.sleep(0.03)  # Reduced pause for more natural flow
+            time.sleep(0.3)  # Reduced pause for more natural flow
         elif len(beep) == 2:
             generate_sound(pwm, beep[0], beep[1])
         elif len(beep) == 3:
