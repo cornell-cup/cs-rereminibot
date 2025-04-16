@@ -29,14 +29,14 @@ sound_mappings = {
     "big_no": ['D','O','L','D','O','L'], #isn't working 
     "big_yes": ['A', 'I','C','A','I','C'], #isn't working 
     "chuckle": ['G','G','G','G','G','G','G', 'G'],
-    "surprise": ['N','M','N', 'H'],
+    "surprise": ['K','N','M','N', 'H','K','N','M','N', 'H'],
     "no": ['O','O','B','O', 'B', 'O','O','B','O','B'], #isn't working 
-    "ready_to_race": ['F','I','F','I','F','I','F'],
-    "sad": ['L','L','B','L','L','B', 'B','B'],
-    "idle_stable": ['E','E','E','E'],
-    "startled": ['M','N','M','N'],
-    "yes": ['A','A','A'],
-    "love_it": ['A','F','A','F','A'],
+    "ready_to_race": ['F','I','F','I','P','F','I','F','I','P','F','I','F','I','P','F','I','F','I','P'],
+    "sad": ['L','L','B','L','L','B', 'B','B', 'P','P','P' ],
+    "idle_stable": ['E','E','E','E','E','E','E','E'],
+    "startled": ['M','N','Q','M','N','Q','M','N','Q','M','N','Q'],
+    "yes": ['A','A','A', 'G', 'A','A','A', 'G'],
+    "love_it": ['A','F','A','F','A', 'G'],
     "vomit": ['B','L','G','B','L','G'],
     "blink_awake": ['E','M','E','M']
 }
