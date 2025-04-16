@@ -15,6 +15,9 @@ import traceback
 
 MIN_ANIMATION_DURATION = 4
 
+# Flag to interrupt current sound playback
+sound_interrupt_flag = threading.Event()
+
 def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_count : int, frame_width : int, frame_height : int):
     sheet = Spritesheet(src=sheet_src,
                              frame_width=frame_width,
@@ -30,9 +33,14 @@ def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_coun
 def play_sound_thread(expression_name):
     """Function to run in a separate thread for sound playback"""
     try:
-        sound.play_expression(expression_name)
+        # Reset interrupt flag at beginning of new sound
+        sound_interrupt_flag.clear()
+        
+        # Pass the interrupt flag to the sound module
+        sound.play_expression(expression_name, sound_interrupt_flag)
     except Exception as e:
         print(f"Sound playback error: {e}")
+        traceback.print_exc()  # Print full error for debugging
 
 #@profile
 def run_pi_zero(demo_expression : str = "excited"):
@@ -111,16 +119,16 @@ def run_pi_zero(demo_expression : str = "excited"):
                         pi_ava.clear_current_expression()
                         pi_ava.load_single_expression_json(path_to_expression_json, expression_name, path_to_img_dir)
                         
-                        # Start sound playback in a separate thread
-                        if sound_thread and sound_thread.is_alive():
-                            # Wait for the previous sound thread to finish if it's still running
-                            # This prevents overlapping sounds
-                            sound_thread.join(0.1)  # Wait up to 100ms for previous thread to finish
-                            
-                        # Create and start a new thread for sound playback
+                        # Signal any running sound thread to stop
+                        sound_interrupt_flag.set()
+                        
+                        # Create and start a new thread for sound playback without waiting
                         sound_thread = threading.Thread(target=play_sound_thread, args=(expression_name,))
                         sound_thread.daemon = True  # Make thread daemon so it exits when main program exits
                         sound_thread.start()
+                        
+                        # Print debug info
+                        print(f"Started sound thread for {expression_name}")
 
                 elif message.startswith("PBS"):
                     message_asked = False
@@ -192,10 +200,7 @@ def run_pi_zero(demo_expression : str = "excited"):
             print("in exception")
             print(type(e))
             print(e)
-            # running = False
-            # print("Encountered Exception!")
-            # print(type(e), e)
-            # print(traceback.format_exc())
+            traceback.print_exc()  # Add full traceback for better debugging
             print(f"Device exists {os.path.exists('/dev/ttyACM0')}")
             if os.path.exists('/dev/ttyACM0'):
                 print("Reinitializing ser")
@@ -203,6 +208,8 @@ def run_pi_zero(demo_expression : str = "excited"):
                 serial_connected = 1
                 time.sleep(1)
     
+    # Signal all threads to terminate
+    sound_interrupt_flag.set()
     print("Pi Zero Script Complete.")
     pygame.quit()
 
