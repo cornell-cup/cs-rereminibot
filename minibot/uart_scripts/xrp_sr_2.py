@@ -1,11 +1,10 @@
 import time
 import RPi.GPIO as GPIO
+import threading
 
 # Set up GPIO
 BUZZER_PIN = 20
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(BUZZER_PIN, GPIO.OUT)
-pwm = GPIO.PWM(BUZZER_PIN, 1000)  # Initialize PWM on pin 20 with 1000 Hz
+GPIO_INITIALIZED = False
 
 # Mapping letters to sounds
 sound_library = {
@@ -42,7 +41,23 @@ sound_mappings = {
     "blink_awake": ['E','M','E','M']
 }
 
-def generate_sound(frequency, duration, end_freq=None):
+# Global sound state variables
+current_sound_thread = None
+is_playing = False
+last_played_expression = None
+
+def init_gpio():
+    """Initialize GPIO if not already initialized"""
+    global GPIO_INITIALIZED, pwm
+    
+    if not GPIO_INITIALIZED:
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setup(BUZZER_PIN, GPIO.OUT)
+        pwm = GPIO.PWM(BUZZER_PIN, 1000)  # Initialize PWM on pin 20 with 1000 Hz
+        GPIO_INITIALIZED = True
+    return pwm
+
+def generate_sound(pwm, frequency, duration, end_freq=None):
     """Generate a beep sound with optional pitch sliding using a piezo buzzer."""
     pwm.start(50)  # Start PWM with 50% duty cycle
     
@@ -64,32 +79,85 @@ def generate_sound(frequency, duration, end_freq=None):
 
 def play_beeps(beep_sequence):
     """Generate and play beeps dynamically, mimicking R2-D2-style expressive speech."""
+    pwm = init_gpio()
+    
     for beep in beep_sequence:
         if beep is None:
             time.sleep(0.03)  # Reduced pause for more natural flow
         elif len(beep) == 2:
-            generate_sound(beep[0], beep[1])
+            generate_sound(pwm, beep[0], beep[1])
         elif len(beep) == 3:
-            generate_sound(beep[0], beep[1], beep[2])
+            generate_sound(pwm, beep[0], beep[1], beep[2])
         elif len(beep) > 3:
             for i in range(0, len(beep), 2):
                 if i+1 < len(beep):  # Make sure we don't go out of bounds
-                    generate_sound(beep[i], beep[i+1])
+                    generate_sound(pwm, beep[i], beep[i+1])
                     time.sleep(0.01)
 
+def sound_player_thread(expression_name):
+    """Thread function to play sounds for an expression"""
+    global is_playing, last_played_expression
+    
+    try:
+        if expression_name in sound_mappings:
+            beep_sequence = []
+            for letter in sound_mappings[expression_name]:
+                if letter in sound_library:
+                    beep_sequence.extend(sound_library[letter])
+            
+            print(f"Playing '{expression_name}' sound...")
+            play_beeps(beep_sequence)
+            
+    except Exception as e:
+        print(f"Error in sound playback: {e}")
+    
+    is_playing = False
+    last_played_expression = expression_name
+
 def play_expression(expression_name):
-    """Play sounds corresponding to a specific expression name."""
+    """Play sounds corresponding to a specific expression name in a separate thread."""
+    global current_sound_thread, is_playing, last_played_expression
+    
+    # Don't play the same sound if it's already playing
+    if is_playing and last_played_expression == expression_name:
+        return False
+    
+    # Stop any current sound thread if running
+    stop_sound()
+    
     if expression_name in sound_mappings:
-        beep_sequence = []
-        for letter in sound_mappings[expression_name]:
-            if letter in sound_library:
-                beep_sequence.extend(sound_library[letter])
-        
-        print(f"Playing '{expression_name}' expression...")
-        play_beeps(beep_sequence)
-        GPIO.cleanup()
+        # Start a new thread for sound playback
+        is_playing = True
+        current_sound_thread = threading.Thread(target=sound_player_thread, args=(expression_name,))
+        current_sound_thread.daemon = True  # Set as daemon so it doesn't block program exit
+        current_sound_thread.start()
         return True
     else:
         print(f"Expression '{expression_name}' not found in sound mappings.")
-        GPIO.cleanup()
         return False
+
+def stop_sound():
+    """Stop any currently playing sounds"""
+    global current_sound_thread, is_playing
+    
+    if is_playing and current_sound_thread and current_sound_thread.is_alive():
+        # We can't directly stop a thread, but we can signal it to stop
+        is_playing = False
+        # Wait a brief moment for the thread to terminate
+        current_sound_thread.join(0.1)
+    
+    # Make sure PWM is stopped
+    if GPIO_INITIALIZED:
+        try:
+            pwm.stop()
+        except:
+            pass
+
+def cleanup():
+    """Clean up GPIO resources"""
+    global GPIO_INITIALIZED
+    
+    stop_sound()
+    if GPIO_INITIALIZED:
+        GPIO.cleanup()
+        GPIO_INITIALIZED = False
