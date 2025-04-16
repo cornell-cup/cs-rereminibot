@@ -5,12 +5,14 @@ import os.path
 import json
 import sys
 import time
+from openai import OpenAI
+from dotenv import load_dotenv
 
-# Minibot imports.
+# Minibot imports .
 from .basestation_init import base_station
 
 from flask import current_app
-
+ 
 # Error messages
 NO_BOT_ERROR_MSG = "Please connect to a bot!"
 
@@ -20,7 +22,6 @@ chatbot_bp = Blueprint('chatbot',
 
 @chatbot_bp.route('/chatbot-context', methods=['POST', 'GET'])
 def chatbot_context():
-    print ("reached here")
     if request.method == 'POST':
         data = request.get_json()
         command = data['command']
@@ -33,7 +34,6 @@ def chatbot_context():
             context_stack = data['contextStack']
             base_station.replace_context_stack(context_stack)
             return json.dumps(True), status.HTTP_200_OK
-        
         elif command == 'reset-context-stack':
             base_station.chatbot_clear_context()
             return json.dumps(True), status.HTTP_200_OK
@@ -67,15 +67,26 @@ def chatbot_context():
             context = data['context']
             res = base_station.chatbot_edit_context_idx(idx, context)
             return json.dumps({"res": res}), status.HTTP_200_OK
-            
 
+     
+load_dotenv()
+client = OpenAI(api_key=os.environ.get("API_KEY"))
 
 @chatbot_bp.route('/chatbot-ask', methods=['POST', 'GET'])
 def chatbot_ask():
-    if request.method == 'POST':
+    if request.method == "POST":
         data = request.get_json()
-        question = data['question']
-        answer = base_station.chatbot_compute_answer(question)
+        question = data["question"]
+        print(question)
+        if question.lower().startswith("gpt:") or question.lower().startswith(
+            "chatgpt:"
+        ):
+            response = client.chat.completions.create(
+                model="gpt-3.5-turbo", messages=[{"role": "user", "content": question}]
+            )
+            answer = response.choices[0].message.content
+        else:
+            answer = base_station.chatbot_compute_answer(question)
         return json.dumps(answer), status.HTTP_200_OK
     
     

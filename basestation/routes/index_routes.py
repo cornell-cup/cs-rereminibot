@@ -92,6 +92,10 @@ def script():
         return json.dumps(error_json), status.HTTP_400_BAD_REQUEST
     script_code = data['script_code']
     login_email = data['login_email']
+
+    print(bot_name)
+    print(type(script_code))
+    print(login_email)
     try:
         print("Script code:")
         print(script_code)
