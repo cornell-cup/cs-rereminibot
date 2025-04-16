@@ -56,7 +56,7 @@ def cleanup_gpio():
     with gpio_lock:
         GPIO.cleanup(BUZZER_PIN)
 
-def generate_sound(pwm, frequency, duration, end_freq=None):
+def generate_sound(pwm, frequency, duration, end_freq=None, interrupt_flag=None):
     """Generate a beep sound with optional pitch sliding using a piezo buzzer."""
     pwm.start(50)  # Start PWM with 50% duty cycle
     
@@ -65,39 +65,79 @@ def generate_sound(pwm, frequency, duration, end_freq=None):
         steps = int(duration * 100)  # 100 steps per second
         step_time = duration / steps
         for i in range(steps):
+            # Check for interrupt
+            if interrupt_flag and interrupt_flag.is_set():
+                break
+                
             current_freq = frequency + (end_freq - frequency) * (i / steps)
             pwm.ChangeFrequency(current_freq)
             time.sleep(step_time)
     else:
         # For constant pitches
         pwm.ChangeFrequency(frequency)
-        time.sleep(duration)
+        
+        # Handle duration with potential interrupt
+        if interrupt_flag:
+            start_time = time.time()
+            while time.time() - start_time < duration:
+                if interrupt_flag.is_set():
+                    break
+                time.sleep(min(0.01, duration - (time.time() - start_time)))
+        else:
+            time.sleep(duration)
     
     pwm.stop()  # Stop PWM
-    time.sleep(0.01)  # Small gap between sounds
+    
+    # Only sleep if not interrupted
+    if not (interrupt_flag and interrupt_flag.is_set()):
+        time.sleep(0.01)  # Small gap between sounds
 
-def play_beeps(beep_sequence):
+def play_beeps(beep_sequence, interrupt_flag=None):
     """Generate and play beeps dynamically, mimicking R2-D2-style expressive speech."""
     pwm = setup_gpio()
     
     try:
         for beep in beep_sequence:
+            # Check for interrupt before each beep
+            if interrupt_flag and interrupt_flag.is_set():
+                break
+                
             if beep is None:
-                time.sleep(0.03)  # Reduced pause for more natural flow
+                if interrupt_flag:
+                    start_time = time.time()
+                    while time.time() - start_time < 0.03:  # Reduced pause for more natural flow
+                        if interrupt_flag.is_set():
+                            break
+                        time.sleep(0.01)
+                else:
+                    time.sleep(0.03)  # Reduced pause for more natural flow
             elif len(beep) == 2:
-                generate_sound(pwm, beep[0], beep[1])
+                generate_sound(pwm, beep[0], beep[1], interrupt_flag=interrupt_flag)
             elif len(beep) == 3:
-                generate_sound(pwm, beep[0], beep[1], beep[2])
+                generate_sound(pwm, beep[0], beep[1], beep[2], interrupt_flag=interrupt_flag)
             elif len(beep) > 3:
                 for i in range(0, len(beep), 2):
+                    # Check for interrupt during multi-beep sequence
+                    if interrupt_flag and interrupt_flag.is_set():
+                        break
+                        
                     if i+1 < len(beep):  # Make sure we don't go out of bounds
-                        generate_sound(pwm, beep[i], beep[i+1])
-                        time.sleep(0.01)
+                        generate_sound(pwm, beep[i], beep[i+1], interrupt_flag=interrupt_flag)
+                        
+                        # Only sleep if not interrupted
+                        if not (interrupt_flag and interrupt_flag.is_set()):
+                            time.sleep(0.01)
     finally:
         cleanup_gpio()
 
-def play_expression(expression_name):
-    """Play sounds corresponding to a specific expression name."""
+def play_expression(expression_name, interrupt_flag=None):
+    """
+    Play sounds corresponding to a specific expression name.
+    
+    Args:
+        expression_name: Name of the expression to play sounds for
+        interrupt_flag: Optional threading.Event to signal interruption
+    """
     if expression_name in sound_mappings:
         beep_sequence = []
         for letter in sound_mappings[expression_name]:
@@ -105,7 +145,7 @@ def play_expression(expression_name):
                 beep_sequence.extend(sound_library[letter])
         
         print(f"Playing '{expression_name}' expression...")
-        play_beeps(beep_sequence)
+        play_beeps(beep_sequence, interrupt_flag)
         return True
     else:
         print(f"Expression '{expression_name}' not found in sound mappings.")
