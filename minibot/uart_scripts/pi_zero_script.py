@@ -37,7 +37,7 @@ def play_sound_thread(expression_name):
         sound_interrupt_flag.clear()
         
         # Pass the interrupt flag to the sound module
-        sound.play_expression(expression_name, sound_interrupt_flag)
+        sound.play_expression(expression_name)
     except Exception as e:
         print(f"Sound playback error: {e}")
         traceback.print_exc()  # Print full error for debugging
