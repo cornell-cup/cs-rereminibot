@@ -47,13 +47,6 @@ def run_pi_zero(demo_expression : str = "excited"):
     process = psutil.Process(pid)
     memory_info = process.memory_info()
     print(f'RAM usage: {memory_info.rss / 1000 / 1000} MB')
-    
-    # Load expressions
-    pi_ava.load_expressions_json(path_to_expression_json, path_to_img_dir)
-
-    print("Loaded the following expressions:")
-    for expression in pi_ava.get_expression_names():
-        print(" - ", expression)
 
     pi_ava.set_playback_speed(15)
     print("Playback speed is currently at " + str(pi_ava._current_playback_speed))
