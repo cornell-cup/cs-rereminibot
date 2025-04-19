@@ -161,9 +161,9 @@ class Bot:
         time.sleep(0.5) # TODO needs to be changed so that it isn't a wait and instead waits until the value is available
         self.readKV()
         if line_value == "LEFT":
-            return self.line_follow_left_value
+            return float(self.line_follow_left_value)
         elif line_value == "RIGHT":
-            return self.line_follow_right_value
+            return float(self.line_follow_right_value)
         else:
             return 0 ##TODO or Raise Error?
     
