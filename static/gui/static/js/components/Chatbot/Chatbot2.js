@@ -240,7 +240,7 @@ function Chatbot2({
 
   // functions processing commands: sending context, question, toggling mics
   const sendContext = (e) => {
-    processSentiment(inputText);
+    // processSentiment(inputText);
     e.preventDefault();
     if (inputText === emptyStr) return;
     var temp_id = id + 1;
@@ -276,7 +276,7 @@ function Chatbot2({
   }
 
   const sendQuestion = (e) => {
-    processSentiment(inputText)
+    // processSentiment(inputText);
     e.preventDefault();
     if (inputText === emptyStr) return;
     var temp_id = id + 1;
@@ -299,6 +299,8 @@ function Chatbot2({
     }).then(function (response) {
       if (response.data) {
         const res = response.data;
+        console.log("using response emotion");
+        processSentiment(res);
         newList = newList.concat({ id: temp_id, who: "other", message: res, timeStamp: getTimeStamp() });
         setMessages(newList);
         setAnimating(false);
