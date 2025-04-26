@@ -9,6 +9,7 @@ import os
 import psutil
 import traceback
 
+
 MIN_ANIMATION_DURATION = 4
 
 def add_expression(avatar : Avatar, expr_name : str, sheet_src : str, frame_count : int, frame_width : int, frame_height : int):
@@ -89,22 +90,24 @@ def run_pi_zero(demo_expression : str = "excited"):
                     print(f"Expression request: '{expression_name}'")
 
                     # Only change expression if animation of current one is complete or it's the first one
-                    if pi_ava.is_animation_complete() or current_expression is None:
-                        if expression_name == "":
-                            pi_ava.clear_current_expression()
-                            current_expression = None
-                        else:
-                            # Load and switch to new expression
-                            current_expression = expression_name
-                            pi_ava.clear_current_expression()
-                            success = pi_ava.load_single_expression_json(path_to_expression_json, expression_name, path_to_img_dir)
-                            
-                            if success:
-                                # Play sound for new expression
-                                sound.play_expression(expression_name)
-                                expression_change_time = time.time()
+                    #if pi_ava.is_animation_complete() or current_expression is None:
+                    if expression_name == "":
+                        pi_ava.clear_current_expression()
+                        current_expression = None
+                        sound.stop_sound()
                     else:
-                        print(f"Ignoring expression change to '{expression_name}' - current animation not complete")
+                        # Load and switch to new expression
+                        current_expression = expression_name
+                        pi_ava.clear_current_expression()
+                        success = pi_ava.load_single_expression_json(path_to_expression_json, expression_name, path_to_img_dir)
+                        
+                        if success:
+                            # Play sound for new expression
+                            sound.stop_sound()
+                            sound.play_expression(expression_name)
+                            expression_change_time = time.time()
+                    #else:
+                    #    print(f"Ignoring expression change to '{expression_name}' - current animation not complete")
 
                 # Process playback speed commands
                 elif message.startswith("PBS"):

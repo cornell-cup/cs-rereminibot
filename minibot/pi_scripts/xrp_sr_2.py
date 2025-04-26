@@ -1,6 +1,13 @@
 import time
 import RPi.GPIO as GPIO
 import threading
+import google.generativeai as ai
+import speech_recognition as sr
+from internet_check import is_internet_connected as internet_connected
+
+model = ai.GenerativeModel("gemini-2.0-flash")
+chat = model.start_chat()
+
 
 # Set up GPIO
 BUZZER_PIN = 20
@@ -40,6 +47,48 @@ sound_mappings = {
     "vomit": ['B','L','G','B','L','G'],
     "blink_awake": ['E','M','E','M']
 }
+
+melodies = {
+    'Z': [  # Happy Birthday
+        (594, 0.025), (594, 0.025), (668, 0.05), (594, 0.05), (792, 0.05), (742, 0.1),
+        (594, 0.025), (594, 0.025), (668, 0.05), (594, 0.05), (891, 0.05), (792, 0.1)
+    ],
+    'Y': [  # Darth Vader's Theme (Imperial March)
+        (440, 0.1), (440, 0.1), (440, 0.1), (349, 0.075), (523, 0.025), (440, 0.1),
+        (349, 0.075), (523, 0.025), (440, 0.2), (659, 0.1), (659, 0.1), (659, 0.1),
+        (698, 0.075), (523.25, 0.025), (415, 0.1), (340, 0.075), (523, 0.025), (440, 0.2)
+    ],
+    '1': [  # Harry Potter Theme (Hedwig's Theme)
+        (261.63, 0.05), (349.23, 0.075), (415.30, 0.025), (392.00, 0.05), (349.23, 0.1),
+        (523.25, 0.05), (466.16, 0.15), (392.00, 0.15),
+    ]
+}
+#getting a response from the chatbot
+def gemini_response(expression_name):
+    """Get response from Gemini in beep-letter format."""
+    prompt = (
+        "You are a robot that communicates only through beeping sounds. Each letter corresponds to a distinct beep: "
+        "A=Happy, B=Sad, C=Excited, D=Angry, E=Calm, F=Playful (rising), G=Goofy, H=Curious, I=Fast Whirr, J=Warble, "
+        "K=Long Whistle, L=Sad Downslide, M=Alert, N=Surprise, O=Neutral Sigh. "
+        "Special: Z=Happy Birthday, Y=Darth Vader, 1=Harry Potter. "
+        "Spaces are short pauses. Responses should be expressive but not too long. If using a song, only use one per message surround it with beeps.\n\n"
+        "\n\nemotion to express: {expression_name}\n\nResponse:"
+    )
+    response = chat.send_message(prompt.format(expression_name=expression_name))
+    return response.text.strip()
+
+#converting the response into a beep sequence
+def text_to_beeps(text):
+    """Convert chatbot-generated text into beepy sequences."""
+    beep_sequence = []
+    for char in text.upper():
+        if char in sound_library:
+            beep_sequence.extend(sound_library[char])
+        elif char in melodies:
+            beep_sequence.extend(melodies[char])
+        elif char == ' ':
+            beep_sequence.append(None)  # Short pause
+    return beep_sequence
 
 # Global sound state variables
 current_sound_thread = None
@@ -114,6 +163,18 @@ def sound_player_thread(expression_name):
     is_playing = False
     last_played_expression = expression_name
 
+def gemini_sound_thread(expression_name):
+    global is_playing, last_played_expression
+    try:
+        print(f"Using Gemini to generate sound for '{expression_name}'...")
+        response = gemini_response(expression_name)
+        beep_sequence = text_to_beeps(response)
+        play_beeps(beep_sequence)
+    except Exception as e:
+        print(f"Error in Gemini sound playback: {e}")
+    is_playing = False
+    last_played_expression = expression_name
+
 def play_expression(expression_name):
     """Play sounds corresponding to a specific expression name in a separate thread."""
     global current_sound_thread, is_playing, last_played_expression
@@ -127,11 +188,18 @@ def play_expression(expression_name):
     
     if expression_name in sound_mappings:
         # Start a new thread for sound playback
-        is_playing = True
-        current_sound_thread = threading.Thread(target=sound_player_thread, args=(expression_name,))
-        current_sound_thread.daemon = True  # Set as daemon so it doesn't block program exit
-        current_sound_thread.start()
-        return True
+        if internet_connected():
+            is_playing = True
+            current_sound_thread = threading.Thread(target=gemini_sound_thread, args=(expression_name,))
+            current_sound_thread.daemon = True  # Set as daemon so it doesn't block program exit
+            current_sound_thread.start()
+            return True
+        else:
+            is_playing = True
+            current_sound_thread = threading.Thread(target=sound_player_thread, args=(expression_name,))
+            current_sound_thread.daemon = True  # Set as daemon so it doesn't block program exit
+            current_sound_thread.start()
+            return True
     else:
         print(f"Expression '{expression_name}' not found in sound mappings.")
         return False
