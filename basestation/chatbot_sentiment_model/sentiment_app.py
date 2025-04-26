@@ -1,8 +1,11 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import sys
 from transformers import BertTokenizer, BertForSequenceClassification
 import torch
 import numpy as np
+sys.path.append('..')
+from config import port_number
 
 app = Flask(__name__)
 CORS(app)
@@ -27,5 +30,5 @@ def predict():
     return jsonify(prediction)
 
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=2300, debug=False)
+    app.run(host="127.0.0.1", port=port_number, debug=False)
 
