@@ -20,6 +20,7 @@ from basestation import config
 # database imports
 from basestation.databases.user_database import User, Chatbot as ChatbotTable, Submission
 from basestation.databases.user_database import db
+from basestation.databases.user_database import Chatbot_Uploads as Uploads
 
 # imports from basestation util
 import basestation.piVision.pb_utils as pb_utils
@@ -150,6 +151,7 @@ class BaseStation:
             "left": "Minibot moves left",
             "right": "Minibot moves right",
             "stop": "Minibot stops",
+            "run": "Minibot runs an uploaded file",
         }
 
         self.script_thread = None
@@ -739,3 +741,21 @@ class BaseStation:
         return submissions
 
     
+        # ====================== CHATBOT FILE UPLOAD =========================
+
+    def chatbot_upload_file(self, given_code: str, name_of_file: str, email: str) -> Uploads:
+        upload = Uploads(
+            code=given_code,
+            filename=name_of_file,
+            user_id=self.get_user(email).id
+        )
+        db.session.add(upload)
+        db.session.commit()
+        return upload
+
+    def chatbot_get_upload(self, name_of_file: str, user: User):
+        upload_obj = Uploads.query.filter_by(
+            user_id=User.id, filename=name_of_file).first()
+        code = upload_obj.code
+        print(code)
+        return code
