@@ -1,8 +1,9 @@
 import requests
-import time
-from requests.structures import CaseInsensitiveDict
-import json
+import os
 from basestation import config
+from transformers import BertTokenizer, BertForSequenceClassification
+import torch
+import numpy as np
 
 default_context = "Hello, I am minibot. My creators are from Cornell but I \
 legally can't say that because they signed a waiver. Oh well, let's just say \
@@ -21,11 +22,27 @@ FAILURE = 400
 
 
 class ChatbotWrapper:
-
-    def __init__(self, context=default_context, url = config.chatbot_url):
-        print(config.chatbot_url)
-        self.context_stack = [default_context]  # context
+    def __init__(self, context=default_context, url=config.chatbot_url):
+        print("Chatbot URL:", url)
+        self.context_stack = [context]
         self.url = url
+
+        here      = os.path.dirname(__file__)
+        model_dir = os.path.join(here, "chatbot_sentiment_model", "sentiment-model")           
+
+        self.tokenizer = BertTokenizer.from_pretrained(model_dir)
+        self.model     = BertForSequenceClassification.from_pretrained(model_dir)
+        self.model.eval()
+
+    def predict_labels(self, text):
+        inputs = self.tokenizer(
+            text, return_tensors="pt", truncation=True, padding=True
+        )
+        with torch.no_grad():
+            logits = self.model(**inputs).logits
+            probs = torch.sigmoid(logits)[0].cpu().numpy()
+        pred_idx = int(np.argmax(probs))
+        return pred_idx if probs[pred_idx] > 0.07 else -1
 
     def replace_context_stack(self, context_stack):
         '''Replaces the self.context_stack with <context_stack>.
