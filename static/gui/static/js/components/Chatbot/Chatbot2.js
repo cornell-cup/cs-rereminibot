@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as Icons from '@fortawesome/free-solid-svg-icons';
 import {
   commands,
+  match_file_command,
   X_BTN, MIC_BTN, MIC_BTNON,
   ACT_MIC_CHATBOT,
   ZIP_FILE_UPLOAD
@@ -60,11 +61,48 @@ function Chatbot2({
   const [tempCommands, setTempCommands] = useState("");
   const [isAnimating, setAnimating] = useState(false);
 
+  const emptyStr = "";
+  let initialUpload = [];
+
+  const [upload, setUpload] = useState(initialUpload);
+
+  /*
   const hiddenFileInput = useRef(null);
 
   const handleClick = (e) => {
     e.preventDefault();
   };
+
+  */
+
+  //Handles upload zip file event through chatbot's command mode
+  //const hiddenFileInput = React.useRef();
+  const hiddenFileInput = useRef(null);
+
+  const [tick, setTick] = useState(0);
+  
+  console.log("Rendering Chatbot2");
+
+  // EXTRA CHECK 
+  useEffect(() => {
+    console.log("Component mounted");
+    // Optional: Verify ref exists after mount
+    console.log("File input ref:", hiddenFileInput.current); 
+  }, [tick]);
+
+
+  const handleClick = () => {
+    console.log("Ref value:", hiddenFileInput.current); 
+    hiddenFileInput.current.click();
+    console.log("statement!!")
+
+
+    setTick(t => t + 1);
+
+
+
+
+  }
 
   // style for the overall chatbot window
   const styles = {
@@ -239,6 +277,70 @@ function Chatbot2({
   }
 
   // functions processing commands: sending context, question, toggling mics
+
+  const handleChange = (event) => {
+    console.log("HANDLE CHANGE IS WORKING")
+    let fileUploaded = event.target.files[0];
+    var filenames = "";
+    if (loginEmail == "") {
+      window.alert("Zipfile upload is a registered user functionality. Please log in first.")
+    }
+    else {
+      console.log("user has logged in");
+      JSZip.loadAsync(fileUploaded).then(function (zip) {
+        Object.keys(zip.files).forEach(function (filename) {
+          zip.files[filename].async('text').then(function (fileData) {
+            setUpload([...upload, fileData]);
+            axios({
+              method: 'POST',
+              url: '/chatbot-upload',
+              headers: {
+                'Content-Type': 'application/json',
+                'Upload-Content': 'code'
+              },
+              data: JSON.stringify({
+                script_code: fileData,
+                script_name: filename,
+                login_email: loginEmail
+              })
+            }).then(function (response) {
+              console.log("file is sent successfully");
+            }).catch(function (error) {
+              console.log("Error branch");
+              console.error(error.response.data);
+            })
+          })
+          filenames += filename + ", ";
+        })
+        filenames = filenames.substring(0, filenames.length - 2);   //trims the trailing comma
+        axios({
+          method: 'POST',
+          url: '/chatbot-upload',
+          headers: {
+            'Content-Type': 'application/json',
+            'Upload-Content': 'filenames'
+          },
+          data: JSON.stringify({
+            filename: filenames,
+          }),
+        }).then(function (response) {
+          console.log("names are sent successfully");
+        }).catch(function (error) {
+          console.log("Error branch");
+          console.error(error.response.data);
+
+        })
+
+      })
+    }
+  }
+
+
+
+
+
+
+
   const sendContext = (e) => {
     // processSentiment(inputText);
     e.preventDefault();
@@ -357,6 +459,9 @@ function Chatbot2({
     initialList[0].timeStamp = getTimeStamp();
     setMessages(initialList);
   }, []);
+
+
+" THIS IS BOT VOICE CONTROL, which isn't super relevant rn for the file upload. " 
 
   /***************************** Bot Voice Control ***************************/
   useEffect(() => {
@@ -487,37 +592,42 @@ function Chatbot2({
                   style={{ width: "75%", height: "75%", objectFit: "contain", }}
                   onClick={(e) => { toggleMic(e); }} />}
             </span>
-            {/* selectively rendering send context and question buttons based on contextMode */}
-            {contextMode ?
-              <span>
-                <span>
-                  <button style={{ marginLeft: "2px", objectFit: "inline", width: "30%" }} onClick={(e) => { sendContext(e);}}>
-                    <FontAwesomeIcon icon={Icons.faPaperPlane} />
-                  </button>
-                </span>
-                <span>
-                  <button style={{ marginLeft: "2px", objectFit: "inline" }} onClick={(e) => { sendQuestion(e);}}>
-                    <FontAwesomeIcon icon={Icons.faQuestion} />
-                  </button>
-                </span>
-              </span>
-              :
-               <span>
-              <input type="image"
-                id='zipFileUpload'
-                src={ZIP_FILE_UPLOAD}
-                style={{ width: "40%", height: "40%", objectFit: "contain", }}
-                onClick={handleClick} />
-              <input
-                type="file"
-                id="zipfile"
-                ref={hiddenFileInput}
-                accept=".zip"
-                // onChange={handleChange}
-                style={{ display: 'none' }}
-              />
-            </span>
-            }
+            {contextMode ? (
+                  <span>
+                    <span>
+                      <button style={{ marginLeft: "2px", objectFit: "inline", width: "30%" }} onClick={(e) => { sendContext(e); }}>
+                        <FontAwesomeIcon icon={Icons.faPaperPlane} />
+                      </button>
+                    </span>
+                    <span>
+                      <button style={{ marginLeft: "2px", objectFit: "inline" }} onClick={(e) => { sendQuestion(e); }}>
+                        <FontAwesomeIcon icon={Icons.faQuestion} />
+                      </button>
+                    </span>
+                  </span>
+                ) : (
+                    <span>
+                      <input type="image"
+                        id='zipFileUpload'
+                        src={ZIP_FILE_UPLOAD}
+                        style={{ width: "50%", height: "50%", objectFit: "contain"}}
+                        onClick={handleClick} />
+                      <input
+                        type="file"
+                        id="zipfile"
+                        ref={hiddenFileInput}
+                        accept=".zip"
+                        onChange={handleChange}
+                        style={{ display: 'none' }}
+                      />
+                      <p>Tick value: {tick}</p>   
+                    </span>
+                )}
+
+
+
+
+
           </div>
         </div>
       </div>
