@@ -22,8 +22,9 @@ export default class AddBot extends React.Component {
             botName: "",
             availableBots: [], // bots connected to Base Station but not GUI
             botList: [],
-            power: 50,
             showPorts: false,
+            servoID: 1, 
+            servoAngle: -1,
         };
 
         // Needed to use a ref for react
@@ -34,6 +35,7 @@ export default class AddBot extends React.Component {
         this.handleArrowKeyDown = this.handleArrowKeyDown.bind(this);
         this.motorPorts = this.motorPorts.bind(this);
         this.portConfigBttnOnClick = this.portConfigBttnOnClick.bind(this);
+        this.setServoAngle = this.setServoAngle.bind(this);
     }
 
     portConfigBttnOnClick() {
@@ -48,9 +50,20 @@ export default class AddBot extends React.Component {
     }
 
     componentDidMount() {
+        const _this = this;
+        this._mounted = true;
+
         setInterval(this.refreshAvailableBots.bind(this), 500);
         document.getElementById("setup_control_tab").addEventListener(
-            "keydown", this.handleArrowKeyDown);
+            "keydown", function(event) {
+                if (_this._mounted) {
+                    _this.handleArrowKeyDown(event);
+                }
+            });
+    }
+
+    componentWillUnmount() {
+        this._mounted = false;
     }
 
     /*
@@ -91,11 +104,6 @@ export default class AddBot extends React.Component {
         return "";
     }
 
-    /*update power value when bot moves*/
-    updatePowerValue(event) {
-        this.state.power = event.target.value;
-    }
-
     /*adds bot name to list*/
     addBotListener(event) {
         let li = this.state.availableBots;
@@ -126,7 +134,7 @@ export default class AddBot extends React.Component {
             data: JSON.stringify({
                 bot_name: _this.props.selectedBotName,
                 direction: value,
-                power: _this.state.power,
+                power: _this.props.power,
             })
         }).catch(function (error) {
             if (error.response.data.error_msg.length > 0)
@@ -138,6 +146,7 @@ export default class AddBot extends React.Component {
 
     /** Handles keyboard input to control the movement buttons */
     handleArrowKeyDown(event) {
+        const _this = this;
         const directionArray = ["left", "forward", "right", "backward"]
         const spaceBar = 32;
         const leftArrow = 37;
@@ -147,12 +156,12 @@ export default class AddBot extends React.Component {
         if (event.keyCode === spaceBar) {
             // prevent spacebar from jumping to the end of the page
             event.preventDefault()
-            this.buttonMapListener("stop");
+            _this.buttonMapListener("stop");
             // If user presses an arrow key, make the Minibot move in that direction
         } else if (event.keyCode >= leftArrow && event.keyCode <= downArrow) {
             // prevent arrow key from causing the page to scroll
             event.preventDefault()
-            this.buttonMapListener(directionArray[event.keyCode - leftArrow])
+            _this.buttonMapListener(directionArray[event.keyCode - leftArrow])
         }
     }
 
@@ -244,7 +253,27 @@ export default class AddBot extends React.Component {
         });
     }
 
-    
+    setServoAngle() {
+        const _this = this;
+        console.log(_this.state.servoAngle);
+        axios({
+            method: 'POST',
+            url: '/set_servo_angle',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: JSON.stringify({
+                bot_name: _this.props.selectedBotName,
+                servo_id: _this.state.servoID,
+                servo_angle: _this.state.servoAngle,
+            })
+        }).catch(function (error) {
+            if (error.response.data.error_msg.length > 0)
+                window.alert(error.response.data.error_msg);
+            else
+                console.log(error);
+        });
+    }
 
 
     render() {
@@ -291,6 +320,32 @@ export default class AddBot extends React.Component {
                 </div>
                 <InformationBoxModal type={INFOBOXTYPE.SETUP} />
                 <br />
+                <br />
+                <br />
+                <div className="container">
+                    <div className="row">
+                        <div className="col horizontalDivCenter">
+                            <p className="small-title"> Servo Control </p>
+                            <div className="element-wrapper">
+                                <input
+                                    type="text"
+                                    placeholder="ID"
+                                    style={{ width: "50px" }}
+                                    onChange={(e) => _this.setState({ servoID: e.target.value })}
+                                />
+                                </div>
+                                <div className="element-wrapper">
+                                <input
+                                    type="text"
+                                    placeholder="Angle"
+                                    style={{ width: "200px" }}
+                                    onChange={(e) => _this.setState({ servoAngle: e.target.value })}
+                                />
+                                </div>
+                            <button className="btn btn-secondary" onClick={() => this.setServoAngle()}>Confirm</button>
+                        </div>
+                    </div>
+                </div>
                 <br />
                 <br />
                 <div className="container">

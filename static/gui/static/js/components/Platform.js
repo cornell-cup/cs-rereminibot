@@ -24,6 +24,7 @@ import BotControl from './BotControl/BotControl.js';
 import Dashboard from './Analytics/dashboard.js';
 import History from './Analytics/submissionHistory.js';
 import ContextHistory from './ContextHistory/ContextHistory.js';
+import PhysicalBlockly from './PhysicalBlockly/PhysicalBlockly.js';
 
 // Utils import
 import VirtualEnviroment from './utils/VirtualEnviroment.js';
@@ -57,22 +58,26 @@ const Platform = withCookies((props) => {
   //    and has disallowed Blockly from overwriting these changes.
   const [pythonCodeState, setPythonCodeState] = useState(-1);
   const [selectedBotStyle, setSelectedBotStyleState] = useState(hiddenStyle);
-  const [loginEmail, setLoginEmail] = useState(props.cookies.get('current_user_email') || "");
   const [virtualRoomId, setVirtualRoomId] = useState(props.cookies.get('virtual_room_id') || nanoid())
   const [virtualEnviroment, setVirtualEnviroment] = useState(new VirtualEnviroment([], []));
 
+  const [pb, setPb] = useState("");
+
   useEffect(() => {
     let tmp_email = props.cookies.get('current_user_email') || "";
-    let tmp_cont_hist_loaded = props.contextHistoryLoaded && tmp_email == loginEmail
+    let tmp_cont_hist_loaded = props.contextHistoryLoaded && tmp_email == props.loginEmail
     props.setContextHistoryLoaded(tmp_cont_hist_loaded);
-    setLoginEmail(tmp_email);
+    props.setLoginEmail(tmp_email);
 
     setVirtualRoomId(props.cookies.get('virtual_room_id') || nanoid());
   }, [document.cookie]);
 
 
   useEffect(() => {
+    console.log('loading');
+    console.log(props.loginEmail);
     props.cookies.set('virtual_room_id', virtualRoomId, { path: '/' });
+    props.setLoginEmail(props.cookies.get('current_user_email') || "");
   }, []);
 
 
@@ -112,7 +117,7 @@ const Platform = withCookies((props) => {
             <div id="coding-tab">
 
               <Blockly
-                loginEmail={loginEmail}
+                loginEmail={props.loginEmail}
                 blocklyXml={blocklyXml}
                 setBlockly={setBlocklyXml}
                 pythonCode={pythonCode}
@@ -127,22 +132,33 @@ const Platform = withCookies((props) => {
 
           <Route path="/user-analytics">
             <Dashboard
-              loginEmail={loginEmail}
+              loginEmail={props.loginEmail}
             />
           </Route>
 
           <Route path="/history">
             <History
-              loginEmail={loginEmail}
+              loginEmail={props.loginEmail}
             />
           </Route>
 
           <Route path="/context-history">
             <ContextHistory
               parentContext={props.parentContext}
-              loginEmail={loginEmail}
+              loginEmail={props.loginEmail}
               contextHistoryLoaded={props.contextHistoryLoaded}
               setContextHistoryLoaded={props.setContextHistoryLoaded}
+            />
+          </Route>
+          
+          <Route path="/physical-blockly">
+            <PhysicalBlockly
+              selectedBotName={props.selectedBotName}
+              pb={pb}
+              setPb={setPb}
+              setPythonCode={setPythonCode}
+              setBlocklyXml={setBlocklyXml}
+              setPythonCodeState = {setPythonCodeState}
             />
           </Route>
 

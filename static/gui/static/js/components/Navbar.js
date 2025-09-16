@@ -17,7 +17,7 @@ import {
   useLocation
 } from "react-router-dom";
 
-const allRoutes = ['/start', '/coding', '/user-analytics', '/history', '/context-history'];
+const allRoutes = ['/start', '/coding', '/user-analytics', '/history', '/context-history', '/physical-blockly'];
 const authorizationRestrictedRoutes = ['/user-analytics', '/history', '/context-history'];
 
 /**
@@ -28,7 +28,8 @@ const SETUP = 0;
 const CODING = 1;
 const ANALYTICS = 2;
 const HIST = 3
-const CONTEXTHIST = 5;
+const CONTEXTHIST = 4;
+const PHYSICALBLOCKLY = 5;
 
 const Navbar = (props) => {
   const [loginEmail, setLoginEmail] = useState(props.cookies.get('current_user_email') || "");
@@ -92,6 +93,9 @@ const Navbar = (props) => {
         <Link id="coding-link" to="/coding" className={`nav-link ${activeIndex === CODING ? "active" : ""}`} onClick={(e) => { setActiveIndex(CODING) }}><FontAwesomeIcon icon="code" /> Coding</Link>
         {isLoggedIn &&
           <Link id="analytics-link" to="/user-analytics" className={`nav-link ${activeIndex === ANALYTICS ? "active" : ""}`} onClick={(e) => { setActiveIndex(ANALYTICS) }}><FontAwesomeIcon icon={Icons.faChartBar} /> Analytics</Link>
+        }
+        {
+          <Link id="physical-blockly-link" to="/physical-blockly" className={`nav-link ${activeIndex === PHYSICALBLOCKLY ? "active" : ""}`} onClick={(e) => { setActiveIndex(PHYSICALBLOCKLY) }}><FontAwesomeIcon icon={Icons.faCubes} /> Physical Blockly</Link>
         }
         {isLoggedIn &&
           <Link id="history-link" to="/history" className={`nav-link ${activeIndex === HIST ? "active" : ""}`} onClick={(e) => { setActiveIndex(HIST) }}><FontAwesomeIcon icon={Icons.faChartBar} /> History</Link>

@@ -4,10 +4,15 @@ Base Station for the MiniBot.
 import os
 import re
 import socket
-import sys
 import time
 import threading
-import math
+import ctypes
+import json
+import queue
+import random
+import copy
+from time import sleep
+from typing import Tuple, Optional
 
 from basestation.bot import Bot
 from basestation import config
@@ -17,13 +22,18 @@ from basestation.databases.user_database import User, Chatbot as ChatbotTable, S
 from basestation.databases.user_database import db
 
 # imports from basestation util
-from basestation.util.stoppable_thread import StoppableThread, ThreadSafeVariable
+import basestation.piVision.pb_utils as pb_utils
 
+from basestation.emotion_bs import *
+
+import random
 from random import choice, randint
 from string import digits, ascii_lowercase, ascii_uppercase
 from typing import Any, Dict, List, Tuple, Optional
 from copy import deepcopy
 import subprocess
+from basestation import ChatbotWrapper
+ 
 
 MAX_VISION_LOG_LENGTH = 1000
 VISION_UPDATE_FREQUENCY = 30
@@ -54,35 +64,60 @@ def make_thread_safe(func):
 
 
 class BaseStation:
+    # THESE SHOULD BE CONSISTENT ACROSS THE BASESTATION AND ROBOT
+    START_CMD_TOKEN = "<<<<"
+    END_CMD_TOKEN = ">>>>"
+    SOCKET_BUFFER_SIZE = 1024
+    SOCKET_BUFFER_PADDING = 32
+
     def __init__(self, app_debug=False, reuseport = config.reuseport):
         self.active_bots = {}
         self.reuseport = reuseport
+        self.chatbot = ChatbotWrapper.ChatbotWrapper()
 
         self.blockly_function_map = {
-            "move_forward": "fwd",         "move_backward": "back",
-            "move_forward_distance": "fwd_dst",         "move_backward_distance": "back_dst",
-            "move_to": "move_to",
-            "wait": "time.sleep",          "stop": "stop",
-            "set_wheel_power":             "ECE_wheel_pwr",
-            "turn_clockwise": "right",     "turn_counter_clockwise": "left",
-            "turn_clockwise_angle": "right_angle",     "turn_counter_clockwise_angle": "left_angle",
-            "turn_to": "turn_to",
-            "move_servo": "move_servo",    "read_ultrasonic": "read_ultrasonic",
+            "move_forward": "bot_script.sendKV(\"WHEELS\",\"(pow,pow)\")",
+            "move_backward": "bot_script.sendKV(\"WHEELS\",\"(-pow,-pow)\")",
+            "turn_clockwise": "bot_script.sendKV(\"WHEELS\",\"(pow,-pow)\")",
+            "turn_counter_clockwise": "bot_script.sendKV(\"WHEELS\",\"(-pow,pow)\")",
+            "wait": "time.sleep",        
+            "stop": "bot_script.sendKV(\"WHEELS\",\"(0,0)\")",
 
+            "set_expression": "bot_script.sendKV(\"SPR\",ARG)",
+            "clear_expression": "bot_script.sendKV(\"SPR\",ARG)",
+            "set_expression_playback_speed": "bot_script.sendKV(\"PBS\",ARG)",
+
+            "get_accel_x": "bot_script.get_imu()[0]",
+            "get_accel_y": "bot_script.get_imu()[1]",
+            "get_accel_z": "bot_script.get_imu()[2]",
+
+            "move_servo": "bot_script.sendKV(\"SERVO\", \"ARG\")",
+            "read_rangefinder": "bot_script.get_rangefinder()",
+
+            "read_line_follow_left": "bot_script.get_line_follow(\"LEFT\")",
+            "read_line_follow_right": "bot_script.get_line_follow(\"RIGHT\")"
+            # read_rangefinder: have to sleep because it will get the older distance
+            #TODO
         }
-        # functions that run continuously, and hence need to be started
-        # in a new thread on the Minibot otherwise the Minibot will get
-        # stuck in an infinite loop and will be unable to receive
-        # other commands
-        self.blockly_threaded_functions = [
-            "fwd", "back", "right", "left", "stop", "ECE_wheel_pwr"
-        ]
+
+        self.wheel_directions_multiplier_map = {
+            "forward": [1, 1],
+            "backward": [-1, -1],
+            "left": [1, -1],
+            "right": [-1, 1],
+            "stop": [0, 0]
+        }
+
+        self.wheel_directions = ["forward", "backward", "left", "right", "stop"]
+
+        self.py_commands = queue.Queue()
+        self.pb_map = {}
+        self.pb_stopped = True
 
         # This socket is used to listen for new incoming Minibot broadcasts
         # The Minibot broadcast will allow us to learn the Minibot's ipaddress
         # so that we can connect to the Minibot
         self.sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-
 
         if self.reuseport:
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
@@ -98,14 +133,9 @@ class BaseStation:
         # Cards, and therefore will have multiple ip_addresses
         server_address = ("0.0.0.0", 5001)
         
-
-    
-
-        
         # checks if vision can see april tag by checking lenth of vision_log
         # self.connections = BaseConnection()
 
-        
         # only bind in debug mode if you are the debug server, if you are the
         # monitoring program which restarts the debug server, do not bind,
         # otherwise the debug server won't be able to bind
@@ -129,11 +159,18 @@ class BaseStation:
             "stop": "Minibot stops",
         }
 
+        self.script_thread = None
         # Keep track of any built-in scripts that are running / should run next
         self.builtin_script_state = {
             "procs": dict(),
             "next_req_id": 0
         }
+
+        # Emotional System Variables (Possibly Upgrade to Handle Multiple Bots)
+        self.emotion_repo = {}
+        self.current_expression = None
+        self.current_expression_playback_speed = 30
+        
 
     # ==================== BOTS ====================
 
@@ -177,7 +214,6 @@ class BaseStation:
         for address in address_data_map:
             # data should consist of "password port_number"
             data_lst = address_data_map[address].split(" ")
-
             if data_lst[0] == request_password:
                 # Tell the minibot that you are the base station
                 self.sock.sendto(response.encode(), address)
@@ -231,36 +267,71 @@ class BaseStation:
     @make_thread_safe
     def move_bot_wheels(self, bot_name: str, direction: str, power: str):
         """ Gives wheels power based on user input """
+        # stop currently running script (if any)
+        self.stop_bot_script(bot_name)
         bot = self.get_bot(bot_name)
         direction = direction.lower()
-        bot.sendKV("WHEELS", direction)
-        
-    # def set_bot_mode(self, bot_name: str, mode: str):
-    #     """ Set the bot to either line follow or object detection mode """
-    #     bot = self.get_bot(bot_name)
-
-    #     if mode == "object_detection":
-    #         self.bot_vision_server = subprocess.Popen(
-    #             ['python', './basestation/piVision/server.py', '-p MobileNetSSD_deploy.prototxt', 
-    #             '-m', 'MobileNetSSD_deploy.caffemodel', '-mW', '2', '-mH', '2', '-v', '1'])
-    #     elif mode == "color_detection":
-    #         self.bot_vision_server = subprocess.Popen(
-    #             ['python', './basestation/piVision/server.py', '-p MobileNetSSD_deploy.prototxt', 
-    #             '-m', 'MobileNetSSD_deploy.caffemodel', '-mW', '2', '-mH', '2', '-v', '2'])
-    #     else:
-    #         if self.bot_vision_server:
-    #             self.bot_vision_server.kill()
-
-    #     bot.sendKV("MODE", mode)
+        wheel_arg_str = "(0,0)"
+        if direction in self.wheel_directions_multiplier_map.keys():
+            wheel_arg = copy.deepcopy(self.wheel_directions_multiplier_map[direction])
+            power = self.parse_power(power)
+            wheel_arg[0] *= power
+            wheel_arg[1] *= power
+            wheel_arg_str = "(" + str(wheel_arg[0]) + "," + str(wheel_arg[1]) + ")"
+        bot.sendKV("WHEELS", wheel_arg_str)
 
     def send_bot_script(self, bot_name: str, script: str):
         """Sends a python program to the specific bot"""
-        bot = self.get_bot(bot_name)
-        # reset the previous script_exec_result
-        bot.script_exec_result = None
         parsed_program_string = self.parse_program(script)
-        # Now actually send to the bot
-        bot.sendKV("SCRIPTS", parsed_program_string)
+
+        bot = self.get_bot(bot_name)
+        self.stop_bot_script(bot_name)
+        
+        # reset the previous script_exec_result
+        bot.script_exec_result_var.set_with_lock(False, "Waiting for execution completion")
+
+        # Run the script in a separate thread
+        self.script_thread = threading.Thread(target=self.run_bot_script, args=[bot_name, parsed_program_string])
+        self.script_thread.start()
+
+    def run_bot_script(self, bot_name: str, program_string: str):
+        """ Executes a python program on the specific bot """
+        bot_script = self.get_bot(bot_name)
+        bot_script.script_alive_var.set_with_lock(True, True, timeout=-1)
+        try:
+            print("Current Expression:", self.current_expression)
+            print("Parsed Program:")
+            print(program_string)
+            print("Executing Program...")
+            exec_globals = {
+                'bot_script': bot_script,
+                'Emotion' : Emotion,
+                'self' : self,
+                }
+            exec(program_string, exec_globals)  # Pass bot_script to exec()
+            print("Finished Executing Program!")
+            bot_script.script_exec_result_var.set_with_lock(True, "Successful execution", timeout=5)
+        except Exception as exception:
+            str_exception = str(type(exception)) + ": " + str(exception)
+            bot_script.script_exec_result_var.set_with_lock(True, str_exception, timeout=5)
+            print("exception encountered in running the program")
+            print(str_exception)
+        bot_script.script_alive_var.set_with_lock(True, False, timeout=-1)
+
+    def stop_bot_script(self, bot_name: str):
+        """ Stops any currently executing python program on the specific bot """
+        bot = self.get_bot(bot_name)
+        if bot == None:
+            print("no bot available for stoppping bot script")
+            return
+        
+        script_alive = bot.script_alive_var.get_with_lock(True, timeout=-1)
+        if script_alive and self.script_thread != None:
+            # stop current running script and send stop command to the bot
+            bot.script_exec_result_var.set_with_lock(True, "Stop current program in execution", timeout=1)
+            res = ctypes.pythonapi.PyThreadState_SetAsyncExc(ctypes.c_long(self.script_thread.ident), ctypes.py_object(SystemExit))
+            print("interrupting the thread executing the script, result: " + str(res))
+            bot.sendKV("WHEELS", "(0,0)")
 
     # def get_virtual_program_execution_data(self, query_params: Dict[str, Any]) -> Dict[str, List[Dict]]:
     #     script = query_params['script_code']
@@ -277,34 +348,83 @@ class BaseStation:
     #     return run_program_string_for_gui_data(parsed_program_string, start, worlds)
 
     def parse_program(self, script: str) -> str:
+        #TODO
+        """ Parses python program into commands that can be sent to the bot """
         # Regex is for bot-specific functions (move forward, stop, etc)
         # 1st group is the whitespace (useful for def, for, etc),
         # 2nd group is for func name, 3rd group is for args,
         # 4th group is for anything else (additional whitespace,
         # ":" for end of if condition, etc)
-        pattern = r"(.*)bot.(\w*)\((.*)\)(.*)"
+        pattern = r"(.*)bot\.(\w+)\(([^)]*)\)(.*)"
         regex = re.compile(pattern)
         program_lines = script.split('\n')
         parsed_program = []
+
+        parsed_program.append("import time\n")
+
+        init_emotional_system(parsed_program)
+
         for line in program_lines:
             match = regex.match(line)
-            if match:
-                if match.group(2) in self.blockly_function_map:
-                    func = self.blockly_function_map[match.group(2)]
+            # match group 2: command, such as move_forward
+            # match group 3: argument, such as power like 100
+            while match:
+                command = match.group(2)
+                argument = str(match.group(3))
+
+                if command in self.blockly_function_map:
+                    func = self.blockly_function_map[command]
                 else:
-                    func = match.group(2)
-                args = match.group(3)
+                    func = command
+
+                if command == "wait":
+                    func = func + "(" + argument + ")"
+
+                # TODO Improve/rework blockly function map so this doesn't need to happen
+                if command == "set_expression":
+                    func = func.replace("ARG", argument)
+
+                if command == "set_expression_playback_speed":
+                    func = func.replace("ARG", argument)
+
+                if command == "clear_expression":
+                    func = func.replace("ARG", "\"\"")
+
+
+                # TODO: implement custom power  
+                # elif func.startswith("bot_script.sendKV(\"WHEELS\","):
+                #     if argument != '':
+                #         float_power = float(argument) / 100
+                #         func = func.replace("pow",str(float_power))   
+                if func.startswith("bot_script.sendKV(\"WHEELS\","):
+                    if argument != '':
+                        power = self.parse_power(argument)
+                        func = func.replace("pow", str(power))   
+                    else:
+                        func = func.replace("-pow", "0").replace("pow", "0")
+
+                if func.startswith("bot_script.sendKV(\"SERVO\","):
+                    try:
+                        arguments = [int(x) for x in argument.replace(" ", "").split(",")]
+                    except:
+                        arguments = [0, 0]
+                    
+                    func = func.replace("ARG", f"{arguments[0]}_{arguments[1]}")
+
                 whitespace = match.group(1)
                 if not whitespace:
                     whitespace = ""
                 parsed_line = whitespace
-                if func in self.blockly_threaded_functions:
-                    parsed_line += f"Thread(target={func}, args=[{args}]).start()\n"
-                else:
-                    parsed_line += f"{func}({args}){match.group(4)}\n"
-                parsed_program.append(parsed_line)
-            else:
-                parsed_program.append(line + '\n')  # "normal" Python
+                # adding ; for multiline execution in exec
+                parsed_line += func
+                parsed_line += match.group(4)
+
+                line = parsed_line
+                match = regex.match(line)
+            
+            parsed_program.append(line + '\n') 
+
+        parsed_program.append("time.sleep(1)\n") #TODO Possibly Remove
         parsed_program_string = "".join(parsed_program)
         return parsed_program_string
 
@@ -318,12 +438,27 @@ class BaseStation:
         """ Retrieve the last script's execution result from the specified bot.
         """
         bot = self.get_bot(bot_name)
-        # request the bot to send the script execution result
-        bot.sendKV("SCRIPT_EXEC_RESULT", "")
-        # try reading to see if the bot has replied
-        bot.readKV()
-        # this value might be None if the bot hasn't replied yet
-        return bot.script_exec_result
+        return bot.script_exec_result_var.get_with_lock(False)
+
+    def parse_power(self, power: str) -> float:
+        """ Convert power string (with max of 100) to a float with max of 1.
+        """
+        try:
+            power = int(power)
+            if power < 0:
+                power = 0
+            elif power > 100:
+                power = 100
+        except:
+            power = 0
+        power /= 100
+        return power
+
+    def get_current_expression(self):
+        return self.current_expression
+    
+    def get_current_expression_playback_speed(self):
+        return self.current_expression_playback_speed
 
     # ==================== DATABASE ====================
     def login(self, email: str, password: str) -> Tuple[int, Optional[str]]:
@@ -391,6 +526,114 @@ class BaseStation:
         user = User.query.filter(User.email == self.login_email).first()
         user.custom_function = custom_function
         db.session.commit()
+        return True
+
+    def get_custom_function(self):
+        print(self.login_email)
+        if not self.login_email:
+            return False, ""
+
+        user = User.query.filter(User.email == self.login_email).first()
+        return True, user.custom_function
+    
+    # ==================== PHYSICAL BLOCKLY ==================================
+    def get_next_py_command(self):
+        """ Gets the next python command for the physical blockly process """
+        if self.py_commands.qsize() == 0:
+            return ""
+        val = self.py_commands.get(False)
+        return val
+
+    def get_rfid(self, bot_name: str):
+        """ Gets the RFID tag from the specific bot """
+        bot = self.get_bot(bot_name)
+        bot.sendKV("RFID", 4)
+        bot.readKV()
+        print("rfid tag: " + bot.rfid_tags, flush=True)
+        return bot.rfid_tags
+
+    @make_thread_safe
+    def set_bot_mode(self, bot_name: str, mode: str, pb_map: json, power: str):
+        """ Set the bot to different physical blockly modes """
+        bot = self.get_bot(bot_name)
+        pb_map = str(pb_map)
+        if mode == "physical-blockly" or mode == "physical-blockly-2":
+            self.pb_stopped = False
+            if mode == 'physical-blockly':
+                self.physical_blockly(bot_name, 0, pb_map, power)
+            else:
+                self.physical_blockly(bot_name, 1, pb_map, power)
+        # elif mode == "object_detection":
+        #     self.bot_vision_server = subprocess.Popen(
+        #         ['python', './basestation/piVision/server.py', '-p MobileNetSSD_deploy.prototxt',
+        #          '-m', 'MobileNetSSD_deploy.caffemodel', '-mW', '2', '-mH', '2', '-v', '1'])
+        # elif mode == "color_detection":
+        #     self.bot_vision_server = subprocess.Popen(
+        #         ['python', './basestation/piVision/server.py', '-p MobileNetSSD_deploy.prototxt',
+        #          '-m', 'MobileNetSSD_deploy.caffemodel', '-mW', '2', '-mH', '2', '-v', '2'])
+        # else:
+        #     if self.bot_vision_server:
+        #         self.bot_vision_server.kill()
+        bot.sendKV("MODE", mode)
+    
+    def physical_blockly(self, bot_name: str, mode: int, pb_map: json, power: str):
+        """ Runs the physical blockly process on the specific bot, with
+        custom mapping of blocks and custom power option """
+        rfid_tags = queue.Queue()
+        pb_map = json.loads(pb_map)
+        
+        def tag_producer():
+            while not self.pb_stopped:
+                tag = self.get_rfid(bot_name)
+                rfid_tags.put(tag)
+                sleep(1.0)
+            
+        def tag_consumer():
+            while not self.pb_stopped:
+                try:
+                    tag = rfid_tags.get(block=False).strip()
+                    if tag in pb_map.keys():
+                        tag = pb_map[tag]
+                        task = pb_utils.classify(tag, pb_utils.commands)
+                        py_code = pb_utils.pythonCode[task[1]]
+
+                        if mode == 1:
+                            if py_code[0:3] == "bot" and task[1] in self.wheel_directions:
+                                self.move_bot_wheels(bot_name, task[1], power)
+                        self.py_commands.put("pb:" + py_code)
+                except:
+                    pass
+                sleep(1.0)
+                
+        threading.Thread(target=tag_consumer).start()
+        threading.Thread(target=tag_producer).start()
+    
+    def end_physical_blockly(self, bot_name: str):
+        """ Ends the physical blockly process """
+        self.pb_stopped = True
+        self.py_commands = queue.Queue()
+        self.move_bot_wheels(bot_name, "STOP", "100")
+        print("ending physical blockly thread")
+    
+    
+    # ==================== Set Servo ============================
+    def set_servo_angle(self, bot_name:str, servo_id: str, servo_angle: str):
+        bot = self.get_bot(bot_name)
+        if bot is None:
+            return False
+        servo_id = str(servo_id)
+        servo_angle = str(servo_angle)
+        bot.sendKV("SERVO", f"{servo_id}_{servo_angle}")
+        return True
+    
+    # ==================== RANGEFINDER/ULTRASONIC ============================
+    def get_rangefinder(self, bot_name:str):
+        bot = self.get_bot(bot_name)
+        if bot is None:
+            return False
+        bot.sendKV("RANGE", "")
+        bot.readKV()
+        print(f"Rangefinder distance: {bot.rangefinder_distance}")
         return True
 
     # ==================== NEW SPEECH RECOGNITION ============================

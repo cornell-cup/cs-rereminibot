@@ -1,0 +1,27 @@
+:root {
+  --sprite-width: 480px;
+  /* Width of each sprite */
+  --sprite-height: 320px;
+  /* Height of each sprite */
+  --sprites-per-row: 5;
+  /* Number of sprites per row */
+  --sprite-rows: 6;
+  /* Number of rows */
+  --frame-count: 30;
+}
+
+.sprite {
+  width: var(--sprite-width);
+  height: var(--sprite-height);
+  background-color: black;
+  /* background-image: url('../img/Expressions/Eyes_Roll.png'); */
+  /* Path to your spritesheet image */
+  animation: spriteAnimationKeyframes 0.5s steps(30) infinite;
+  animation-timing-function: step-end;
+}
+
+@keyframes spriteAnimationKeyframes {
+  0% { background-position: 0 0; }
+  50% { background-position: 0 -960px; }
+  100% { background-position: 0 -1920px; }
+}

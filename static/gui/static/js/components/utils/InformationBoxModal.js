@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { INFOBOXTYPE, INFOBOXID, AprilTagIdBoxModalText } from './Constants';
+import { INFOBOXTYPE, INFOBOXID, AprilTagIdBoxModalText, ExpressionBoxModalText } from './Constants';
 import { PortBoxModalText, SetupBoxModalText, VisionBoxModalText } from './Constants';
 
 
@@ -17,6 +17,9 @@ function InformationBoxModal({ type }) {
         } else if (type == INFOBOXTYPE.VISION) {
             setBoxText(VisionBoxModalText);
             setBoxID(INFOBOXID.VISION);
+        } else if (type == INFOBOXTYPE.EXPRESSION) {
+            setBoxText(ExpressionBoxModalText);
+            setBoxID(INFOBOXID.EXPRESSION);
         } else if (type == INFOBOXTYPE.APRIL_TAG_ID) {
             setBoxText(AprilTagIdBoxModalText);
             setBoxID(INFOBOXID.APRIL_TAG_ID);

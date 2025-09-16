@@ -10,14 +10,12 @@ export default class MovementControls extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            power: 50
-        }
         // this.refreshingBotListRef = React.createRef();
         // this.addBotListener = this.addBotListener.bind(this);
         this.buttonMapListener = this.buttonMapListener.bind(this);
         this.handleArrowKeyDown = this.handleArrowKeyDown.bind(this);
         // this.motorPorts = this.motorPorts.bind(this);
+        this.updatePowerValue = this.updatePowerValue.bind(this);
     }
 
     /*listener for direction buttons*/
@@ -32,7 +30,7 @@ export default class MovementControls extends React.Component {
             data: JSON.stringify({
                 bot_name: _this.props.selectedBotName,
                 direction: value,
-                power: _this.state.power,
+                power: _this.props.power,
             })
         }).catch(function (error) {
             if (error.response.data.error_msg.length > 0)
@@ -44,6 +42,7 @@ export default class MovementControls extends React.Component {
 
     /** Handles keyboard input to control the movement buttons */
     handleArrowKeyDown(event) {
+        const _this = this;
         const directionArray = ["left", "forward", "right", "backward"]
         const spaceBar = 32;
         const leftArrow = 37;
@@ -53,17 +52,20 @@ export default class MovementControls extends React.Component {
         if (event.keyCode === spaceBar) {
             // prevent spacebar from jumping to the end of the page
             event.preventDefault()
-            this.buttonMapListener("stop");
+            _this.buttonMapListener("stop");
             // If user presses an arrow key, make the Minibot move in that direction
         } else if (event.keyCode >= leftArrow && event.keyCode <= downArrow) {
             // prevent arrow key from causing the page to scroll
             event.preventDefault()
-            this.buttonMapListener(directionArray[event.keyCode - leftArrow])
+            _this.buttonMapListener(directionArray[event.keyCode - leftArrow])
         }
     }
 
     updatePowerValue(event) {
-        this.state.power = event.target.value;
+        console.log("update power");
+        console.log(event.target.value);
+        const _this = this;
+        _this.props.setPower(event.target.value);
     }
 
     render() {
@@ -93,7 +95,9 @@ export default class MovementControls extends React.Component {
                                 <FontAwesomeIcon icon="caret-down" />
                             </button>
                         </div>
-                        <label className="white-label" style={{ display: 'block' }}> Power:</label>
+                        <label className="white-label" style={{ display: 'block' }}> Power: &nbsp;
+                            <span>{this.props.power}</span>
+                        </label>
                         <input id="custom-range-1" className="custom-range" name="wheel_power" type="range" min="0" max="100"
                             step="5" onChange={evt => this.updatePowerValue(evt)} />
                     </div>

@@ -161,53 +161,53 @@ Blockly.Python['move_power_time'] = function (block) {
 };
 
 
-Blockly.Blocks['move_distance'] = {
-  init: function () {
-    this.jsonInit(miniblocks.move_distance);
-  }
-};
+// Blockly.Blocks['move_distance'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.move_distance);
+//   }
+// };
 
-Blockly.Python['move_distance'] = function (block) {
-  var dropdown_direction = block.getFieldValue('direction');
-  var number_inches = block.getFieldValue('inches');
+// Blockly.Python['move_distance'] = function (block) {
+//   var dropdown_direction = block.getFieldValue('direction');
+//   var number_inches = block.getFieldValue('inches');
 
-  var fcn = {
-    fwd_dst: "move_forward_distance(",
-    bk_dst: "move_backward_distance("
-  }[dropdown_direction];
+//   var fcn = {
+//     fwd_dst: "move_forward_distance(",
+//     bk_dst: "move_backward_distance("
+//   }[dropdown_direction];
 
-  return BOT_HEADER + fcn + number_inches + ")\n";
-};
+//   return BOT_HEADER + fcn + number_inches + ")\n";
+// };
 
-Blockly.Blocks['move_to_position'] = {
-  init: function () {
-    this.jsonInit(miniblocks.move_to_position);
-  }
-};
+// Blockly.Blocks['move_to_position'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.move_to_position);
+//   }
+// };
 
-Blockly.Python['move_to_position'] = function (block) {
-  var x_inches = block.getFieldValue('x_inches');
-  var y_inches = block.getFieldValue('y_inches');
+// Blockly.Python['move_to_position'] = function (block) {
+//   var x_inches = block.getFieldValue('x_inches');
+//   var y_inches = block.getFieldValue('y_inches');
 
-  var fcn = "move_to("
+//   var fcn = "move_to("
 
-  return BOT_HEADER + fcn + x_inches + "," + y_inches + ")\n";
-};
+//   return BOT_HEADER + fcn + x_inches + "," + y_inches + ")\n";
+// };
 
-Blockly.Blocks['path_plan_to_position'] = {
-  init: function () {
-    this.jsonInit(miniblocks.path_plan_to_position);
-  }
-};
+// Blockly.Blocks['path_plan_to_position'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.path_plan_to_position);
+//   }
+// };
 
-Blockly.Python['path_plan_to_position'] = function (block) {
-  var x_inches = block.getFieldValue('x_inches');
-  var y_inches = block.getFieldValue('y_inches');
+// Blockly.Python['path_plan_to_position'] = function (block) {
+//   var x_inches = block.getFieldValue('x_inches');
+//   var y_inches = block.getFieldValue('y_inches');
 
-  var fcn = "path_plan_to("
+//   var fcn = "path_plan_to("
 
-  return BOT_HEADER + fcn + x_inches + "," + y_inches + ")\n";
-};
+//   return BOT_HEADER + fcn + x_inches + "," + y_inches + ")\n";
+// };
 
 
 
@@ -258,56 +258,56 @@ Blockly.Python['turn_power'] = function (block) {
   return BOT_HEADER + fcn + number_percent + ")" + FCN_ENDING;
 };
 
-Blockly.Blocks['turn_power_time'] = {
-  init: function () {
-    this.jsonInit(miniblocks.turn_power_time);
-  }
-};
+// Blockly.Blocks['turn_power_time'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.turn_power_time);
+//   }
+// };
 
-Blockly.Python['turn_power_time'] = function (block) {
-  var dropdown_direction = block.getFieldValue('direction');
-  var number_percent = block.getFieldValue('percent');
-  var number_seconds = block.getFieldValue('seconds');
+// Blockly.Python['turn_power_time'] = function (block) {
+//   var dropdown_direction = block.getFieldValue('direction');
+//   var number_percent = block.getFieldValue('percent');
+//   var number_seconds = block.getFieldValue('seconds');
 
-  var fcn = {
-    turn_clockwise: "turn_clockwise(",
-    turn_counter_clockwise: "turn_counter_clockwise("
-  }[dropdown_direction];
+//   var fcn = {
+//     turn_clockwise: "turn_clockwise(",
+//     turn_counter_clockwise: "turn_counter_clockwise("
+//   }[dropdown_direction];
 
-  return BOT_HEADER + fcn + number_percent + ")\n" + generateWait(number_seconds);
-};
+//   return BOT_HEADER + fcn + number_percent + ")\n" + generateWait(number_seconds);
+// };
 
-Blockly.Blocks['turn_angle'] = {
-  init: function () {
-    this.jsonInit(miniblocks.turn_angle);
-  }
-};
+// Blockly.Blocks['turn_angle'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.turn_angle);
+//   }
+// };
 
-Blockly.Python['turn_angle'] = function (block) {
-  var dropdown_direction = block.getFieldValue('direction');
-  var number_degrees = block.getFieldValue('degrees');
+// Blockly.Python['turn_angle'] = function (block) {
+//   var dropdown_direction = block.getFieldValue('direction');
+//   var number_degrees = block.getFieldValue('degrees');
 
-  var fcn = {
-    turn_clockwise_angle: "turn_clockwise_angle(",
-    turn_counter_clockwise_angle: "turn_counter_clockwise_angle("
-  }[dropdown_direction];
+//   var fcn = {
+//     turn_clockwise_angle: "turn_clockwise_angle(",
+//     turn_counter_clockwise_angle: "turn_counter_clockwise_angle("
+//   }[dropdown_direction];
 
-  return BOT_HEADER + fcn + number_degrees + ")\n";
-};
+//   return BOT_HEADER + fcn + number_degrees + ")\n";
+// };
 
-Blockly.Blocks['turn_to_angle'] = {
-  init: function () {
-    this.jsonInit(miniblocks.turn_to_angle);
-  }
-};
+// Blockly.Blocks['turn_to_angle'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.turn_to_angle);
+//   }
+// };
 
-Blockly.Python['turn_to_angle'] = function (block) {
-  var angle_degrees = block.getFieldValue('angle_degrees');
+// Blockly.Python['turn_to_angle'] = function (block) {
+//   var angle_degrees = block.getFieldValue('angle_degrees');
 
-  var fcn = "turn_to("
+//   var fcn = "turn_to("
 
-  return BOT_HEADER + fcn + angle_degrees + ")\n";
-};
+//   return BOT_HEADER + fcn + angle_degrees + ")\n";
+// };
 
 // ================ WAIT BLOCK ================ //
 
@@ -324,46 +324,46 @@ Blockly.Python['wait_seconds'] = function (block) {
 
 // ================ COMMUNICATION BLOCKS ================ //
 
-Blockly.Blocks['send_commands'] = {
-  init: function () {
-    this.jsonInit(miniblocks.send_commands);
-  }
-};
+// Blockly.Blocks['send_commands'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.send_commands);
+//   }
+// };
 
-Blockly.Python['send_commands'] = function (block) {
-  var dropdown_bot_name = block.getFieldValue('bot_name');
-  var statements_send_commands = Blockly.Python.statementToCode(block, 'send_commands');
-  // TODO: Assemble Python into code variable.
-  var code = 'pass #TODO Implement backend for send_commands';
-  return code + FCN_ENDING;
-};
+// Blockly.Python['send_commands'] = function (block) {
+//   var dropdown_bot_name = block.getFieldValue('bot_name');
+//   var statements_send_commands = Blockly.Python.statementToCode(block, 'send_commands');
+//   // TODO: Assemble Python into code variable.
+//   var code = 'pass #TODO Implement backend for send_commands';
+//   return code + FCN_ENDING;
+// };
 
-Blockly.Blocks['wait_for_commands'] = {
-  init: function () {
-    this.jsonInit(miniblocks.wait_for_commands);
-  }
-};
+// Blockly.Blocks['wait_for_commands'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.wait_for_commands);
+//   }
+// };
 
-Blockly.Python['wait_for_commands'] = function (block) {
-  var dropdown_bot_name = block.getFieldValue('bot_name');
-  // TODO: Assemble Python into code variable.
-  var code = 'pass #TODO Implement backend for wait_for_commands';
-  return code + FCN_ENDING;
-};
+// Blockly.Python['wait_for_commands'] = function (block) {
+//   var dropdown_bot_name = block.getFieldValue('bot_name');
+//   // TODO: Assemble Python into code variable.
+//   var code = 'pass #TODO Implement backend for wait_for_commands';
+//   return code + FCN_ENDING;
+// };
 
-Blockly.Blocks['while_wait_for_commands'] = {
-  init: function () {
-    this.jsonInit(miniblocks.while_wait_for_commands);
-  }
-};
+// Blockly.Blocks['while_wait_for_commands'] = {
+//   init: function () {
+//     this.jsonInit(miniblocks.while_wait_for_commands);
+//   }
+// };
 
-Blockly.Python['while_wait_for_commands'] = function (block) {
-  var dropdown_bot_name = block.getFieldValue('bot_name');
-  var statements_wait_commands = Blockly.Python.statementToCode(block, 'wait_commands');
-  // TODO: Assemble Python into code variable.
-  var code = 'pass #TODO Implement backend for while_wait_for_commands';
-  return code + FCN_ENDING;
-};
+// Blockly.Python['while_wait_for_commands'] = function (block) {
+//   var dropdown_bot_name = block.getFieldValue('bot_name');
+//   var statements_wait_commands = Blockly.Python.statementToCode(block, 'wait_commands');
+//   // TODO: Assemble Python into code variable.
+//   var code = 'pass #TODO Implement backend for while_wait_for_commands';
+//   return code + FCN_ENDING;
+// };
 
 // ================ SERVO BLOCKS ================ //
 
@@ -375,26 +375,50 @@ Blockly.Blocks['move_servo'] = {
 
 Blockly.Python['move_servo'] = function (block) {
   var angle = block.getFieldValue('angle');
-  var funcCall = "move_servo(" + angle + ")";
+  var id = block.getFieldValue('id');
+  var funcCall = "move_servo(" + id + ", " + angle + ")";
 
   return BOT_HEADER + funcCall + FCN_ENDING;
 }
 
 // ================ ULTRASONIC BLOCKS ================ //
 
-Blockly.Blocks['read_ultrasonic'] = {
+Blockly.Blocks['read_rangefinder'] = {
   init: function () {
-    this.jsonInit(miniblocks.read_ultrasonic)
+    this.jsonInit(miniblocks.read_rangefinder);
   }
 }
 
-Blockly.Python['read_ultrasonic'] = function (block) {
-  var lowerBound = "0 < ";
-  var upperLimit = block.getFieldValue('input');
-  var upperBound = " <= " + upperLimit;
-  var funcName = "read_ultrasonic()";
+Blockly.Python['read_rangefinder'] = function (block) {
+  var funcName = "read_rangefinder()";
 
-  return [lowerBound + BOT_HEADER + funcName + upperBound, Blockly.Python.ORDER_NONE];
+  return BOT_HEADER + funcName + FCN_ENDING;
+}
+
+// ================ Get Line Follow ================ //
+
+Blockly.Blocks['read_line_follow_left'] = {
+  init: function () {
+    this.jsonInit(miniblocks.read_line_follow_left);
+  }
+}
+
+Blockly.Python['read_line_follow_left'] = function (block) {
+  var funcName = "read_line_follow_left()";
+
+  return BOT_HEADER + funcName + FCN_ENDING;
+}
+
+Blockly.Blocks['read_line_follow_right'] = {
+  init: function () {
+    this.jsonInit(miniblocks.read_line_follow_right);
+  }
+}
+
+Blockly.Python['read_line_follow_right'] = function (block) {
+  var funcName = "read_line_follow_right()";
+
+  return BOT_HEADER + funcName + FCN_ENDING;
 }
 
 // ================ COLOR SENSING BLOCKS ================ //
@@ -429,4 +453,192 @@ Blockly.Python['sees_color'] = function (block) {
   var color_code = '==' + color_check;
 
   return [BOT_HEADER + sensor_code + color_code, Blockly.Python.ORDER_NONE];
+};
+
+// ============= EMOTIONAL SUBSYSTEM BLOCKS ============== //
+
+Blockly.Blocks['create_emotion'] = {
+  init: function () {
+    this.jsonInit(miniblocks.create_emotion)
+  }
+};
+
+Blockly.Python['create_emotion'] = function (block) {
+  var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
+  var emotion_action_steps = Blockly.Python.statementToCode(block, 'emotion_action_steps');
+
+  // Defines a function for the emotion's action steps
+  var processed_eas = 'def emotion_action_steps():\n';
+  processed_eas += emotion_action_steps;
+  processed_eas += '  \n';
+
+  var code = processed_eas;
+  code += 'self.emotion_repo[' + emotion_name + '] = Emotion(' + emotion_name + ',';
+  code += 'emotion_action_steps)\n';
+  return code;
+};
+
+Blockly.Blocks['add_emotion'] = {
+  init: function () {
+    this.jsonInit(miniblocks.add_emotion)
+  }
+};
+
+Blockly.Python['add_emotion'] = function (block) {
+  var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
+  var emotion_priority = Blockly.Python.valueToCode(block, 'emotion_priority', Blockly.Python.ORDER_NONE);
+
+  var code = 'added_emotions[' + emotion_name + '] = ' + emotion_priority + '\n';
+  return code;
+};
+
+Blockly.Blocks['add_required_device'] = {
+  init: function () {
+    this.jsonInit(miniblocks.add_required_device)
+  }
+};
+
+Blockly.Python['add_required_device'] = function (block) {
+  var dropdown_device_name = block.getFieldValue('device_name');
+  var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
+
+  var code = 'self.emotion_repo[' + emotion_name + '].add_required_device(\"' + dropdown_device_name + '\")\n';
+  return code;
+};
+
+Blockly.Blocks['set_device_emotion_status'] = {
+  init: function () {
+    this.jsonInit(miniblocks.set_device_emotion_status)
+  }
+};
+
+Blockly.Python['set_device_emotion_status'] = function (block) {
+  var dropdown_device_name = block.getFieldValue('device_name');
+  var device_status = Blockly.Python.valueToCode(block, 'device_status', Blockly.Python.ORDER_NONE);
+
+  var code = 'devices_emotional_status[\"' + dropdown_device_name + '\"] = ' + device_status + '\n';
+  return code;
+};
+
+Blockly.Blocks['set_emotion_if_possible'] = {
+  init: function () {
+    this.jsonInit(miniblocks.set_emotion_if_possible)
+  }
+};
+
+Blockly.Python['set_emotion_if_possible'] = function (block) {
+  var emotion_name = Blockly.Python.valueToCode(block, 'emotion_name', Blockly.Python.ORDER_NONE);
+
+  var code = 'if ' + emotion_name + ' in added_emotions:\n';
+     code += '    if current_emotion != None: \n';
+     code += '        if added_emotions[' + emotion_name + '] > added_emotions[current_emotion]:\n';
+     code += '            current_emotion = ' + emotion_name + '\n';
+     code += '    else:\n';
+     code += '        current_emotion = ' + emotion_name + '\n';
+  return code;
+};
+
+Blockly.Blocks['clear_current_emotion'] = {
+  init: function () {
+    this.jsonInit(miniblocks.clear_current_emotion)
+  }
+};
+
+Blockly.Python['clear_current_emotion'] = function (block) {
+
+  var code = 'current_emotion = None';
+  return code;
+};
+
+Blockly.Blocks['process_current_emotion'] = {
+  init: function () {
+    this.jsonInit(miniblocks.process_current_emotion)
+  }
+};
+
+Blockly.Python['process_current_emotion'] = function (block) {
+  
+  var code = 'if current_emotion is not None and current_emotion in self.emotion_repo:\n';
+     code += '    if self.emotion_repo[current_emotion].check_devices(devices_emotional_status):\n';
+     code += '        self.emotion_repo[current_emotion].process_emotion()\n'; 
+  return code;
+};
+
+// ============= FACIAL ANIMATION BLOCKS ============== //
+
+Blockly.Blocks['set_current_expression'] = {
+  init: function () {
+    this.jsonInit(miniblocks.set_current_expression)
+  }
+};
+
+Blockly.Python['set_current_expression'] = function (block) {
+  var expression_name = Blockly.Python.valueToCode(block, 'expression_name', Blockly.Python.ORDER_NONE);
+
+  // TODO - Find a way to merge these two lines into one line if possible
+  var code = 'self.current_expression = ' + expression_name + '\n';
+  code += 'bot.set_expression(' + expression_name + ')\n';
+  return code;
+};
+
+Blockly.Blocks['clear_current_expression'] = {
+  init: function () {
+    this.jsonInit(miniblocks.clear_current_expression)
+  }
+};
+
+Blockly.Python['clear_current_expression'] = function (block) {
+
+  // TODO - Find a way to merge these two lines into one line if possible
+  var code = 'self.current_expression = None\n';
+  code += 'bot.clear_expression()\n';
+  return code;
+};
+
+Blockly.Blocks['set_current_playback_speed'] = {
+  init: function () {
+    this.jsonInit(miniblocks.set_current_playback_speed)
+  }
+};
+
+Blockly.Python['set_current_playback_speed'] = function (block) {
+  var new_speed = Blockly.Python.valueToCode(block, 'new_speed', Blockly.Python.ORDER_NONE);
+
+  // TODO - Find a way to merge these two lines into one line if possible
+  var code = 'self.current_expression_playback_speed = ' + new_speed + '\n';
+  code += 'bot.set_expression_playback_speed(' + new_speed + ')\n';
+  return code;
+};
+
+Blockly.Blocks['get_accel_x'] = {
+  init: function () {
+    this.jsonInit(miniblocks.get_accel_x)
+  }
+};
+
+Blockly.Python['get_accel_x'] = function (block) {
+  console.log("new block working!");
+  return "bot.get_accel_x()\n";
+};
+
+Blockly.Blocks['get_accel_y'] = {
+  init: function () {
+    this.jsonInit(miniblocks.get_accel_y)
+  }
+};
+
+Blockly.Python['get_accel_y'] = function (block) {
+  console.log("new block working!");
+  return "bot.get_accel_y()\n";
+};
+
+Blockly.Blocks['get_accel_z'] = {
+  init: function () {
+    this.jsonInit(miniblocks.get_accel_z)
+  }
+};
+
+Blockly.Python['get_accel_z'] = function (block) {
+  console.log("new block working!");
+  return "bot.get_accel_z()\n";
 };

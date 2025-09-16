@@ -1,6 +1,6 @@
 /* ES6 */
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { nanoid } from 'nanoid';
 import ReactDOM from 'react-dom';
 import { CookiesProvider } from 'react-cookie';
@@ -15,7 +15,7 @@ import {
 // Minibot components import
 import Navbar from './components/Navbar.js';
 import Platform from './components/Platform.js';
-import Chatbot from './components/Chatbot/chatbot2.js';
+import Chatbot from './components/Chatbot/Chatbot2.js';
 
 // Utils import
 import { ACT_MIC_CHATBOT, ACT_MIC_COMMAND } from './components/utils/Constants.js';
@@ -27,6 +27,7 @@ function ClientGUI({ }) {
   const [chatbotContext, setChatbotContext] = useState("");
   const [selectedBotName, setSelectedBotName] = useState("");
   const [contextHistoryLoaded, setContextHistoryLoaded] = useState(false);
+  const [loginEmail, setLoginEmail] = useState("");
 
 
   /**
@@ -91,6 +92,31 @@ function ClientGUI({ }) {
   }, [botVoiceControlMic, chatbotMic, changedMic])
   /****************************************************************************/
 
+  /**
+   ************************* EXPRESSION MANAGEMENT ****************************
+   * We use these props to manipulate the basestation's representation of the
+   * minibot's currently active expression.
+   ****************************************************************************
+   */
+
+   // Empty dependency array ensures the effect runs only once after mount
+
+  // // Use useRef to create a reference to the sprite element
+  // const expressionRef = useRef(null);
+
+  // useEffect(() => {
+  //   if(expressionRef.current){
+  //     try{
+  //       expr_funcs.setAnimation("excited", 15);
+  //     }
+  //     catch(error)
+  //     {
+  //       console.error('An error occurred while running setAnimation():', error.message);
+  //     }
+  //   }
+  // }, [expressionRef.current]);
+
+  /****************************************************************************/
 
   useEffect(() => {
     window.addEventListener("beforeunload", alertUser);
@@ -124,6 +150,9 @@ function ClientGUI({ }) {
 
             contextHistoryLoaded={contextHistoryLoaded}
             setContextHistoryLoaded={setContextHistoryLoaded}
+
+            loginEmail={loginEmail}
+            setLoginEmail={setLoginEmail}
           />
         </div>
         <Chatbot
@@ -133,6 +162,7 @@ function ClientGUI({ }) {
           setActiveMicComponent={setActiveMicComponent}
           mic={chatbotMic}
           setMic={setChatbotMic}
+          loginEmail={loginEmail}
         />
       </Router>
     </div>

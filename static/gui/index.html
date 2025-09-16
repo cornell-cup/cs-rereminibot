@@ -6,8 +6,10 @@
 	<!-- IMPORTS -->
 	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/gui_update.css') }}" />
 	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/codemirror.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/expression_animation.css')}}" id="expresssionStyleSheet"/>
 	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/chatbot.css') }}" />
 	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/contextHistory.css') }}" />
+	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/physicalblockly.css') }}" />
 	<link rel="stylesheet" href="{{ url_for('static', filename = 'css/toggle.css') }}" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
 		integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
@@ -88,22 +90,32 @@
 		<category name="Minibot" colour="300">
 			<block type="move_power"></block>
 			<block type="move_power_time"></block>
-			<block type="move_distance"></block>
-			<block type="move_to_position"></block>
-			<block type="path_plan_to_position"></block>
 			<block type="stop_moving"></block>
 			<block type="set_power"></block>
 			<block type="turn_power"></block>
-			<block type="turn_power_time"></block>
-			<block type="turn_angle"></block>
-			<block type="turn_to_angle"></block>
 			<block type="wait_seconds"></block>
-			<block type="send_commands"></block>
-			<block type="wait_for_commands"></block>
-			<block type="while_wait_for_commands"></block>
 			<block type="sees_color"></block>
-			<block type="read_ultrasonic"></block>
+			<block type="read_rangefinder"></block>
+			<block type="read_line_follow_left"></block>
+			<block type="read_line_follow_right"></block>
 			<block type="move_servo"></block>
+			<block type="get_accel_x"></block>
+			<block type="get_accel_y"></block>
+			<block type="get_accel_z"></block>
+		</category>
+		<category name="Emotions" colour="30">
+			<block type="create_emotion"></block>
+			<block type="add_emotion"></block>
+			<block type="add_required_device"></block>
+			<block type="set_device_emotion_status"></block>
+			<block type="set_emotion_if_possible"></block>
+			<block type="clear_current_emotion"></block>
+			<block type="process_current_emotion"></block>
+		</category>
+		<category name="Facial Animations" colour="60">
+			<block type="set_current_expression"></block>
+			<block type="clear_current_expression"></block>
+			<block type="set_current_playback_speed"></block>
 		</category>
 		<category name="Variables" colour="200" custom="VARIABLE">
 			<block type="variables_set"></block>

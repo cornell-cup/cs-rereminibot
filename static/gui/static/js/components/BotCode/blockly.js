@@ -70,7 +70,7 @@ class PythonEditor extends React.Component {
         const file = event.target.files[0];
         const reader = new FileReader();
         reader.onload = function (event) {
-            this.props.setPythonCode(nextProps.pythonCode, event.target.result);
+            _this.props.setPythonCode(event.target.result, _this.props.pythonCodeState);
         };
         reader.readAsText(file);
     }
@@ -156,15 +156,18 @@ class PythonEditor extends React.Component {
                     // result has arrived so go ahead and clear the interval (stop polling
                     // the server)
                     clearInterval(interval);
+                } else {
+                    // black
+                    document.getElementById("error-message").style.color = "#000000";
                 }
-            }).catch((err) => {
+            }).catch((error) => {
                 clearInterval(interval);
                 if (error.response.data.error_msg.length > 0)
                     window.alert(error.response.data.error_msg);
                 else
                     console.log(error);
             })
-        }, 500);
+        }, 1000);
     }
 
     render() {
@@ -193,6 +196,7 @@ class PythonEditor extends React.Component {
                             value={this.props.pythonCode}
                             onChange={(code) => this.updateCode(code)}
                             options={options}
+                            style={{ overflow: "scroll", height: "488px", backgroundColor: "white" }}
                         />
                     </div>
                 </div>
@@ -576,14 +580,12 @@ export default class MinibotBlockly extends React.Component {
     stopBlockly() {
         axios({
             method: 'POST',
-            url: '/wheels',
+            url: '/stop-script',
             headers: {
                 'Content-Type': 'application/json'
             },
             data: JSON.stringify({
-                bot_name: this.props.selectedBotName,
-                direction: "stop",
-                power: 0,
+                bot_name: this.props.selectedBotName
             })
         }).catch(function (error) {
             if (error.response.data.error_msg.length > 0)

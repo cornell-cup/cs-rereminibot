@@ -5,7 +5,8 @@ import * as Icons from '@fortawesome/free-solid-svg-icons';
 import {
   commands,
   X_BTN, MIC_BTN, MIC_BTNON,
-  ACT_MIC_CHATBOT
+  ACT_MIC_CHATBOT,
+  ZIP_FILE_UPLOAD
 } from "../utils/Constants.js";
 import SpeechRecognitionComp from "../utils/SpeechRecognitionComp.js";
 
@@ -39,7 +40,8 @@ function Chatbot2({
   setActiveMicComponent,
   activeMicComponent,
   mic,
-  setMic }) {
+  setMic,
+  loginEmail }) {
   // use states for chatbot window appearance
   const [enter, setEnter] = useState("");
   const [open, setOpen] = useState(false);
@@ -58,6 +60,12 @@ function Chatbot2({
   const [tempCommands, setTempCommands] = useState("");
   const [isAnimating, setAnimating] = useState(false);
 
+  const hiddenFileInput = useRef(null);
+
+  const handleClick = (e) => {
+    e.preventDefault();
+  };
+
   // style for the overall chatbot window
   const styles = {
     leftWindow: {
@@ -73,13 +81,95 @@ function Chatbot2({
     empty: {}
   }
 
-  // functions responding to commands changing the appearance of the chatbot windows
-  const changeInputText = (event) => {
+  const processSentiment = async (text) => {
+    let sentiment;
+    try{
+      const response = await fetch ("http://127.0.0.1:2300/predict",{
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({input: text})
+      });
+      const data = await response.json();
+      sentiment = data;
+    } catch (err) {
+      sentiment = -1;
+    }
+
+    console.log("assigned label:", sentiment);
+    let emotion;
+
+    const excitement_labels = [4, 8, 13, 17, 20]
+    const sad_labels = [9, 10, 16, 24, 25]
+    const vomit_labels = [11, 12]
+    const chuckle_labels = [1, 19]
+    const surprise_labels = [6, 7, 26]
+    const stable_labels = [-1, 21, 22, 23, 27]  
+    const love_it_labels = [0, 5, 15, 18] 
+    const big_no_labels = [2, 3, 14]
+    
+    if (stable_labels.includes(sentiment)){emotion = "idle_stable"}
+    else if (excitement_labels.includes(sentiment)) {emotion = "excited"}
+    else if (sad_labels.includes(sentiment)) {emotion = "sad"}
+    else if (vomit_labels.includes(sentiment)) {emotion = "vomit"}
+    else if (chuckle_labels.includes(sentiment)) {emotion = "chuckle"}
+    else if (surprise_labels.includes(sentiment)) {emotion = "surprise"}
+    else if (love_it_labels.includes(sentiment)) {emotion = "love_it"}
+    else if (big_no_labels.includes(sentiment)) {emotion = "big_no"}
+
+    console.log(emotion);
+    
+    const pythonCode = `self.current_expression = None\nbot.clear_expression()\nself.current_expression = '${emotion}'\nbot.set_expression('${emotion}')`;
+
+    //stop current script (if any) to avoid conflict 
+    if (selectedBotName) {
+      axios({
+        method: 'POST',
+        url: '/stop-script',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({ 
+          bot_name: selectedBotName 
+        })
+      })
+      .then((response) => {
+        console.log("Stopped script:", response.data);
+      })
+      .catch((error) => {
+        console.error("Failed to stop script:", error.message);
+      });
+    } else {
+      console.log("selectedBotName empty");
+    }
+    
+    //display emotion
+    axios({
+        method: 'POST',
+        url: '/script',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: JSON.stringify({
+            bot_name: selectedBotName,
+            script_code: pythonCode,
+            login_email: loginEmail
+            })
+        }) 
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error.message)
+        });
+  }
+
+  const changeInputText = async (event) => {
     event.preventDefault();
     if (!contextMode) return;
     const input = event.currentTarget.value;
+    console.log("reached")
     setInputText(input);
-  }
+  };
 
   const openChatbox = (e) => {
     e.preventDefault();
@@ -150,6 +240,7 @@ function Chatbot2({
 
   // functions processing commands: sending context, question, toggling mics
   const sendContext = (e) => {
+    processSentiment(inputText);
     e.preventDefault();
     if (inputText === emptyStr) return;
     var temp_id = id + 1;
@@ -158,6 +249,10 @@ function Chatbot2({
     setInputText("");
     setMessages(newList);
     setParentContext(inputText);
+
+    console.log('sending context')
+    console.log(loginEmail)
+
     axios({
       method: 'POST',
       url: '/chatbot-context',
@@ -181,6 +276,7 @@ function Chatbot2({
   }
 
   const sendQuestion = (e) => {
+    processSentiment(inputText)
     e.preventDefault();
     if (inputText === emptyStr) return;
     var temp_id = id + 1;
@@ -254,6 +350,8 @@ function Chatbot2({
   }, [messages]);
 
   useEffect(() => {
+    console.log('login email');
+    console.log(loginEmail);
     initialList[0].timeStamp = getTimeStamp();
     setMessages(initialList);
   }, []);
@@ -351,15 +449,22 @@ function Chatbot2({
         <div className="footer">
           {/* textbox for the user to enter text messages */}
           <textarea rows="3" cols="70" className="text-box" id="textbox"
-            onChange={changeInputText} value={inputText}
+            onChange={(e) => {setInputText(e.target.value)}} value={inputText}
             placeholder={contextMode ? "Enter a context/question" : selectedBotName != "" ?
               "Click the microphone to send a command" : "Please connect to a Minibot!"}
-            onKeyPress={(e) => {
-              if (contextMode) {
-                if (e.key === 'Enter') { sendContext(e); }
-                if (e.key === '`') { sendQuestion(e); }
-              }
-            }}>
+            onKeyDown={(e) => {
+                if(contextMode && e.key === "Enter"){
+                  changeInputText(e);
+                  var message = e.target.value.trim();
+                  var lastChar = message.slice(-1);
+                  if(lastChar === "?"){
+                    sendQuestion(e);
+                  }else{
+                    sendContext(e);
+                  }
+                }
+            }
+            }>
           </textarea>
           {/* mic backend objects built using SpeechRecognitionComp */}
           {contextMode ?
@@ -384,17 +489,32 @@ function Chatbot2({
             {contextMode ?
               <span>
                 <span>
-                  <button style={{ marginLeft: "2px", objectFit: "inline", width: "30%" }} onClick={(e) => { sendContext(e); }}>
+                  <button style={{ marginLeft: "2px", objectFit: "inline", width: "30%" }} onClick={(e) => { sendContext(e);}}>
                     <FontAwesomeIcon icon={Icons.faPaperPlane} />
                   </button>
                 </span>
                 <span>
-                  <button style={{ marginLeft: "2px", objectFit: "inline" }} onClick={(e) => { sendQuestion(e); }}>
+                  <button style={{ marginLeft: "2px", objectFit: "inline" }} onClick={(e) => { sendQuestion(e);}}>
                     <FontAwesomeIcon icon={Icons.faQuestion} />
                   </button>
                 </span>
               </span>
-              : <div></div>
+              :
+               <span>
+              <input type="image"
+                id='zipFileUpload'
+                src={ZIP_FILE_UPLOAD}
+                style={{ width: "40%", height: "40%", objectFit: "contain", }}
+                onClick={handleClick} />
+              <input
+                type="file"
+                id="zipfile"
+                ref={hiddenFileInput}
+                accept=".zip"
+                // onChange={handleChange}
+                style={{ display: 'none' }}
+              />
+            </span>
             }
           </div>
         </div>

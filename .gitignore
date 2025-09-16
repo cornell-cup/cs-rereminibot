@@ -1,2 +1,13 @@
-venv/
-/.vscode
+venv\
+\.vscode
+
+static/gui/node_modules
+node_modules/
+
+.env
+minibot/__pycache__
+minibot/pi_scripts/__pycache__
+basestation/program.db
+
+basestation/chatbot_sentiment_model/sentiment-model
+basestation/chatbot_sentiment_model/results

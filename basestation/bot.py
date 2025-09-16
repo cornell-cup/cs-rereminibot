@@ -2,6 +2,7 @@ import socket
 import time
 from typing import Optional
 
+from basestation.util.locked_variable import LockedVariable
 
 class Bot:
     """ Represents a Minibot that the Basestation is connected to, it is a 
@@ -33,7 +34,13 @@ class Bot:
         self._name = bot_name
         self.last_status_time = time.time()
         self.is_socket_connected = True
-        self._script_exec_result = None
+        self.script_exec_result_var = LockedVariable(None, "Waiting for execution completion")
+        self.script_alive_var = LockedVariable(False, True)
+        self.rfid_tags = ""
+        self.accelerometer_values = [None, None, None]
+        self.rangefinder_distance = -1
+        self.line_follow_left_value = 0
+        self.line_follow_right_value = 0
 
     def try_receive_data(self, peek: bool = False) -> Optional[str]:
         """ Tries to receive data from the Minibot. 
@@ -66,8 +73,8 @@ class Bot:
         """ Send message with specified key and value. """
         if not self.is_socket_connected:
             return
-
         data = f"<<<<{key},{value}>>>>".encode()
+
         # check whether the socket connection is still open
         line = self.try_receive_data(peek=True)
         # If the socket connection is not disconnected
@@ -99,10 +106,67 @@ class Bot:
                 # set to current time in seconds
                 self.last_status_time = time.time()
             elif key == "SCRIPT_EXEC_RESULT":
-                self.script_exec_result = value
+                if self.script_exec_result_lock.acquire(blocking=False):
+                    self.script_exec_result = value
+                    self.script_exec_result_lock.release()
+                else:
+                    self.script_exec_result = "Waiting for execution completion"
+            elif key == "RFID":
+                if value == "":
+                    self.rfid_tags = ""
+                else:
+                    self.rfid_tags = value
+            elif key == "IMU":
+                try:
+                    self.accelerometer_values = [float(x) for x in value.split(" ")]
+                except: 
+                    self.accelerometer_values = [None, None, None]
 
+                if (len(self.accelerometer_values)) != 3:
+                    self.accelerometer_values = [None, None, None]
+
+                print(f"IMU {self.accelerometer_values}")
+            elif key == "RANGE":
+                try:
+                    self.rangefinder_distance = float(value)
+                except:
+                    self.rangefinder_distance = -1
+            elif key == "LINE_FOLLOW":
+                v = value.split('_')[0]
+                if v == "LEFT":
+                    self.line_follow_left_value = value.split('_')[1]
+                elif v == "RIGHT":
+                    self.line_follow_right_value = value.split('_')[1]
+                else:
+                    print(f"INVALID value {v}")
+        
             data_str = data_str[end + token_len:]
 
+    def get_imu(self):
+        # if script == True:
+        self.sendKV("IMU", "")
+        self.readKV()
+        return self.accelerometer_values
+    
+    def get_rangefinder(self):
+        self.rangefinder_distance = -1
+        self.sendKV("RANGE", "")
+        time.sleep(0.5) # TODO needs to be changed so that it isn't a wait and instead waits until the value is available
+        self.readKV()
+        return self.rangefinder_distance 
+
+        # ==================== Get Line Follow ============================
+    def get_line_follow(self, line_value):
+        self.sendKV("LINE_FOLLOW", line_value)
+        time.sleep(0.5) # TODO needs to be changed so that it isn't a wait and instead waits until the value is available
+        self.readKV()
+        if line_value == "LEFT":
+            return float(self.line_follow_left_value)
+        elif line_value == "RIGHT":
+            return float(self.line_follow_right_value)
+        else:
+            return 0 ##TODO or Raise Error?
+    
     def is_connected(self) -> bool:
         """ Checks whether the Minibot has sent a heartbeat message recently 
         """
@@ -112,11 +176,3 @@ class Bot:
     @property
     def name(self):
         return self._name
-
-    @property
-    def script_exec_result(self):
-        return self._script_exec_result
-
-    @script_exec_result.setter
-    def script_exec_result(self, value: str):
-        self._script_exec_result = value
