@@ -34,7 +34,7 @@ Note: Windows users are highly recommended to install on Windows Native rather t
 Please clone (download) the respository onto your local machine. On Windows open Powershell and run the following command from the directory where you would like the `cs-reminibot` repository to be located. On Linux or MacOS open the terminal and run the command.
 
 ```
-git clone https://github.com/cornell-cup/cs-reminibot.git
+git clone https://github.com/cornell-cup/cs-rereminibot.git
 ```
 
 # 3. Installing BaseStation Python Dependencies
